@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">security</string>
+    <string name="priority">קדימות</string>
+    <string name="finding">ממצא</string>
+    <string name="requirement">דרישה</string>
+    <string name="instructions">הנחיות</string>
+    <string name="confirm">אישור</string>
+    <string name="tester_details">פרטי הבודק</string>
+    <string name="institution_symbol">סמל המוסד</string>
+    <string name="city">עיר</string>
+    <string name="place_name">שם המוסד</string>
+    <string name="date">תאריך</string>
+
+    <string-array name="priority_array">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+</resources>
