@@ -992,7 +992,10 @@ HmScope(area = "מעקים ומסעד יד",
     ),
  HmScope(area = "דרכי גישה",
         section = "6.4",
-        definition = "",
+        definition = "דרכי הגישה אל הכניסות למקלט ואל היציאות\n" +
+                "ממנו, לרבות היציאות מפתחי יציאות החירום,\n" +
+                "תהיינה פנויות, מסומנות ומשולטות ופנויות\n" +
+                "מכל מכשול או הפרעה לתנועה מהירה וחלקה.",
      school = false,
      boardingSchool = false,
      youthVillage = false
@@ -1000,12 +1003,22 @@ HmScope(area = "מעקים ומסעד יד",
     //
     HmScope(area = "מבנה",
         section = "6.5",
-        definition = ""
+        definition = "חלקי מבנהו של המקלט, לרבות ארובות\n" +
+                "וצינורות סינון, תעלות וצינורות אוורור, ספי\n" +
+                "כניסה, דלתות פתחי החירום וכיו\"ב לא יהיו\n" +
+                "מכשול או מפגע בטיחותי לתלמידים הנעים\n" +
+                "בשטח וייבנו באופן שתלמידים/ ילדים לא יוכלו\n" +
+                "לטפס עליהם.",
+        kindergarten = false
     ),
 
     HmScope(area = "מבנה",
         section = "6.6",
-        definition = "",
+        definition = "חלקי מבנהו של המקלט, לרבות ארובות\n" +
+                "וצינורות סינון, תעלות וצינורות אוורור, ספי\n" +
+                "כניסה, וכיו\"ב לא יהיו מכשול או מפגע בטיחותי\n" +
+                "וכן ייבנו באופן שתלמידים/ ילדים לא יוכלו\n" +
+                "לטפס עליהם",
         school = false,
         boardingSchool = false,
         youthVillage = false
@@ -1013,95 +1026,128 @@ HmScope(area = "מעקים ומסעד יד",
     //
     HmScope(area = "חלונות",
         section = "6.7",
-        definition = ""
+        definition = "בחלונות מקלט ומרחב מוגן יהיו הגנות למניעת\n" +
+                "נפילה שיאפשרו פתיחה בחירום.",
+        kindergarten = false
     ),
     //
     HmScope(area = "פתחי חירום",
         section = "6.8",
-        definition = "",
+        definition = "לא יהיו בחלונות פינות חדות בעיקר בגובה ילדי\n" +
+                "הגן.",
         school = false,
         boardingSchool = false,
         youthVillage = false
     ),
     HmScope(area = "פתחי חירום",
         section = "6.9",
-        definition = ""
+        definition = "פתחי החירום של המקלט היוצאים אל שטח\n" +
+                "החצר יהיו סגורים מבפנים, ולא יבלטו מעל פני\n" +
+                "השטח."
     ),
     //
     HmScope(area = "קירות",
         section = "6.10",
-        definition = ""
+        definition = "קירות המקלט, תקרתו ורצפתו, יצופו בחומרים\n" +
+                "בלתי דליקים."
     ),
     //
     HmScope(area = "תאורת חירום",
         section = "6.11",
-        definition = ""
+        definition = "קיום תאורת חירום תקינה ומשולטת במקלט."
     ),
 
     //פרק 7
     HmScope(area = "כיתות חדרים וגן",
         section = "7.1",
-        definition = "",
+        definition = "חומרים, קוביות, ארגזים וכד' - מקומם בפינות\n" +
+                "רחוקות מן הפתחים, כדי לאפשר מעבר חופשי.",
         school = false,
         boardingSchool = false,
         youthVillage = false
     ),
     HmScope(area = "כיתות חדרים וגן",
         section = "7.2",
-        definition = ""
+        definition = "אין לערום חפצים כבדים לגובה רב. במדפים\n" +
+                "הגבוהים, מעל להישג ידו של הילד, יהיו ערוכים\n" +
+                "אך ורק חפצים קלים ובלתי שבירים"
     ),
     HmScope(area = "כיתות חדרים וגן",
         section = "7.3",
-        definition = ""
+        definition = "שולחנות ופרטי ריהוט אחרים יהיו בעלי פינות\n" +
+                "מעוגלות. עשויים מחומר לא שביר"
     ),
     HmScope(area = "כיתות חדרים וגן",
         section = "7.4",
-        definition = "",
+        definition = "כיסאות בגני ילדים המרווח בין המושב למשענת\n" +
+                "לא יעלה על  85מ\"מ )תקן .",
         school = false,
         boardingSchool = false,
         youthVillage = false
     ),
     HmScope(area = "כיתות חדרים וגן",
-        section = "7.5",
-        definition = ""
+        section = "7.45",
+        definition = "כלים חשמליים, כמו קומקום חשמלי, מתקנים\n" +
+                "לחימום מים באקווריום, מתקני הפעלה\n" +
+                "לצעצועים וכד' - אלה יהיו בעלי בידוד כפול או\n" +
+                "יוגנו על ידי הארקה.\n" +
+                "לא ימצאו מכשירים חשמליים שאינם שמישים"
     ),
     HmScope(area = "כיתות חדרים וגן",
         section = "7.6",
-        definition = ""
+        definition = "תמונות, קישוטים, ארונות וכד' יחוברו אל\n" +
+                "הקיר בדרך שתמנע סכנת נפילתם.\n" +
+                "קישוטים כלשהם לא יחוברו אל נורות החשמל\n" +
+                "ואל חוטי הנורות. לצורך זה מומלץ להתקין\n" +
+                "ווים בתקרה."
     ),
     HmScope(area = "כיתות חדרים וגן",
         section = "7.7",
-        definition = ""
+        definition = "מיטות דו -קומתיות והסולמות יהיו יציבים\n" +
+                "ומקובעים וללא פינות חדות.",
+        school = false,
+        kindergarten = false
     ),
     HmScope(area = "כיתות חדרים וגן",
         section = "7.8",
-        definition = "",
+        definition = "לא תימצאנה בגן שקיות ניילון העלולות לשמש\n" +
+                "למשחקי הילדים. שקיות ניילון לשימוש הגננת\n" +
+                "ולאחסון חומרים תימצאנה מעבר להישג ידם\n" +
+                "של הילדים, וזאת מחשש שהילדים ילבשו את\n" +
+                "השקיות על ראשיהם וייחנקו.",
         school = false,
         boardingSchool = false,
         youthVillage = false
     ),
     HmScope(area = "כיתות חדרים וגן",
         section = "7.9",
-        definition = ""
+        definition = "הזגוגיות, לרבות מראות, הזיגוג יהיה בחומר\n" +
+                "שאינו מתנפץ."
     ),
     //
     HmScope(area = "המטבח",
         section = "7.10",
-        definition = "",
+        definition = "מטבח יופרד מחדר הלימוד, וישמש להכנת\n" +
+                "אוכל.",
         school = false,
         boardingSchool = false,
         youthVillage = false
     ),
     HmScope(area = "המטבח",
         section = "7.11",
-        definition = "",
+        definition = "מתקני הבישול והחימום והכבלים החשמליים\n" +
+                "המזינים אותם ימצאו במקום גבוה, מעבר\n" +
+                "להישג ידו של הילד.",
         school = false,
         boardingSchool = false,
         youthVillage = false
     ),
     HmScope(area = "המטבח",
         section = "7.12",
-        definition = "",
+        definition = "חימום ובישול בגן ייעשו בכיריים חשמליים או\n" +
+                "בכיריים של גז )אין להשתמש במכשיר גז\n" +
+                "מיטלטל(. מיכל הגז יימצא מחוץ לגן, ויהיה\n" +
+                "מוקף ברשת נעולה.",
         school = false,
         boardingSchool = false,
         youthVillage = false
@@ -1109,7 +1155,13 @@ HmScope(area = "מעקים ומסעד יד",
     //
     HmScope(area = "אחסון חומרי ניקוי",
         section = "7.13",
-        definition = "",
+        definition = "כל חומרי הניקוי והחיטוי יוחזקו בארון נפרד\n" +
+                "ונעול ומפתח הארון יימצא בידי הגננת ובידי\n" +
+                "הסייעת בלבד. אם אין ארון מיוחד לכך בגן,\n" +
+                "תדאג הגננת, שחומרי הניקוי והחיטוי יימצאו\n" +
+                "מעבר להישג ידם של הילדים ובנפרד ממזון, וכן\n" +
+                "שיהיו מאוחסנים באופן שאין חשש של נפילה\n" +
+                "או שפיכה.",
         school = false,
         boardingSchool = false,
         youthVillage = false
@@ -1117,14 +1169,15 @@ HmScope(area = "מעקים ומסעד יד",
     //
     HmScope(area = "עזרה ראשונה",
         section = "7.14",
-        definition = "",
+        definition = "בגן הילדים ימצא תרמיל עזרה ראשונה בעל\n" +
+                "תכולה מתאימה )על פי הנחיות חוזר מנכ\"ל(",
         school = false,
         boardingSchool = false,
         youthVillage = false
     ),
     HmScope(area = "עזרה ראשונה",
         section = "7.15",
-        definition = "",
+        definition = "ציוד העזרה הראשונה יהיה בלתי נגיש לילדים.",
         school = false,
         boardingSchool = false,
         youthVillage = false
@@ -1132,500 +1185,889 @@ HmScope(area = "מעקים ומסעד יד",
     // פרק 8
     HmScope(area = "מבנה",
         section = "8.1",
-        definition = ""
+        definition = "לא יהיו במבנה חומרים המסוכנים לאדם\n" +
+                "כאזבסט וכיוב'"
     ),
     HmScope(area = "מבנה",
         section = "8.2",
-        definition = ""
+        definition = "המבנה יוצב על בסיס מוגבה מהקרקע. גובהו\n" +
+                "המרבי יהיה  60ס\"מ"
     ),
     HmScope(area = "מבנה",
         section = "8.3",
-        definition = ""
+        definition = "המרווח שבין המבנה לבין הקרקע ייאטם מסביב\n" +
+                "לקירות "
     ),
     HmScope(area = "מבנה",
         section = "8.4",
-        definition = ""
+        definition = "במידה ויש צורך במדרגות למבנה, יבוצעו כך\n" +
+                "שלא יגרמו למעידה או למכשול אחר"
     ),
     HmScope(area = "מבנה",
         section = "8.5",
-        definition = ""
+        definition = "בכיתה ללא דלת מילוט יקוים פתח מילוט )ראה\n" +
+                "סורג מילוט("
     ),
     //
     HmScope(area = "חשמל",
         section = "8.6",
-        definition = ""
+        definition = "מפסק פחת למערכת החשמל ימצא במבנה."
     ),
     // פרק 9
 
     HmScope(area = "לוחות חשמל",
         section = "9.1",
-        definition = ""
+        definition = "לוחות חשמל לא יהיו עשויים מחומרים\n" +
+                "דליקים, הארונות יהיו סגורים\n" +
+                "לארונות וללוחות יהיו סידורי נעילה.\n" +
+                "לא יהיו חלקים חשופים בלוחות.\n" +
+                "לא יהיו ארונות חשמל )ראשי/קומתי ואגפי(\n" +
+                "בצמוד לכיתות, מעבדות, משרדים וחדרי ספח\n" +
+                "מאוכלסים."
     ),
     HmScope(area = "לוחות חשמל",
         section = "9.2",
-        definition = ""
+        definition = "בלוחות החשמל ימצאו מבטחים אוטומטיים\n" +
+                "וכן שני מפסקי זרם פחת ברגישות של ."
     ),
     HmScope(area = "לוחות חשמל",
         section = "9.3",
-        definition = ""
+        definition = "כל המעגלים ומפסקי הזרם הראשיים יסומנו\n" +
+                "בסימון בר-קיימא."
     ),
     //
     HmScope(area = "מפסקים ושקעים",
         section = "9.4",
-        definition = ""
+        definition = "כל בתי התקע )שקעים(, מפסקים ונקודות\n" +
+                "מאור מתחת לגובה של  1.80מטר יהיו מוגנים\n" +
+                "ויותקן בהם תריס מגן פנימי או מכסה."
     ),
     HmScope(area = "מפסקים ושקעים",
         section = "9.5",
-        definition = ""
+        definition = "כל אביזרי החשמל יהיו שלמים ומקובעים\n" +
+                "למקומם."
     ),
     //
     HmScope(area = "מנורות וגופי תאורה",
         section = "9.6",
-        definition = ""
+        definition = "גופי תאורה לא יותקנו על גבי חומרים דליקים\n" +
+                ")כמו עץ וכד'("
     ),
     HmScope(area = "מנורות וגופי תאורה",
         section = "9.7",
-        definition = ""
+        definition = "גופי התאורה בחדרי השירותים ובחצר יהיו\n" +
+                "מטיפוס מוגן-מים."
     ),
     HmScope(area = "מנורות וגופי תאורה",
         section = "9.8",
-        definition = ""
+        definition = "גופי תאורה יהיו מוגנים מפגיעה פיזית."
     ),
     //
     HmScope(area = "חיווט וכבלי חשמל",
         section = "9.9",
-        definition = ""
+        definition = "כבלי חשמל קבועים יושמו בתוך תעלות\n" +
+                "מתאימות\n" +
+                "כבלי חשמל לא יהיו בהישג ידם של\n" +
+                "הילדים/תלמידים."
     ),
     //
     HmScope(area = "ציוד חשמלי מטלטל",
         section = "9.10",
-        definition = ""
+        definition = "לא יהיה ציוד חשמלי לא תקין\n" +
+                "ציוד חשמלי של התלמידים ייבדק ויאושר על\n" +
+                "ידי חשמלאי\n" +
+                "לא יותקנו מאווררי תקרה במגורים ובכיתות\n" +
+                "לימוד ) עד גובה של  2.5מטר."
     ),
     HmScope(area = "ציוד חשמלי מטלטל",
         section = "9.11",
-        definition = ""
+        definition = "ציוד חשמלי המשולב במים, יש להתקין\n" +
+                "הארקה נפרדת לגוף החיצוני"
     ),
     //
     HmScope(area = "מעבדות",
         section = "9.12",
-        definition = ""
+        definition = "מפסקי-זרם, מפסקי-מגן, מבטחים וכו' ימצאו\n" +
+                "בלוח-משנה, בקרבת הכניסה למעבדה.\n" +
+                "דלת הארון תהיה מצוידת במנעול, אך\n" +
+                "המפסקים הראשיים של כוח ומאור יותקנו\n" +
+                "מחוץ לארון, ויסומנו באופן בולט.",
+        kindergarten = false,
+        boardingSchool = false
     ),
     HmScope(area = "מעבדות",
         section = "9.13",
-        definition = ""
+        definition = "בתי-תקע )שקעים( חשמליים ימוקמו בגובה\n" +
+                " 25ס\"מ בקירוב מעל לפני לוח השולחן",
+        kindergarten = false,
+        boardingSchool = false
     ),
     HmScope(area = "מעבדות",
         section = "9.14",
-        definition = ""
+        definition = "בתי-תקע )שקעים( של מעגלים בעלי\n" +
+                "מתחים שונים יותקנו באופן שלא\n" +
+                "יאפשרו טעות בחיבור המכשירים\n" +
+                "החשמליים ויסומנו בצורה ברורה.",
+        kindergarten = false,
+        boardingSchool = false
     ),
     HmScope(area = "מעבדות",
         section = "9.15",
-        definition = ""
+        definition = "הצנרת החשמלית ומרכיביה תופרד\n" +
+                "ממקורות מים וממערכות גז.",
+        kindergarten = false,
+        boardingSchool = false
     ),
     HmScope(area = "מעבדות",
         section = "9.16",
-        definition = ""
+        definition = "בשולחן המורה ימצאו כל המפסקים של\n" +
+                "המעגלים החשמליים המותקנים במעבדה.",
+        kindergarten = false,
+        boardingSchool = false
     ),
     HmScope(area = "מעבדות",
         section = "9.17",
-        definition = ""
+        definition = "מערכת התאורה במחסני הכימיקלים ובחדרי\n" +
+                "ההכנה תהיה עמידה בפני התפוצצות וקורוזיה.",
+        kindergarten = false,
+        boardingSchool = false
     ),
     //
     HmScope(area = "חדרי מחשב",
         section = "9.18",
-        definition = ""
+        definition = "מערכת החשמל תותקן בתעלות שיקבעו\n" +
+                "בגובה שלא יעלה על  25ס\"מ מעל פני\n" +
+                "השולחנות.",
+        kindergarten = false,
+        boardingSchool = false
     ),
     HmScope(area = "חדרי מחשב",
         section = "9.19",
-        definition = ""
+        definition = "אין להתקין בתי תקע )שקעים( בחזית השולחן\n" +
+                "או על גבי סרגל מתחת לגובה פני השולחן אלא\n" +
+                "בתוך התעלות.",
+        kindergarten = false,
+        boardingSchool = false
     ),
     HmScope(area = "חדרי מחשב",
         section = "9.20",
-        definition = ""
+        definition = "שולחנות שלא יותקנו לאורך הקירות יקובעו\n" +
+                "לרצפה, ומערכת החשמל תותקן בצנרת מתחת\n" +
+                "לרצפת החדר. ליד השולחן יהיה לוח מקובע\n" +
+                "ברצפה ובו יותקנו בתי התקע )שקע( שהזרם\n" +
+                "ינותב אליו.",
+        kindergarten = false,
+        boardingSchool = false
     ),
     // פרק 10
     HmScope(area = "גז",
         section = "10.1",
-        definition = ""
+        definition = "סוללת מכלי גז לבישול תותקן רחוק ככל\n" +
+                "האפשר מאזורי הפעילות והתנועה של\n" +
+                "התלמידים."
     ),
     HmScope(area = "גז",
         section = "10.2",
-        definition = ""
+        definition = "מכלי הגז יותקנו במקום פתוח ומאוורר על גבי\n" +
+                "משטח בטון ישר המוגבה כ- 10ס\"מ מפני\n" +
+                "הקרקע, מגודר ברשת יציבה בגובה  1.8מטר\n" +
+                "לפחות, ומקורה בגגון, עם פשפש לנעילה במנעול\n" +
+                "תלייה. המפתחות יהיו במזכירות מוסד החינוך\n" +
+                "או בידי אב הבית"
     ),
     HmScope(area = "גז",
         section = "10.3",
-        definition = ""
+        definition = "מרכזיית גז למתקני הסקה תותקן במכל תת-\n" +
+                "קרקעי. סביב מקום המכל תותקן גדר-רשת\n" +
+                "בגובה של  1.80מטר, לפחות, עם פשפש ועם\n" +
+                "מנעול תלייה. המכל יקבע במקום רחוק מאזורי\n" +
+                "הפעילות והתנועה של התלמידים וקרוב לגדר\n" +
+                "המגרש, באופן שימולא מבחוץ, בלי שמכלית\n" +
+                "הגז תיכנס לחצר."
     ),
-    //
+    //todo check if it is ok in phone
     HmScope(area = "מכל נפט, סולר",
         section = "10.4",
-        definition = ""
+        definition = "מכל הנפט או הסולר לצורכי הסקה יהיה תת\n" +
+                "קרקעי, אולם אם קיבולו קטן מ - 500ליטר הוא\n" +
+                "יכול להיות גם על-קרקעי. במקרה כזה הוא\n" +
+                "יותקן על גבי בסיס ישר, המוגבה  10ס\"מ מעל\n" +
+                "פני הקרקע, ויגודר ברשת יציבה וחזקה, בגובה\n" +
+                "של  1.80מ', עם פשפש ועם מנעול מתאימים.\n" +
+                "בכל מקרה של הקמת מכל על-קרקעי יש לבנות\n" +
+                "קירות-איגום )מעצרה( בנפח של המכל + %.10"
     ),
     HmScope(area = "מכל נפט, סולר",
         section = "10.5",
-        definition = ""
+        definition = "המכל יותקן רחוק ככל האפשר מאזורי\n" +
+                "והפעילות של התלמידים וקרוב לגבול המגרש,\n" +
+                "באופן שהוא ימולא מבחוץ, בלי שמכלית הדלק\n" +
+                "תיכנס לחצר. בין המכל לבניין יהיה מרחק\n" +
+                "מזערי של  5מ'"
     ),
     //
     HmScope(area = "תחנת דלק פנימית",
         section = "10.6",
-        definition = ""
+        definition = "תחנת דלק פנים מוסדית תתוחזק על פי :\n" +
+                "* תקנת רישוי עסקים)אחסנת נפט ומוצריו(-\n" +
+                "התשל\"ז-1976\n" +
+                "* גיליונות הבטיחות של החומר המאוחסן\n" +
+                "(S.D.S.M)",
+        school = false,
+        kindergarten = false,
+        boardingSchool = false
     ),
     //פרק 11
     HmScope(area = "ארגון אולם",
         section = "11.1",
-        definition = ""
+        definition = "ישמרו שולים נקיים ברוחב מינימאלי\n" +
+                "של:\n" +
+                ")כדורגל, קט רגל וכדור עף- 3מטר(\n" +
+                ")כדורסל-  2מטר(.\n" +
+                ")כדור יד- 2מ' לרוחב האולם,  1מ'\n" +
+                "לאורך האולם.(\n" +
+                "עצמים בולטים, ברזיות, הידראנטים, עמודי\n" +
+                "תאורה, לוחות חשמל וכיו\"ב - יורחקו משולי\n" +
+                "מגרשי הספורט",
+        kindergarten = false
     ),
     //
     HmScope(area = "דלתות",
         section = "11.2",
-        definition = ""
+        definition = "באולם הספורט תותקנה שתי דלתות, לפחות.\n" +
+                "הרוחב המזערי הפנוי של כל דלת יהיה 1.10\n" +
+                "מ'.\n" +
+                "רצוי הדלתות תיקבענה בקירות הנגדיים של\n" +
+                "האולם, כשהן רחוקות זו מזו ככל האפשר\n" +
+                "ופתחיהן כלפי חוץ, בכיוון המילוט.",
+        kindergarten = false
     ),
     HmScope(area = "תקרה",
         section = "11.3",
-        definition = ""
+        definition = "התקרה הקונסטרוקטיבית של האולם, תקרת\n" +
+                "המשנה והציפויים האקוסטיים יהיו עמידים\n" +
+                "בפני פגיעות כדורי הספורט.",
+        kindergarten = false
     ),
     HmScope(area = "קירות",
         section = "11.4",
-        definition = ""
+        definition = "קירות האולם וחומרי הגימור יהיו חלקים\n" +
+                "וללא בליטות עד לגובה של  2מ' מהרצפה.\n" +
+                "הפינות של הקירות והעמודים שבהן יהיו\n" +
+                "קטומים.",
+        kindergarten = false
     ),
     HmScope(area = "רצפנ",
         section = "11.5",
-        definition = ""
+        definition = "המשטח יהיה ללא בליטות, שקעים\n" +
+                "ומחומרים מונעי החלקה בהתאם להנחיות\n" +
+                "חוזר מנכ\"ל",
+        kindergarten = false
     ),
     HmScope(area = "אוורור",
         section = "11.6",
-        definition = ""
+        definition = "יהיו פתחי אוורור או אמצעי אוורור.",
+        kindergarten = false
     ),
     HmScope(area = "תאורה",
         section = "11.7",
-        definition = ""
+        definition = "גופי התאורה יוגנו מפני שבירה ופגיעות\n" +
+                "באמצעות התקנתם בשקעים, או על-ידי\n" +
+                "שימוש בגופי תאורה מדגמי \"אנטי-ונדל\"\n" +
+                ")ייבדק בבדיקת רישוי(",
+        kindergarten = false
     ),
     HmScope(area = "חשמל",
         section = "11.8",
-        definition = ""
+        definition = "השקעים ומפסקי החשמל יהיו מטיפוס\n" +
+                "משוריין. לוח אולם-ההתעמלות יותקן באחד\n" +
+                "מחדרי-הספח שמחוץ לאולם",
+        kindergarten = false
     ),
     HmScope(area = "מתקני ספורט",
         section = "11.9",
-        definition = ""
+        definition = "מכשירי ההתעמלות המיועדים לתרגילי\n" +
+                "תנופה )טבעות, מוטות, חבלים וכיו\"ב( יותקנו\n" +
+                "באופן שכיוון התנופה שלהם יהיה לאורך\n" +
+                "האולם, מרחקם המזערי מקיר האורך יהיה\n" +
+                " 2.50מ', ומרחקם הרצוי מקיר הרוחב יהיה -8\n" +
+                " 6מ'",
+        kindergarten = false
     ),
     HmScope(area = "מתקני ספורט",
         section = "11.10",
-        definition = ""
+        definition = "כל חלקי העץ במתקני ההתעמלות יהיו\n" +
+                "חלקים ונקיים מכל בליטה, מצופים לכה\n" +
+                "שקופה, בהירה וקשה במיוחד ובעלי קצוות\n" +
+                "מעוגלים. כל חלקי המתכת, לרבות הברגים,\n" +
+                "יהיו חלקים ושקועים במבנה העץ ועשויים\n" +
+                "ממתכת בלתי מחלידה או מגולוונת",
+        kindergarten = false
     ),
     HmScope(area = "מתקני ספורט",
         section = "11.11",
-        definition = ""
+        definition = "המרחקים בין מתקן למתקן יהיו כאלה\n" +
+                "שבשום פנים ואופן לא תהיה חפיפה אפשרית\n" +
+                "בין המתעמלים על המתקנים.",
+        kindergarten = false
     ),
     HmScope(area = "מתקני ספורט",
         section = "11.12",
-        definition = ""
+        definition = "לא יהיו מתקני ספורט מאולתרים",
+        kindergarten = false
     ),
     HmScope(area = "מתקני ספורט",
-        section = "11.3",
-        definition = ""
+        section = "11.13",
+        definition = "אין להשאיר באולם מתקנים ניידים\n" +
+                "המאפשרים טיפוס )סולמות, פיגומים וכד('\n" +
+                "לא יהיו מתקנים ניידים המאפשרים טיפוס\n" +
+                ")סולמות, פיגומים וכו('\n" +
+                "אין לאחסן ציוד שאינו שייך למהות תפקוד\n" +
+                "האולם",
+        kindergarten = false
     ),
     //פרק 12
     HmScope(area = "מעברים ויציאות",
         section = "12.1",
-        definition = ""
+        definition = "במעבדה יהיה לפחות מעבר אחד בעל רוחב\n" +
+                "מזערי של  0.9מטר\n" +
+                "מעבר זה יהיה חופשי מכל מכשול, ושום\n" +
+                "ריהוט וציוד לא ימצאו בו.\n" +
+                "במעבדה לכימיה תהיינה לפחות שתי דלתות,\n" +
+                "אשר תיפתחנה כלפי חוץ, עם קשר רצוף\n" +
+                "למעבר.\n" +
+                "דלת היציאה מחדר ההכנה המחובר למעבדה\n" +
+                "תיחשב כדלת יציאה.(\n" +
+                "במעבדות לפיסיקה ולביולוגיה מספיקה דלת\n" +
+                "אחת.  0.9מטר"
     ),
     HmScope(area = "מעברים ויציאות",
         section = "12.2",
-        definition = ""
+        definition = "בחדרי הכנה הצמודים לחדרי מעבדות\n" +
+                "תיבנה יציאה נפרדת )שלא דרך חדר\n" +
+                "המעבדה(. הדלתות בחדרי ההכנה תיפתחנה\n" +
+                "כלפי-חוץ )כלפי המעבדה וכלפי המסדרון(,\n" +
+                "הדלתות תהיינה מסוג \" עמיד אש \" על פי\n" +
+                "תקן ישראלי מתאים.",
+        kindergarten = false,
+        boardingSchool = false
     ),
     //
     HmScope(area = "צנרות",
         section = "12.3",
-        definition = ""
+        definition = "לא יהיה שימוש בצנרת או בבידוד העשויים\n" +
+                "מחומרים פלסטיים, רק במקרים מיוחדים",
+        kindergarten = false,
+        boardingSchool = false
     ),
     HmScope(area = "צנרות",
         section = "12.4",
-        definition = ""
+        definition = "לכל סוגי הצנרת )חשמל, מים, אוויר דחוס,\n" +
+                "גז וכיו\"ב( המגיעים לשני מקומות, לפחות,\n" +
+                "בתוך חדר המעבדה, חייב להיות מתג או ברז\n" +
+                "ניתוק כללי. ברז או מתג זה יהיה נפרד עבור\n" +
+                "אותו חדר ומותקן ליד שולחן המורה.\n" +
+                "המתגים והברזים חייבים להיות נגישים\n" +
+                "וקלים לאבחנה\n" +
+                "בצנרת מים, גז , יש לסמן את כיוון הזרימה",
+        kindergarten = false,
+        boardingSchool = false
     ),
     HmScope(area = "כימיקלים",
         section = "12.5",
-        definition = ""
+        definition = "כימיקלים יאוחסנו במחסן נפרד, בארונות\n" +
+                "מתאימים לקבוצת סיכון של חומרים זהה,\n" +
+                "שיהיה מאוורר היטב, הן בחלקו התחתון והן\n" +
+                "בחלקו העליון.",
+        kindergarten = false,
+        boardingSchool = false
     ),
     HmScope(area = "כימיקלים",
         section = "12.6",
-        definition = ""
+        definition = "באגף חדרי מעבדות שבו שלוש מעבדות\n" +
+                "ויותר יוקצה מחסן כימיקלים נפרד. דלתות\n" +
+                "המחסן תצוידנה במנעול צילינדר. כן יהיה\n" +
+                "מחסן כימיקלים למעבדה שבה יש מגמה\n" +
+                "לכימיה או מגמה ביולוגיה.",
+        kindergarten = false,
+        boardingSchool = false
     ),
     HmScope(area = "גז",
         section = "12.7",
-        definition = ""
+        definition = "גז דחוס יסופק דרך צנרת בלחץ נמוך, אשר\n" +
+                "תסתעף ממרכז האספקה שבו ימוקמו\n" +
+                "הגלילים בארון ייעודי נעול.",
+        kindergarten = false,
+        boardingSchool = false
     ),
     HmScope(area = "גז",
         section = "12.8",
-        definition = ""
+        definition = "לילי גז )גזיות( יוצבו על גבי בסיסים\n" +
+                "מתאימים, יהיו מקובעים ומאובטחים\n" +
+                "למקומם למניעת נפילתם.",
+        kindergarten = false,
+        boardingSchool = false
     ),
     HmScope(area = "גז",
         section = "12.9",
-        definition = ""
+        definition = "גלילי גז יוצבו במקום מאוורר ומוצל וללא\n" +
+                "גישה חופשית.",
+        kindergarten = false,
+        boardingSchool = false
     ),
     //
     HmScope(area = "מנדף",
         section = "12.10",
-        definition = ""
+        definition = "כל מנגנוני ההפעלה )ברזים ומתגים\n" +
+                "למיניהם( של מערכות השירות )מים, גז,\n" +
+                "חשמל( יהיו מחוץ למנדף.",
+        kindergarten = false,
+        boardingSchool = false
     ),
     HmScope(area = "מנדף",
         section = "12.11",
-        definition = ""
+        definition = "החלון המתרומם יובטח מפני נפילה מקרית. נורת סימון אדומה תצביע על מצבו התפעולי\n" +
+                "של המתקן.",
+        kindergarten = false,
+        boardingSchool = false
     ),
     //
     HmScope(area = "ציוד מגן אישי",
         section = "12.12",
-        definition = ""
+        definition = "ליד כל חדר או קבוצה של חדרי מעבדה\n" +
+                "יותקן ארון ובו ציוד-מגן אישי, ציוד עזרה-\n" +
+                "ראשונה וכלים לאיסוף ולטיהור-חירום של\n" +
+                "שפכים מעבדתיים.",
+        kindergarten = false,
+        boardingSchool = false
     ),
     //
     HmScope(area = "תאורת חירום",
         section = "12.13",
-        definition = ""
+        definition = "בחדרי מעבדה המופעלים גם בשעות\n" +
+                "החשכה, וכן לאורך דרכי המילוט מהם,\n" +
+                "יותקנו גופים של תאורת-חירום.",
+        kindergarten = false,
+        boardingSchool = false
     ),
     //
     HmScope(area = "שטיפת עיניים",
         section = "12.14",
-        definition = ""
+        definition = "בכל מעבדה לכימיה תותקן עמדה תקנית\n" +
+                "לשטיפת עיניים)עם כיסוי למניעת הצטברות\n" +
+                "אבק(, משולב או נפרד ממקלחת החירום\n" +
+                "ויהיו מנוקזים אל מערכת הניקוז.",
+        kindergarten = false,
+        boardingSchool = false
     ),
     //
     //todo לבדוק אם הסעיפים האלה תחת אותו תחום או שפשוט היה חסר קו הפרדה 12.15 12.16
     HmScope(area = "מקלחת חירום",
         section = "12.15",
-        definition = ""
+        definition = "בקרבת פתח היציאה מהמעבדות לכימיה\n" +
+                "ומהמעבדות לביולוגיה ובחדר ההכנה, שבהן\n" +
+                "מרבים להשתמש בכימיקלים, תמצא\n" +
+                "מקלחת-חירום תקנית.",
+        kindergarten = false,
+        boardingSchool = false
     ),
     HmScope(area = "תנאי סביבה בחדר הכנה",
         section = "12.16",
-        definition = ""
+        definition = "חדר הכנה יצויד בוונטה  10 /8צול ומזגן\n" +
+                "מתאים.",
+        kindergarten = false,
+        boardingSchool = false
     ),
     //
     HmScope(area = "תנאי סביבה בכיתת מעבדה",
         section = "12.17",
-        definition = ""
+        definition = "כיתת מעבדה תצויד בשתי וונטיות\n" +
+                "מתאימות.",
+        kindergarten = false,
+        boardingSchool = false
     ),
     //
     HmScope(area = "תאורה",
         section = "12.18",
-        definition = ""
+        definition = "התאורה בכיתת מעבדה תהיה מסוג תאורה\n" +
+                "מוגנת מים.",
+        kindergarten = false,
+        boardingSchool = false
     ),
     HmScope(area = "תאורה",
         section = "12.19",
-        definition = ""
+        definition = "תאורה במחסן כימיקלים תהיה מסוג מוגן\n" +
+                "התפוצצות.",
+        kindergarten = false,
+        boardingSchool = false
     ),
+    //
     HmScope(area = "חשמל",
         section = "12.20",
-        definition = ""
+        definition = "כול שקעי החשמל בחדר ההכנה ובכיתות\n" +
+                "המעבדה יהיו מסוג מוגן מים.",
+        kindergarten = false,
+        boardingSchool = false
     ),
+    //
     HmScope(area = "פסולת כימית",
         section = "12.21",
-        definition = ""
+        definition = "בחדר הכנה תהיה עמדה לאחסון פסולת כימית. מתאימה, מסומנת .",
+        kindergarten = false,
+        boardingSchool = false
     ),
     // פרק 13
 
     HmScope(area = "ציוד מגן",
         section = "13.1",
-        definition = ""
+        definition = "יהיה ציוד מגן אישי מתאים למשימה,\n" +
+                "והוראות בטיחות והפעלה יהיו תלויים קרוב\n" +
+                "לעמדה.",
+        kindergarten = false,
+        boardingSchool = false
     ),
     //
     HmScope(area = "דלתות אש",
         section = "13.2",
-        definition = ""
+        definition = "בחדרי מלאכה שקיימים בהם סיכוני-אש\n" +
+                "פוטנציאליים תהיינה הדלתות בעלות\n" +
+                "עמידות-אש מזערית של חצי שעה.",
+        kindergarten = false,
+        boardingSchool = false
     ),
     //
     HmScope(area = "מעבר",
         section = "13.3",
-        definition = ""
+        definition = "לאורך חדר המלאכה ימוקם מעבר מרכזי\n" +
+                "ברוחב מטר אחד, שיסתיים בפתח היציאה.",
+        kindergarten = false,
+        boardingSchool = false
     ),
     //
     HmScope(area = "חלקים נעים",
         section = "13.4",
-        definition = ""
+        definition = "החלקים הנעים והסובבים של מכונות יוגנו\n" +
+                "לבטח. אין להסיר מגנים מחלקים נעים\n" +
+                "ומסתובבים.",
+        kindergarten = false,
+        boardingSchool = false
     ),
     //
     HmScope(area = "חשמל",
         section = "13.5",
-        definition = ""
+        definition = "לא יוזנו מכונות ומכשירים ממעגלי מאור.",
+        kindergarten = false,
+        boardingSchool = false
     )
     ,HmScope(area = "חשמל",
         section = "13.6",
-        definition = ""
+        definition = "המפסק הראשי יותקן בקרבת הכניסה\n" +
+                "ותאופשר נעילתו במצב \"מופסק\" ).(",
+        kindergarten = false,
+        boardingSchool = false
     )
     ,HmScope(area = "חשמל",
         section = "13.7",
-        definition = ""
+        definition = "לאורך הקירות, במרווחים שאינם עולים על\n" +
+                " 5מ' יותקנו לחצני חירום בולטים להפסקת\n" +
+                "הזרם בלבד.",
+        kindergarten = false,
+        boardingSchool = false
     )
     ,HmScope(area = "חשמל",
         section = "13.8",
-        definition = ""
+        definition = "כל מכונה או מתקן חשמלי קבועים יצוידו -\n" +
+                "נוסף למפסק החשמלי המקורי שלהם - גם\n" +
+                "במפסק שיורכב על הקיר או על העמוד\n" +
+                "הסמוך.",
+        kindergarten = false,
+        boardingSchool = false
     ),
     //
     HmScope(area = "מכונות וציוד",
         section = "13.9",
-        definition = ""
+        definition = "המכונות תמוקמנה באופן שהפריטים\n" +
+                "הארוכים המובאים לעיבוד לא יפריעו\n" +
+                "לפעולתן של מכונות אחרות ולא יבלטו לתוך\n" +
+                "המעבר. מכונות המתיזות שבבים, סיגים\n" +
+                "וכיו\"ב )כגון משחזת, כרסומת, מקצוע\n" +
+                "וכיו\"ב( תמוקמנה במרחק סביר מן המעברים\n" +
+                "ומשולחנות העבודה, וכיוון התזת השבבים\n" +
+                "וכיו\"ב יהיה כלפי הקיר.\n" +
+                "המרחק המזערי בין מכונה למכונה יהיה 90\n" +
+                "ס\"מ.\n" +
+                "כל הציוד הנייח חייב להיות יציב ומקובע.",
+        kindergarten = false,
+        boardingSchool = false
     ),
     HmScope(area = "מכונות וציוד",
         section = "13.10",
-        definition = ""
+        definition = "תימנע הפעלה בלתי מבוקרת של ציוד מסוכן\n" +
+                "בחדרי המלאכה, על ידי גידורו, נעילתו או\n" +
+                "ריתוק מתגיו או ברזיו של ציוד כזה במצב\n" +
+                "\"מופסק\" או \"סגור\".\n" +
+                "נדרש להציב הוראות בטיחות להפעלת ציוד\n" +
+                "בחדר מלאכה.",
+        kindergarten = false,
+        boardingSchool = false
     ),
     HmScope(area = "מכונות וציוד",
         section = "13.11",
-        definition = ""
+        definition = "על מכונות הפועלות באופן אוטומטי, יש\n" +
+                "להתקין שילוט\n" +
+                "\"הפעלה אוטומטית\"",
+        kindergarten = false,
     ),
     HmScope(area = "מכונות וציוד",
         section = "13.12",
-        definition = ""
+        definition = "תנורי קרמיקה יותקנו בחדרי ספח מיוחדים,\n" +
+                "או באגף נפרד בחדרי המלאכה שבהם סידורי\n" +
+                "אוורור.",
+        kindergarten = false,
+        boardingSchool = false
     ),
     //
     HmScope(area = "רעש",
         section = "13.13",
-        definition = ""
+        definition = "בחדרי מלאכה רועשים תקוימנה בדיקות\n" +
+                "רעש תקופתיות\n" +
+                "ציוד ומיכון מרעיש )מדחסים, גנרטורים וכו('\n" +
+                "יופרד מחלל חדר המלאכה.",
+        kindergarten = false,
+        boardingSchool = false
     ),
     HmScope(area = "רעש",
         section = "13.14",
-        definition = ""
+        definition = "בחדרי המלאכה , במקומות שנקבע כי קיים בהם רעש מזיק, יש להציב שילוט אזהרה\n" +
+                "לרעש מזיק, שילוט המורה על שימוש\n" +
+                "באמצעי מגן מתאימים וכן, סידורים\n" +
+                "להקצאת אטמי אוזניים ו/ או אזניות.",
+        kindergarten = false,
+        boardingSchool = false
     ),
     //
     HmScope(area = "הסמכות",
         section = "13.15",
-        definition = ""
+        definition = "מכונות ומכשירים במסגרייה/נגריה/מוסך\n" +
+                "ובית מלאכה אחר יופעלו על ידי עובדים\n" +
+                "שהוסמכו לעבודה וזוהי עבודתם העיקרית.\n" +
+                "הנושא זה ייבדק פעם בשנה על ידי הממונה\n" +
+                "על הבטיחות."
+        ,
+        kindergarten = false,
+        boardingSchool = false,
+        school = false
     ),
     // פרק 14
 
     HmScope(area = "תכנון",
         section = "14.1",
-        definition = ""
+        definition = "תכנון המוצג והתקנתו יאושרו בידי מהנדס\n" +
+                "מבנים."
     ),
     //
     HmScope(area = "גובה",
         section = "14.2",
-        definition = ""
+        definition = "הגובה המרבי של המוצג לא יעלה על  2.5מ'\n" +
+                "והרוחב המרבי של צלעות הבסיס לא יעלה\n" +
+                "על  3מ'."
     ),
     //
     HmScope(area = "מפגע",
         section = "14.3",
-        definition = ""
+        definition = "המוצג ומיקומו לא יהיו מפגע בטיחותי ולא\n" +
+                "תהיינה בו פינות חדות, בליטות חדות או\n" +
+                "זוויות חדות."
     ),
     //
     HmScope(area = "חשמל ומים",
         section = "14.4",
-        definition = ""
+        definition = "מתקן המשלב חשמל ומים חייב באישור\n" +
+                "ובפיקוח של מהנדס חשמל ומהנדס\n" +
+                "אינסטלציה, ועליו לכלול גם תאורה\n" +
+                "חיצונית ואפשרות להתזת מים חיצונית\n" +
+                "ולניקוז."
     ),
     //
     HmScope(area = "שילוט",
         section = "14.5",
-        definition = ""
+        definition = "כל מוצג יתוחם וישולט בשלט האוסר על\n" +
+                "טיפוס."
     ),
     //
     HmScope(area = "מרחק מהכניסה",
         section = "14.6",
-        definition = ""
+        definition = "מוצג שיותקן ליד הכניסה למוסד יותקן\n" +
+                "במרחק של  3מ' לפחות מהכניסה, באופן\n" +
+                "שהוא לא יהיה מפגע בכניסה למוסד או\n" +
+                "ביציאה ממנו."
     ),
     //
     HmScope(area = "מרחק מהחלונות",
         section = "14.7",
-        definition = ""
+        definition = "מוצג שיותקן בחצר המוסד יותקן לפחות במרחק של  3מ' מחלונות המבנה."
     ),
 
     // פרק 15
     HmScope(area = "דלתות",
         section = "15.1",
-        definition = ""
+        definition = "דלתות המטבח תיפתחנה כלפי חוץ.",
+        kindergarten = false
     ),
     //
     HmScope(area = "דלתות",
-        section = "15.1",
-        definition = ""
+        section = "15.2",
+        definition = "המטבח יהיה מאוורר.",
+        kindergarten = false
     ),
     //
     HmScope(area = "דלתות",
-        section = "15.1",
-        definition = ""
+        section = "15.3",
+        definition = "תעלות ניקוז תהיינה שקועות ומוגנות ברשת\n" +
+                "בגובה פני הרצפה",
+        kindergarten = false
     ),
     //
     HmScope(area = "דלתות",
-        section = "15.1",
-        definition = ""
+        section = "15.4",
+        definition = "לא יאוחסנו במטבח חומרים מתלקחים.",
+        kindergarten = false
     ),
     HmScope(area = "דלתות",
-        section = "15.1",
-        definition = ""
+        section = "15.5",
+        definition = "חומרי ניקוי במטבח יאוחסנו בארון סגור\n" +
+                "ונעול שיסומן עליו \"זהירות! חומרי-\n" +
+                "ניקוי!\"",
+        kindergarten = false
     ),
     HmScope(area = "דלתות",
-        section = "15.1",
-        definition = ""
-    ),
-    //
-    HmScope(area = "דלתות",
-        section = "15.1",
-        definition = ""
-    ),
-    //
-    HmScope(area = "דלתות",
-        section = "15.1",
-        definition = ""
-    ),
-    HmScope(area = "דלתות",
-        section = "15.1",
-        definition = ""
+        section = "15.6",
+        definition = "חומרי הניקוי יהיו באריזתם במקורית,\n" +
+                "ויאוחסנו מחוץ למבנה, במקום נעול\n" +
+                "ומאוורר.",
+        kindergarten = false
     ),
     //
     HmScope(area = "דלתות",
-        section = "15.1",
-        definition = ""
+        section = "15.7",
+        definition = "במטבח יהיה ציוד עזרה ראשונה תקין, נגיש\n" +
+                "ובמקום בולט.",
+        kindergarten = false
+    ),
+    //
+    HmScope(area = "דלתות",
+        section = "15.8",
+        definition = "המטבח וחדר האוכל לא יהיו במקלט או\n" +
+                "בחדר תת-קרקעי.",
+        kindergarten = false
+    ),
+    HmScope(area = "דלתות",
+        section = "15.9",
+        definition = "חדר האוכל, המטבח וחדר-החלוקה יהיו\n" +
+                "במפלס אחד, ללא מדרגות ביניהם.",
+        kindergarten = false
+    ),
+    //
+    HmScope(area = "דלתות",
+        section = "15.10",
+        definition = "בכל מטבח יהיה מטפה ובו  6ק\"ג של אבקה,\n" +
+                "נגיש ובמקום בולט לעין.\n" +
+                "מטף נוסף ימוקם בכניסה למטבח ולמחסן.",
+        kindergarten = false
     ),
     //
     HmScope(area = "מיגון מכונות",
         section = "15.11",
-        definition = ""
+        definition = "כל המכונות במטבח תהיינה מוגנות באופן בטיחותי.",
+        kindergarten = false
     ),
     HmScope(area = "מיגון מכונות",
         section = "15.12",
-        definition = ""
+        definition = "את המכונה לחיתוך לחם אפשר יהיה\n" +
+                "להפעיל רק עם סגירת מכסה ההגנה של\n" +
+                "אזור הסכינים.",
+        kindergarten = false
     ),
     HmScope(area = "מיגון מכונות",
         section = "15.13",
-        definition = ""
+        definition = "סירים מתהפכים יהיו מאובטחים באופן\n" +
+                "שתימנע התהפכותם בפעולה אקראית.",
+        kindergarten = false
     ),
     //
     HmScope(area = "אחסון",
         section = "15.14",
-        definition = ""
+        definition = "תכולת המחסן תאוחסן על מדפים, החפצים\n" +
+                "הכבדים למטה והקלים למעלה.",
+        kindergarten = false
     ),
     HmScope(area = "אחסון",
         section = "15.15",
-        definition = ""
+        definition = "כלי זכוכית יאוחסנו באופן שתימנע נפילתם.",
+        kindergarten = false
     ),
     HmScope(area = "אחסון",
         section = "15.16",
-        definition = ""
+        definition = "תהיה הפרדה בין חומרי-ניקוי וחיטוי, בין\n" +
+                "מזון ובין אריזות ריקות.",
+        kindergarten = false
     ),
     //
     HmScope(area = "חדר קירור",
         section = "15.17",
-        definition = ""
+        definition = "לדלת חדר הקירור יהיה מתקן המאפשר\n" +
+                "פתיחה מבפנים, כפתור אזעקה מבפנים\n" +
+                "ופעמון אזעקה מבחוץ שאפשר לשמוע אותו\n" +
+                "למרחוק, גם בתנאי רעש.",
+        kindergarten = false
     ),
     //
     HmScope(area = "תלמידים",
         section = "15.19",
-        definition = ""
+        definition = "לא יועסקו תלמידים בעבודות מטבח.",
+        kindergarten = false
     ),
     // פרק 16
     HmScope(area = "כיבוי אש",
         section = "16.1",
-        definition = ""
+        definition = "בחדר האוכל יהיה ציוד כיבוי-אש תקין, נגיש גלוי וקרוב לפתחי היציאה.",
+        kindergarten = false
     ),
     //
     HmScope(area = "דרכי מילוט",
         section = "16.2",
-        definition = ""
+        definition = "שלט מואר במילה  \"יציאה\" יהיה מעל דלתות היציאה ",
+        kindergarten = false
     ),
     //
     HmScope(area = "תאורת חירום",
         section = "16.3",
-        definition = ""
+        definition = "בחדר האוכל תהינה תאורות חירום.",
+        kindergarten = false
     ),
     //
     HmScope(area = "סורגים",
         section = "16.4",
-        definition = ""
+        definition = "החלונות בקומת הקרקע ובחדרים בהם יש צורך\n" +
+                "בסורגים, למניעת פריצה דרכם. בכל כתה או\n" +
+                "אולם יהיה לפחות פתח מילוט אחד באחד\n" +
+                "הסורגים העונים על הדרישות האלה:\n" +
+                "א. פתח המילוט בסורג יפתח כלפי חוץ ויהיה\n" +
+                "במידות מינימום של  0.80מ' )רוחב( ו –\n" +
+                " 1.00מ' )גובה.(\n" +
+                "ב. צבע הסורג המשמש כפתח מילוט יהיה\n" +
+                "מסוג זוהר, פולט אור משני הצדדים.\n" +
+                "ג. מעל החלון יותקן שלט זוהר ועליו כתוב \"\n" +
+                "חלון חילוץ\".\n" +
+                "ד. מפתח המנעול שעל הסורג ימצא בתוך\n" +
+                "קופסת ניפוץ צבועה באדום שתיקבע\n" +
+                "במרחק לא גדול מהמנעול שעל הסורג.\n" +
+                "מפתחות נוספים מאותו הסוג )מאסטר(\n" +
+                "יהיו בארון המפתחות של מוסד החינוך\n" +
+                "ובידי המורה וכל אדם אחראי לחדר.\n" +
+                "קופסת הניפוץ תכיל פטישון להוצאה\n" +
+                "מהירה של המפתח בשעת חירום.",
+        kindergarten = false
     ),
 
 
