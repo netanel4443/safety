@@ -1,19 +1,45 @@
 <resources>
     <string name="app_name">security</string>
     <string name="priority">קדימות</string>
+    <string name="study_place_details">פרטי המוסד</string>
     <string name="finding">ממצא</string>
     <string name="requirement">דרישה</string>
     <string name="instructions">הנחיות</string>
-    <string name="confirm">אישור</string>
     <string name="tester_details">פרטי הבודק</string>
     <string name="institution_symbol">סמל המוסד</string>
     <string name="city">עיר</string>
     <string name="place_name">שם המוסד</string>
+    <string name="symbol">סמל המוסד</string>
+    <string name="address">כתובת המוסד</string>
+    <string name="ownership">בעלות</string>
+    <string name="students_number">מספר תלמידים</string>
+    <string name="founding_year">שנת הקמה</string>
+    <string name="study_place_phone">טלפון המוסד</string>
+    <string name="manager_details">פרטי המנהל/ת</string>
+    <string name="inspector_details">פרטי המפקח/ת הכללי</string>
+    <string name="study_place_participants">משתתפים מטעם המוסד החינוכי</string>
+    <string name="authority_participants">שתתפים מטעם הרשות/הבעלות</string>
     <string name="date">תאריך</string>
+    <string name="school">בית ספר</string>
+    <string name="kindergarten">גן ילדים</string>
+    <string name="boarding_school">פנימייה</string>
+    <string name="youth_village">כפר נוער</string>
+    <string name="educationalInstitution">מוסד לימודי</string>
+    <string name="confirm">אישור</string>
+    <string name="cancel">ביטול</string>
+    <string name="edit">ערוך</string>
+
 
     <string-array name="priority_array">
         <item>0</item>
         <item>1</item>
         <item>2</item>
+    </string-array>
+
+    <string-array name="hozer_types">
+        <item >@string/school</item>
+        <item>@string/kindergarten</item>
+        <item>@string/boarding_school</item>
+        <item>@string/youth_village</item>
     </string-array>
 </resources>

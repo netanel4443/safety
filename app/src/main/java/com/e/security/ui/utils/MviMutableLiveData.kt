@@ -1,9 +1,9 @@
 package com.e.security.ui.utils
 
-import androidx.lifecycle.MutableLiveData
+import com.e.security.ui.utils.livedata.MviLiveData
 
 class MviMutableLiveData<T>(private var initialState: T) :
-        MutableLiveData<PrevAndCurrentState<T>>(PrevAndCurrentState(initialState,initialState)) {
+        MviLiveData<PrevAndCurrentState<T>>(PrevAndCurrentState(initialState,initialState)) {
 
     private var state:T=initialState
 

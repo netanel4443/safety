@@ -10,31 +10,22 @@ fun <T> Collection<T>.differentItems(secondCollection: Collection<T>): List<T> {
 }
 
 private fun <T> getDifferentItems(
-    biggerCollection: Collection<T>,
-    smallerCollection: Collection<T>
+    firstCollection: Collection<T>,
+    secondCollection: Collection<T>
 ): List<T> {
     val al = ArrayList<T>()
-    biggerCollection.forEach { value ->
-        if (!smallerCollection.contains(value)) {
+    firstCollection.forEach { value ->
+        if (!secondCollection.contains(value)) {
             al.add(value)
         }
     }
     return al
 }
 
-fun <T> Collection<T>.oldAndNewItemsPairs(oldCollection: Collection<T>): List<Pair<T,T>> {
-    return if (this.size != oldCollection.size) return ArrayList()
-    else {
-        val al = ArrayList<Pair<T,T>>()
-        forEachIndexed { index,value ->
-            val oldItem=oldCollection.elementAt(index)!!
-            if (!oldItem.equals(value)) {
-                al.add(oldItem to value)
-            }
-        }
-        al
-    }
-}
+data class OldItemNewItem<T>(
+    var old:T,
+    var new:T
+)
 
 
 

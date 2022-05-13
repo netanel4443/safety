@@ -11,4 +11,15 @@ open class GeneralReportDetailsRlmObj:RealmObject() {
     var institutionSymbol=""
     var date:String=""
     var testerDetails:String=""
+    var ownership:String=""
+    var studentsNumber:String=""
+    var address:String=""
+    var yearOfFounding:String=""
+    var studyPlacePhone:String=""
+    var managerDetails:String=""
+    var inspectorDetails:String=""
+    var studyPlaceParticipants:String=""
+    var authorityParticipants:String=""
+
+
 }

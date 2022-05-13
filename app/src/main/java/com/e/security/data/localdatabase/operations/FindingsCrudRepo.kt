@@ -8,6 +8,7 @@ import com.e.security.data.objects.FindingRlmObj
 import com.e.security.data.objects.GeneralReportDetailsRlmObj
 import com.e.security.data.objects.StudyPlaceRlmObj
 import com.e.security.di.scopes.ApplicationScope
+import com.e.security.utils.printIfDbg
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import org.bson.types.ObjectId
@@ -32,7 +33,7 @@ class FindingsCrudRepo @Inject constructor() {
                     newFinding.requirement = finding.requirement
                     newFinding.section = finding.section
                     newFinding.sectionInAssessmentList = finding.sectionInAssessmentList
-//                    newFinding.testArea = finding.testArea
+                    newFinding.priority=finding.priority
 
                     findingListRlmObj!!.findingList.add(newFinding)
                     realm.insertOrUpdate(findingListRlmObj)
@@ -46,7 +47,7 @@ class FindingsCrudRepo @Inject constructor() {
         }
     }
 
-    fun createNewStudyPlace(id:ObjectId,placeGeneralDetails: GeneralReportDetailsDataHolder): Single<String> {
+    fun createNewStudyPlace(id:ObjectId, placeDetails: ReportDetailsDataHolder): Single<String> {
         return Single.create { emitter ->
             try {
                 realm.executeTransactionAsync { realm ->
@@ -58,12 +59,21 @@ class FindingsCrudRepo @Inject constructor() {
                         GeneralReportDetailsRlmObj::class.java
                     )
 
-                    generalReportDetailsRlmObj.city = placeGeneralDetails.city
-                    generalReportDetailsRlmObj.date = placeGeneralDetails.date
-                    generalReportDetailsRlmObj.institutionSymbol =
-                        placeGeneralDetails.institutionSymbol
-                    generalReportDetailsRlmObj.placeName = placeGeneralDetails.placeName
-                    generalReportDetailsRlmObj.testerDetails = placeGeneralDetails.testerDetails
+                    generalReportDetailsRlmObj.city = placeDetails.city
+                    generalReportDetailsRlmObj.date = placeDetails.date
+                    generalReportDetailsRlmObj.institutionSymbol = placeDetails.institutionSymbol
+                    generalReportDetailsRlmObj.placeName = placeDetails.placeName
+                    generalReportDetailsRlmObj.testerDetails = placeDetails.testerDetails
+                    generalReportDetailsRlmObj.address=placeDetails.address
+                    generalReportDetailsRlmObj.studyPlaceParticipants=placeDetails.studyPlaceParticipants
+                    generalReportDetailsRlmObj.authorityParticipants=placeDetails.authorityParticipants
+                    generalReportDetailsRlmObj.inspectorDetails=placeDetails.inspectorDetails
+                    generalReportDetailsRlmObj.managerDetails=placeDetails.managerDetails
+                    generalReportDetailsRlmObj.ownership=placeDetails.ownership
+                    generalReportDetailsRlmObj.studentsNumber=placeDetails.studentsNumber
+                    generalReportDetailsRlmObj.yearOfFounding=placeDetails.yearOfFounding
+                    generalReportDetailsRlmObj.studyPlacePhone=placeDetails.studyPlacePhone
+
                     obj.generalReportDetailsRlmObj = generalReportDetailsRlmObj
                     realm.insertOrUpdate(obj)
                     emitter.onSuccess("success")
@@ -75,7 +85,7 @@ class FindingsCrudRepo @Inject constructor() {
         }
     }
 
-    fun createNewFindingList(placeId: ObjectId, id: ObjectId, date: String): Completable {
+    fun createNewReport(placeId: ObjectId, id: ObjectId, date: String): Completable {
         return Completable.create { emitter ->
             try {
                 realm.executeTransactionAsync { realm ->
@@ -107,6 +117,7 @@ class FindingsCrudRepo @Inject constructor() {
                     rlmObj.requirement = finding.requirement
                     rlmObj.section = finding.section
                     rlmObj.sectionInAssessmentList = finding.sectionInAssessmentList
+                    rlmObj.priority=finding.priority
 
                     emitter.onComplete()
                 }
@@ -127,7 +138,7 @@ class FindingsCrudRepo @Inject constructor() {
                 val generalReportDetailsRlmObj = studyPlaceRlmObj.generalReportDetailsRlmObj
                 studyPlaceDataHolder.id = studyPlaceRlmObj._id
 
-                studyPlaceDataHolder.generalReportDetails = GeneralReportDetailsDataHolder(
+                studyPlaceDataHolder.reportDetails = ReportDetailsDataHolder(
                     city = generalReportDetailsRlmObj!!.city,
                     placeName = generalReportDetailsRlmObj.placeName,
                     institutionSymbol = generalReportDetailsRlmObj.institutionSymbol,
@@ -135,11 +146,11 @@ class FindingsCrudRepo @Inject constructor() {
                     testerDetails = generalReportDetailsRlmObj.testerDetails,
                 )
 
-                val reportArrayList = HashMap<ObjectId, FindingListDataHolder>()
+                val reportArrayList = HashMap<ObjectId, ReportDataHolder>()
 
                 studyPlaceRlmObj.reportList.forEach { findingListRlmObj ->
 
-                    val findingListDataHolder = FindingListDataHolder()
+                    val findingListDataHolder = ReportDataHolder()
                     findingListDataHolder.id = findingListRlmObj._id
                     findingListDataHolder.date = findingListRlmObj.date
 
@@ -147,7 +158,7 @@ class FindingsCrudRepo @Inject constructor() {
                         val findingsDataObj = FindingDataHolder(
                             id = findingRealmObj._id,
                             section = findingRealmObj.section,
-//                            testArea = findingRealmObj.testArea,
+                            priority = findingRealmObj.priority,
                             sectionInAssessmentList = findingRealmObj.sectionInAssessmentList,
                             requirement = findingRealmObj.requirement,
                             problem = findingRealmObj.problem,
@@ -162,6 +173,7 @@ class FindingsCrudRepo @Inject constructor() {
                 }
                 hashMap[studyPlaceDataHolder.id]=studyPlaceDataHolder
             }
+            printIfDbg("crud"," size ${hashMap.size}")
             hashMap
         }
     }

@@ -3,8 +3,8 @@ package com.e.security.data.writetoword
 import android.content.Context
 import android.net.Uri
 import com.e.security.data.FindingDataHolder
-import com.e.security.data.FindingListDataHolder
-import com.e.security.data.GeneralReportDetailsDataHolder
+import com.e.security.data.ReportDataHolder
+import com.e.security.data.ReportDetailsDataHolder
 import com.e.security.utils.printErrorIfDbg
 import com.e.security.utils.printIfDbg
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -28,17 +28,17 @@ class WriteToWord(private val context: Context) {
     private var run:XWPFRun?=null
     private var numID:BigInteger?=null
 
-    fun exportData(findingListDataHolder: FindingListDataHolder,
-                   generalDetails: GeneralReportDetailsDataHolder):Completable{
+    fun exportData(reportDataHolder: ReportDataHolder,
+                   details: ReportDetailsDataHolder):Completable{
 
          return   Completable.fromAction {
 
 
              document = XWPFDocument()
 
-             writeGeneralDetails(generalDetails)
+             writeGeneralDetails(details)
 
-             findingListDataHolder.findingArr.forEach {
+             reportDataHolder.findingArr.forEach {
                  writeList(it.values)
              }
              saveWordFileToDirectory()
@@ -47,7 +47,7 @@ class WriteToWord(private val context: Context) {
 
     }
 
-    private fun writeGeneralDetails( generalDetails: GeneralReportDetailsDataHolder) {
+    private fun writeGeneralDetails(details: ReportDetailsDataHolder) {
         addText(ParagraphAlignment.CENTER,
         "הבטחת תנאים בטיחותיים במוסדות חינוך")
         addText(ParagraphAlignment.CENTER,"דוח סיכום מבדק")
@@ -67,10 +67,10 @@ class WriteToWord(private val context: Context) {
 
         tableRow = table!!.getRow(1)
         tableRow.getCell(0).text=""
-        tableRow.getCell(1).text =generalDetails.institutionSymbol
-        tableRow.getCell(2).text = generalDetails.placeName
+        tableRow.getCell(1).text =details.institutionSymbol
+        tableRow.getCell(2).text = details.placeName
         tableRow.getCell(3).text = ""
-        tableRow.getCell(4).text = generalDetails.city
+        tableRow.getCell(4).text = details.city
 
         createTable(2,3)
         // for sapce between tables
@@ -104,8 +104,8 @@ class WriteToWord(private val context: Context) {
         tableRow.getCell(1).text ="תאריך המבדק "
 
         tableRow = table!!.getRow(1)
-        tableRow.getCell(0).text=generalDetails.testerDetails
-        tableRow.getCell(1).text =generalDetails.date
+        tableRow.getCell(0).text=details.testerDetails
+        tableRow.getCell(1).text =details.date
 
         addText(ParagraphAlignment.LEFT,"ממצאים לפי תחומי בדיקה וקדימות טיפול")
         addText(ParagraphAlignment.LEFT,"כללי")
@@ -202,11 +202,11 @@ class WriteToWord(private val context: Context) {
         for (i in 0..3){
             findingPriorityList[ObjectId()]=fdh
         }
-        var fdlh= FindingListDataHolder()
+        var fdlh= ReportDataHolder()
         fdlh.findingArr.forEach {
             it.putAll(findingPriorityList)
         }
-        val generalDetails=GeneralReportDetailsDataHolder(
+        val generalDetails=ReportDetailsDataHolder(
             "אופקים",
             "בית ספר אשלים","1234","05.05.22","שמוליק בן יוסי"
         )

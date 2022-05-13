@@ -29,72 +29,35 @@ class CameraOperations(
     companion object {
         private const val TAG = "CameraXApp"
         private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
-        private const val REQUEST_CODE_PERMISSIONS = 10
-        private val REQUIRED_PERMISSIONS =
-            mutableListOf(
-                Manifest.permission.CAMERA
-            ).apply {
-                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
-                    add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                }
-            }.toTypedArray()
     }
+
+    val REQUIRED_PERMISSIONS =
+        mutableListOf(
+            Manifest.permission.CAMERA
+        ).apply {
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+                add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            }
+        }.toTypedArray()
 
     private var cameraExecutor: ExecutorService? = null
     private var imageCapture: ImageCapture? = null
-    var isGranted = false
 
-    fun requestPermissions(view: PreviewView) {
+    fun requestPermissions(): Boolean {
 
         cameraExecutor = Executors.newSingleThreadExecutor()
 
-        // Request camera permissions
-        if (allPermissionsGranted()) {
-
-            startCamera(view)
-        } else {
-            //todo ask for permissions
-//            initLauncher().launch(REQUIRED_PERMISSIONS)
-        }
-
+        return allPermissionsGranted()
     }
 
 
-    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
+    fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
         ContextCompat.checkSelfPermission(
             fragmentActivity, it
         ) == PackageManager.PERMISSION_GRANTED
     }
 
-//    fun initLauncher(): ActivityResultLauncher<Array<String>> {
-//
-//        return fragmentActivity.registerForActivityResult(
-//            ActivityResultContracts.RequestMultiplePermissions()
-//        ) { permissions ->
-//
-//            val granted = permissions.entries.all {
-//                it.value == true
-//            }
-//            if (granted) {
-//                isGranted=true
-//            } else {
-//                Toast.makeText(
-//                    fragmentActivity,
-//                    "Permissions not granted by the user.",
-//                    Toast.LENGTH_SHORT
-//                ).show()
-//
-//            }
-//        }
-//    }
-
-    fun startCameraIfPermissionGranter(view: PreviewView) {
-        if (isGranted) {
-            startCamera(view)
-        }
-    }
-
-    private fun startCamera(view: PreviewView) {
+    fun startCamera(view: PreviewView) {
 
         val cameraProviderFuture = ProcessCameraProvider.getInstance(fragmentActivity)
 

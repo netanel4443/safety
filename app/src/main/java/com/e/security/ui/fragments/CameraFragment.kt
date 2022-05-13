@@ -18,7 +18,7 @@ class CameraFragment:BaseSharedVmFragment() {
     private lateinit var cameraOperations: CameraOperations
     private lateinit var binding: ActivityCameraBinding
     private val viewModel: MainViewModel by lazy(this::getViewModel)
-    private  var launcher: ActivityResultLauncher<Array<String>> =registerForActivityResult()
+    private var launcher: ActivityResultLauncher<Array<String>> =registerForActivityResult()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -32,11 +32,9 @@ class CameraFragment:BaseSharedVmFragment() {
           ActivityResultContracts.RequestMultiplePermissions()
       ) { permissions ->
 
-          val granted = permissions.entries.all {
-              it.value == true
-          }
+          val granted = cameraOperations.allPermissionsGranted()
           if (granted) {
-              cameraOperations.isGranted=true
+              cameraOperations.startCamera(binding.viewFinder)
           } else {
               Toast.makeText(
                   requireActivity(),
@@ -59,13 +57,23 @@ class CameraFragment:BaseSharedVmFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        cameraOperations.requestPermissions(binding.viewFinder)
+       val bool= cameraOperations.requestPermissions()
+        if (bool){
+            cameraOperations.startCamera(binding.viewFinder)
+        }else{
+            launcher.launch(cameraOperations.REQUIRED_PERMISSIONS)
+        }
 
         binding.takePhotoBtn.setOnClickListener {
             cameraOperations.takePhoto(){
                 viewModel.setProblemImage(it)
-
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+            //todo check if it should be here or another place
+        cameraOperations.onDestroy()
     }
 }

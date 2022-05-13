@@ -8,6 +8,7 @@ import com.e.security.ui.fragments.CameraFragment
 import com.e.security.ui.fragments.CreateFindingFragment
 import com.e.security.ui.fragments.FindingsDetailsFragment
 import com.e.security.ui.fragments.StudyPlaceReportsFragment
+import com.e.security.usecase.HozerMankalUseCase
 import dagger.Subcomponent
 
 @ActivityScope
@@ -27,4 +28,5 @@ interface MainActivityComponent {
     fun inject(studyPlaceReportsFragment: StudyPlaceReportsFragment)
     fun inject(findingsDetailsFragment: FindingsDetailsFragment)
     fun inject(cameraFragment: CameraFragment)
+
 }

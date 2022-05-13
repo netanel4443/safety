@@ -9,10 +9,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.e.security.MainActivity
 import com.e.security.R
 import com.e.security.databinding.FragmentRecyclerviewAddBtnBinding
-import com.e.security.di.ApplicationComponent
 import com.e.security.ui.MainViewModel
+import com.e.security.ui.dialogs.CalendarDialog
 import com.e.security.ui.recyclerviews.GenericRecyclerviewAdapter
 import com.e.security.ui.recyclerviews.celldata.ReportVhCell
+import com.e.security.ui.recyclerviews.clicklisteners.ReportVhItemClick
 import com.e.security.ui.recyclerviews.helpers.GenericItemClickListener
 import com.e.security.ui.recyclerviews.viewholders.CreateStudyPlaceReportsVh
 import com.e.security.ui.utils.addFragment
@@ -27,6 +28,8 @@ class StudyPlaceReportsFragment : BaseSharedVmFragment() {
             GenericRecyclerviewAdapter<ReportVhCell,
                     CreateStudyPlaceReportsVh>
 
+    private var calendarDialog:CalendarDialog?=null
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         (requireActivity() as MainActivity).mainActivityComponent.inject(this)
@@ -40,11 +43,21 @@ class StudyPlaceReportsFragment : BaseSharedVmFragment() {
         return binding.root
     }
 
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initUi()
         initEffectObserver()
         initStateObserver()
         viewModel.getReportListOfChosenStudyPlace()
+    }
+
+    private fun initUi() {
+        initRecyclerView()
+
+        binding.addBtn.setOnClickListener {
+            viewModel.createNewReport()
+        }
     }
 
     private fun initStateObserver() {
@@ -74,6 +87,7 @@ class StudyPlaceReportsFragment : BaseSharedVmFragment() {
         viewModel.viewEffect.observe(viewLifecycleOwner) { effect ->
             when (effect) {
                 is Effects.StartFindingsDetailsFragment -> startFindingDetailsFragment()
+                is Effects.ShowCalendarDialog -> showCalendarDialog()
             }
         }
     }
@@ -84,23 +98,19 @@ class StudyPlaceReportsFragment : BaseSharedVmFragment() {
     }
 
 
-    private fun initUi() {
-        initRecyclerView()
-
-        binding.addBtn.setOnClickListener {
-            viewModel.createNewFindingList()
-        }
-    }
-
     private fun initRecyclerView() {
         val recyclerview = binding.recyclerview
         recyclerviewAdapter = GenericRecyclerviewAdapter(
             R.layout.report_vh_cell_design,
             CreateStudyPlaceReportsVh::class.java
         )
-        recyclerviewAdapter.setItemClickListener(object : GenericItemClickListener<ReportVhCell> {
+        recyclerviewAdapter.setItemClickListener(object : ReportVhItemClick<ReportVhCell> {
             override fun onItemClick(item: ReportVhCell) {
                 viewModel.startFindingDetailsFragment(item.id)
+            }
+
+            override fun onEditBtnClick() {
+                viewModel.showCalendarDialog()
             }
         })
         recyclerview.adapter = recyclerviewAdapter
@@ -113,5 +123,15 @@ class StudyPlaceReportsFragment : BaseSharedVmFragment() {
         recyclerview.setHasFixedSize(true)
     }
 
+    private fun showCalendarDialog() {
+        calendarDialog?.run { showDialog() } ?: createCalendarDialog()
 
+    }
+    private fun createCalendarDialog(){
+        calendarDialog= CalendarDialog(requireActivity())
+        calendarDialog!!.onClick={
+           viewModel.setReportDate()
+        }
+        calendarDialog!!.showDialog()
+    }
 }

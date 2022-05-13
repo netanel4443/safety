@@ -9,18 +9,22 @@ import android.view.WindowManager
 import android.widget.Toast
 import com.e.security.MainActivity
 import com.e.security.R
-import com.e.security.data.GeneralReportDetailsDataHolder
-import com.e.security.data.PlaceGeneralDetails
+import com.e.security.data.ReportDetailsDataHolder
 import com.e.security.databinding.StudyPlaceInfoBinding
 import com.e.security.ui.MainViewModel
 import com.e.security.ui.fragments.VmDialogFragment
-import java.util.*
+import com.e.security.ui.recyclerviews.celldata.TextViewVhCell
+import com.e.security.ui.recyclerviews.viewholders.CreateTextViewVh
+import com.e.security.ui.utils.rxjava.throttleClick
+import com.e.security.ui.viewmodels.effects.Effects
 
 class StudyPlaceInfoDialog() : VmDialogFragment() {
 
     private val viewModel: MainViewModel by lazy(this::getViewModel)
 
     private lateinit var binding: StudyPlaceInfoBinding
+    private var recyclerViewDialog: RecyclerViewDialog<TextViewVhCell>? = null
+
 
     companion object {
         const val TAG = "StudyPlaceInfoDialog"
@@ -50,33 +54,105 @@ class StudyPlaceInfoDialog() : VmDialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val binding = StudyPlaceInfoBinding.bind(view)
 
-        binding.date.text= getDate()
+        binding.educationalInstitution.setOnClickListener {
+            viewModel.showEducationalInstitutionsDialog(resources.getStringArray(R.array.hozer_types))
+        }
 
-        binding.confirmButton.setOnClickListener {
+        binding.confirmButton.throttleClick(3000) {
             val text = binding.placeNameEdittext.text.toString()
-            if (text.isNotBlank()) {
-                viewModel.createNewStudyPlace(GeneralReportDetailsDataHolder(placeName = text))
+            if (text.isNotBlank() && binding.educationalInstitution.text.isEmpty()) {
+                viewModel.createNewStudyPlace(
+                    ReportDetailsDataHolder(
+                        placeName = text,
+                        city = binding.cityEdittext.text.toString(),
+                        address = binding.address.text.toString(),
+                        ownership = binding.institutionSymbolEdittext.text.toString(),
+                        institutionSymbol = binding.institutionSymbolEdittext.text.toString(),
+                        studentsNumber = binding.studentsNumber.text.toString(),
+                        yearOfFounding = binding.foundingYear.text.toString(),
+                        studyPlacePhone = binding.studyPlacePhone.text.toString(),
+                        managerDetails = binding.managerDetails.text.toString(),
+                        inspectorDetails = binding.inspectorDetails.text.toString(),
+                        studyPlaceParticipants = binding.studyPlaceParticipants.text.toString(),
+                        authorityParticipants = binding.authorityParticipants.text.toString(),
+                        testerDetails = binding.testerDetailsEditText.text.toString()
+                    )
+                )
                 dismiss()
             } else {
                 Toast.makeText(context, "לא הוכנס טקסט", Toast.LENGTH_SHORT).show()
             }
+        }.addDisposable()
+
+
+        initStateObserver()
+        initEffectObserver()
+
+    }
+
+    private fun initEffectObserver() {
+        viewModel.viewEffect.observe(viewLifecycleOwner) { effect ->
+            when (effect) {
+                is Effects.ShowEducationalInstitutionDialog -> showEducationalInstitutionsDialog(
+                    effect.items
+                )
+
+            }
+        }
+    }
+
+
+    private fun initStateObserver() {
+        viewModel.viewState.observe(viewLifecycleOwner, { state ->
+
+            val currentState = state.currentState.studyPlaceFragmentState
+            val prevState = state.prevState.studyPlaceFragmentState
+            if (currentState != prevState) {
+                if (currentState.reportDetails.educationalInstitution !=
+                    prevState.reportDetails.educationalInstitution
+                ) {
+                    binding.educationalInstitution.text =
+                        currentState.reportDetails.educationalInstitution
+                }
+
+            }
+
+        }) { initialState ->
+            val data = initialState.currentState.studyPlaceFragmentState.reportDetails
+            binding.placeNameEdittext.setText(data.placeName)
+            binding.cityEdittext.setText(data.city)
+            binding.address.setText(data.address)
+            binding.institutionSymbolEdittext.setText(data.ownership)
+            binding.institutionSymbolEdittext.setText(data.institutionSymbol)
+            binding.studentsNumber.setText(data.studentsNumber)
+            binding.foundingYear.setText(data.yearOfFounding)
+            binding.studyPlacePhone.setText(data.studyPlacePhone)
+            binding.managerDetails.setText(data.managerDetails)
+            binding.inspectorDetails.setText(data.inspectorDetails)
+            binding.studyPlaceParticipants.setText(data.studyPlaceParticipants)
+            binding.authorityParticipants.setText(data.authorityParticipants)
+            binding.testerDetailsEditText.setText(data.testerDetails)
+            binding.educationalInstitution.text = data.educationalInstitution
+        }
+    }
+
+    private fun showEducationalInstitutionsDialog(items: List<TextViewVhCell>) {
+        recyclerViewDialog?.run { showDialog() } ?: createEducationalInstitutionsDialog(items)
+    }
+
+    private fun createEducationalInstitutionsDialog(items: List<TextViewVhCell>) {
+
+        recyclerViewDialog = RecyclerViewDialog(
+            requireActivity(),
+            CreateTextViewVh::class.java,
+            R.layout.textview_vh_cell_design
+        )
+        recyclerViewDialog!!.showDialog()
+        recyclerViewDialog!!.onClick = {
+            viewModel.changeEducationalInstitution(it.item)
         }
 
+        recyclerViewDialog!!.addItems(items)
     }
-    //todo move it from here
-    private fun getDate():String {
-        val c = Calendar.getInstance()
-        val year = c.get(Calendar.YEAR)
-        val month = c.get(Calendar.MONTH)
-        val day = c.get(Calendar.DAY_OF_MONTH)
-        return StringBuilder().append(resources.getString(R.string.date))
-            .append(day).append("/")
-            .append(month).append("/")
-            .append(year)
-            .toString()
-    }
-
-
 }

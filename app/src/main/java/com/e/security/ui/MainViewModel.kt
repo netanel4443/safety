@@ -3,44 +3,62 @@ package com.e.security.ui
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import com.e.security.data.FindingDataHolder
-import com.e.security.data.FindingListDataHolder
-import com.e.security.data.GeneralReportDetailsDataHolder
+import com.e.security.data.ReportDataHolder
+import com.e.security.data.ReportDetailsDataHolder
 import com.e.security.data.StudyPlaceDataHolder
 import com.e.security.data.localdatabase.operations.FindingsCrudRepo
 import com.e.security.di.scopes.ActivityScope
 import com.e.security.ui.recyclerviews.celldata.FindingVhCellData
 import com.e.security.ui.recyclerviews.celldata.ReportVhCell
 import com.e.security.ui.recyclerviews.celldata.StudyPlaceDataVhCell
+import com.e.security.ui.recyclerviews.celldata.TextViewVhCell
 import com.e.security.ui.states.MainViewState
 import com.e.security.ui.utils.MviMutableLiveData
 import com.e.security.ui.utils.PrevAndCurrentState
+import com.e.security.ui.utils.livedata.MviLiveData
 import com.e.security.ui.utils.livedata.SingleLiveEvent
 import com.e.security.ui.viewmodels.BaseViewModel
 import com.e.security.ui.viewmodels.effects.Effects
+import com.e.security.usecase.HozerMankalUseCase
 import com.e.security.utils.printErrorIfDbg
 import com.e.security.utils.printIfDbg
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 import org.bson.types.ObjectId
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 @ActivityScope
 class MainViewModel @Inject constructor(
-    private val crud: FindingsCrudRepo
+    private val crud: FindingsCrudRepo,
+    private val hozerMankalUSeCase: HozerMankalUseCase
 ) : BaseViewModel() {
 
     private val TAG = this.javaClass.name
     private val _viewState = MviMutableLiveData(MainViewState())
-    val viewState: LiveData<PrevAndCurrentState<MainViewState>> get() = _viewState
+    val viewState: MviLiveData<PrevAndCurrentState<MainViewState>> get() = _viewState
 
     private val _viewEffect = SingleLiveEvent<Effects>()
     val viewEffect: LiveData<Effects> get() = _viewEffect
 
     private var data=HashMap<ObjectId,StudyPlaceDataHolder>()
-
     private var chosenStudyPlaceId = ObjectId()
     private var chosenReportId = ObjectId()
     private var chosenFindingId: ObjectId = ObjectId()
+
+
+    init {
+        onViewModelCreated()
+    }
+
+    private fun onViewModelCreated(){
+        hozerMankalUSeCase.sortHozerim()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({},{ printErrorIfDbg(TAG,it.message) })
+    }
 
     fun getStudyPlacesAndTheirFindings() {
         if (data.isNotEmpty()) return
@@ -103,8 +121,8 @@ class MainViewModel @Inject constructor(
         data.forEach { _, value->
             val obj = StudyPlaceDataVhCell(
                 value.id,
-                value.generalReportDetails.placeName,
-                value.generalReportDetails.city
+                value.reportDetails.placeName,
+                value.reportDetails.city
             )
             tmpArray.add(obj)
         }
@@ -115,13 +133,13 @@ class MainViewModel @Inject constructor(
 
     }
 
-    fun createNewFindingList() {
+    fun createNewReport() {
         val date = getDate()
         val reportListId = ObjectId()
-        crud.createNewFindingList(chosenStudyPlaceId, reportListId, date)
+        crud.createNewReport(chosenStudyPlaceId, reportListId, date)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                val newReport=FindingListDataHolder()
+                val newReport=ReportDataHolder()
                 newReport.id=reportListId
                 newReport.date=date
 
@@ -138,24 +156,27 @@ class MainViewModel @Inject constructor(
             }, { printIfDbg(TAG, it.message) })
     }
 
+    fun getChosenHozerMankal(){
+
+    }
 
 
-    fun createNewStudyPlace(placeGeneralDetails: GeneralReportDetailsDataHolder) {
+    fun createNewStudyPlace(placeDetails: ReportDetailsDataHolder) {
         val id=ObjectId()
-        crud.createNewStudyPlace(id,placeGeneralDetails)
+        crud.createNewStudyPlace(id,placeDetails)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 val placeDataHolder=StudyPlaceDataHolder()
                 placeDataHolder.id=id
-                placeDataHolder.generalReportDetails=placeGeneralDetails
+                placeDataHolder.reportDetails=placeDetails
 
                 data[placeDataHolder.id]=placeDataHolder
                 val copyArr = _viewState.currentState().copy().studyPlacesVhCells
                 val studyPlaceVhCellData =
                     StudyPlaceDataVhCell(
                         id=placeDataHolder.id,
-                        placeName = placeGeneralDetails.placeName,
-                        city = placeGeneralDetails.city)
+                        placeName = placeDetails.placeName,
+                        city = placeDetails.city)
                 copyArr.add(studyPlaceVhCellData)
                 _viewState.mviValue {
 
@@ -167,22 +188,29 @@ class MainViewModel @Inject constructor(
     }
 
    private fun getFindingToEdit() {
-        val findingArr = data[chosenStudyPlaceId]!!
-            .reportList[chosenReportId]!!
-            .findingArr
+       val findingArr = data[chosenStudyPlaceId]!!
+           .reportList[chosenReportId]!!
+           .findingArr
 
        var finding:FindingDataHolder?=null
 
        findingArr.forEach {
            if (it.containsKey(chosenFindingId)){
                finding=it[chosenFindingId]!!
-               return
+               return@forEach
            }
        }
+       printIfDbg(TAG,"finding ${finding!!.priority}")
 
+       updateChosenFindingUi(finding!!)
+    }
+
+    private fun updateChosenFindingUi(finding: FindingDataHolder){
         _viewState.mviValue {
             it.copy(
-                finding = finding!!
+                createFindingFragmentState = it.createFindingFragmentState.copy(
+                    finding = finding
+                )
             )
         }
     }
@@ -201,9 +229,7 @@ class MainViewModel @Inject constructor(
 
     fun startCreateFindingFragment() {
         //if we want to create a new finding , pass empty data
-        _viewState.mviValue {
-          it.copy(finding = FindingDataHolder())
-        }
+        updateChosenFindingUi(FindingDataHolder())
         _viewEffect.value=Effects.StartCreateFindingFragment
     }
 
@@ -216,17 +242,50 @@ class MainViewModel @Inject constructor(
 
     fun saveFinding(finding:FindingDataHolder){
 
-        val findings=data[chosenStudyPlaceId]!!
+        val findingsArr=data[chosenStudyPlaceId]!!
             .reportList[chosenReportId]!!
-            .findingArr[finding.priority.toInt()]
+            .findingArr
+        var findings:HashMap<ObjectId,FindingDataHolder>?=null
 
+        findingsArr.forEach {
+                if (it.containsKey(finding.id)){
+                    findings=it
+                    return@forEach
+                }
+            }
 
-        if (findings.containsKey(finding.id)){
+        //if finding doesn't exists, get proper Hm for inserting the new one
+      if (findings==null){
+          findings=findingsArr[finding.priority.toInt()]
+      }
+
+        if (findings!!.containsKey(finding.id)){
             crud.updateFinding(finding)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    //update the finding
-                    findings[chosenFindingId]=finding
+                    // check if priority has changed , if it has,
+                    // remove the finding from  prev hm and insert to correct one
+                    if (findings!![finding.id]!!.priority!=finding.priority){
+                        findings!!.remove(finding.id)
+                        findingsArr[finding.priority.toInt()][finding.id]=finding
+                    }else{// else we need to update the finding in same hm
+                        findings!![finding.id]= finding
+                    }
+                    val findingVhCellDataArrayList=ArrayList<FindingVhCellData>()
+                    _viewState.currentState().copy().findingArrayList.forEach {
+                        val tmpFinding:FindingVhCellData =
+                            if (it.id != finding.id) { it }
+                            else{
+                            FindingVhCellData(
+                                id = finding.id,
+                                problem = finding.problem,
+                                findingSection = finding.section
+                            )
+                        }
+                        findingVhCellDataArrayList.add(tmpFinding)
+                    }
+                    updateFindingArrayList(findingVhCellDataArrayList)
+
                 },{ printIfDbg(TAG,it.message)})
         }
         else{
@@ -242,14 +301,17 @@ class MainViewModel @Inject constructor(
                         findingSection = finding.section
                     )
                 )
-                _viewState.mviValue {
-                    it.copy(
-                        findingArrayList = findingVhCellDataArrayList
-                    )
-                }
-               findings[finding.id]=finding
-
+                findings!![finding.id]=finding
+                updateFindingArrayList(findingVhCellDataArrayList)
             },{ printIfDbg(TAG,it.message)})
+        }
+    }
+
+    fun updateFindingArrayList(findingArrayList:ArrayList<FindingVhCellData>){
+        _viewState.mviValue {
+            it.copy(
+                findingArrayList = findingArrayList
+            )
         }
     }
 
@@ -269,8 +331,40 @@ class MainViewModel @Inject constructor(
     fun setProblemImage(uri: Uri?) {
         _viewState.mviValue {
             it.copy(
-                problemImage = uri
+                createFindingFragmentState = it.createFindingFragmentState.copy(
+                    problemImage = uri
+                )
             )
         }
+    }
+
+    fun showCalendarDialog(){
+        _viewEffect.value=Effects.ShowCalendarDialog
+    }
+
+    fun showEducationalInstitutionsDialog(items:Array<String>) {
+        val tvList= ArrayList<TextViewVhCell>()
+        items.forEach {
+            tvList.add(
+                TextViewVhCell(item = it)
+            )
+        }
+        _viewEffect.value=Effects.ShowEducationalInstitutionDialog(tvList)
+    }
+
+    fun changeEducationalInstitution(educationalInstitution: String) {
+        _viewState.mviValue {
+            it.copy(
+                studyPlaceFragmentState=  it.studyPlaceFragmentState.copy(
+                    reportDetails = it.studyPlaceFragmentState.reportDetails.copy(
+                        educationalInstitution=educationalInstitution
+                    )
+                )
+            )
+        }
+    }
+
+    fun setReportDate() {
+        TODO("Not yet implemented")
     }
 }

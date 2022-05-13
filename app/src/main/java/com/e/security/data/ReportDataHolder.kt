@@ -2,7 +2,7 @@ package com.e.security.data
 
 import org.bson.types.ObjectId
 
-class FindingListDataHolder {
+class ReportDataHolder {
 
   var id:ObjectId = ObjectId()
   var date:String=""

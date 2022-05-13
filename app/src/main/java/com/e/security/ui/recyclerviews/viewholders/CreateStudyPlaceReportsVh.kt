@@ -3,6 +3,7 @@ package com.e.security.ui.recyclerviews.viewholders
 import android.view.View
 import com.e.security.databinding.ReportVhCellDesignBinding
 import com.e.security.ui.recyclerviews.celldata.ReportVhCell
+import com.e.security.ui.recyclerviews.clicklisteners.ReportVhItemClick
 import com.e.security.ui.recyclerviews.helpers.CreateVh
 import com.e.security.ui.recyclerviews.helpers.GenericItemClickListener
 
@@ -17,11 +18,19 @@ class CreateStudyPlaceReportsVh : CreateVh<ReportVhCell> {
     }
 
     private inner class ReportVh(view:View):GenericViewHolder<ReportVhCell>(view){
-        val binding: ReportVhCellDesignBinding = ReportVhCellDesignBinding.bind(view)
+        private val binding: ReportVhCellDesignBinding = ReportVhCellDesignBinding.bind(view)
+        private var itmClk:ReportVhItemClick<ReportVhCell>?=null
+
+        override fun setItemClickListener(itemClickListener: GenericItemClickListener<ReportVhCell>?) {
+            itmClk=itemClickListener as ReportVhItemClick<ReportVhCell>
+        }
 
         init {
             binding.parent.setOnClickListener {
-                itemClick!!.onItemClick(cachedItem!!)
+                itmClk!!.onItemClick(cachedItem!!)
+            }
+            binding.editBtn.setOnClickListener {
+                itmClk!!.onEditBtnClick()
             }
         }
 

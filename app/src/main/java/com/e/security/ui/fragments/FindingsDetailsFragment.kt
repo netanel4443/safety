@@ -66,6 +66,14 @@ class FindingsDetailsFragment : BaseSharedVmFragment() {
                         curr.findingArrayList.differentItems(prev.findingArrayList)
                     recyclerviewAdapter.removeItems(itemsToRemove)
                 }
+                // if we arrived to this point , one item has been updated
+                // so we need to reflect it on the ui
+                prev.findingArrayList != curr.findingArrayList ->{
+                    val itemsToRemove=curr.findingArrayList.differentItems(prev.findingArrayList)
+                    val itemsToAdd=prev.findingArrayList.differentItems(curr.findingArrayList)
+                    recyclerviewAdapter.removeItems(itemsToRemove)
+                    recyclerviewAdapter.addItems(itemsToAdd)
+                }
             }
         }
     }

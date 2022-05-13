@@ -11,5 +11,6 @@ open class StudyPlaceRlmObj:RealmObject() {
     var _id:ObjectId= ObjectId()
     var generalReportDetailsRlmObj: GeneralReportDetailsRlmObj?=null
     var reportList:RealmList<FindingListRlmObj> = RealmList()
+    var educationalInstitution:String=""
 
 }

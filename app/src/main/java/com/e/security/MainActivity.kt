@@ -6,11 +6,9 @@ import android.os.Bundle
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.e.security.application.BaseApplication
-import com.e.security.data.PlaceGeneralDetails
 import com.e.security.data.writetoword.WriteToWord
 import com.e.security.databinding.FragmentRecyclerviewAddBtnBinding
 import com.e.security.di.components.MainActivityComponent
-import com.e.security.sensors.CameraOperations
 import com.e.security.ui.MainViewModel
 import com.e.security.ui.activities.BaseActivity
 import com.e.security.ui.dialogs.StudyPlaceInfoDialog
@@ -22,7 +20,6 @@ import com.e.security.ui.recyclerviews.viewholders.CreateStudyPlacesVh
 import com.e.security.ui.utils.addFragment
 import com.e.security.ui.viewmodels.effects.Effects
 import com.e.security.utils.differentItems
-import com.e.security.utils.printIfDbg
 import org.apache.poi.util.Units
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment
 import org.apache.poi.xwpf.usermodel.XWPFDocument

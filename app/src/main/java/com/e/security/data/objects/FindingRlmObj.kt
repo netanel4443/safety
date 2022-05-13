@@ -12,4 +12,5 @@ open class FindingRlmObj:RealmObject() {
     var requirement: String = ""
     var problem: String = ""
     var picPath: String = ""
+    var priority:String="0"
 }

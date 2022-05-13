@@ -1,45 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
     android:orientation="vertical"
+
     >
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:id="@+id/scrollview"
+        android:fillViewport="true"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintHeight_percent="0.9">
 
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
+    android:isScrollContainer="true"
     >
 
     <TextView
         android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
         android:layout_marginBottom="30dp"
-        android:textSize="20sp"
+        android:textSize="30sp"
+        android:gravity="center"
+        android:fontFamily="cursive"
+        android:text="@string/study_place_details"
         app:layout_constraintHeight_percent="0.1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:id="@+id/educationalInstitution"
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintTop_toBottomOf="@+id/title"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintWidth_percent="0.5"
+        android:hint="@string/educationalInstitution"
+        android:gravity="center"
+        />
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="4dp"
+        android:textSize="20sp"
+        android:gravity="center"
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title"
+        app:layout_constraintWidth_percent="0.5"
+        />
+
     <EditText
         android:id="@+id/place_name_edittext"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="100dp"
         android:hint="@string/place_name"
         android:layout_marginBottom="30dp"
         app:layout_constraintHeight_percent="0.1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title"
-        app:layout_constraintWidth_percent="0.8" />
+        app:layout_constraintTop_toBottomOf="@+id/date"
+        app:layout_constraintWidth_percent="0.8"
+        />
 
     <EditText
         android:id="@+id/city_edittext"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="100dp"
         android:layout_marginBottom="30dp"
         android:hint="@string/city"
         app:layout_constraintHeight_percent="0.1"
@@ -51,52 +91,147 @@
     <EditText
         android:id="@+id/institution_symbol_edittext"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="100dp"
         android:layout_marginBottom="30dp"
-        android:hint="@string/instructions"
+        android:hint="@string/symbol"
         app:layout_constraintHeight_percent="0.1"
         app:layout_constraintWidth_percent="0.8"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/city_edittext" />
 
-    <TextView
-        android:id="@+id/date"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="30dp"
-        android:textSize="20sp"
-        app:layout_constraintHeight_percent="0.1"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/institution_symbol_edittext"
-        app:layout_constraintWidth_percent="0.8" />
-
     <EditText
         android:id="@+id/testerDetails_edit_text"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="100dp"
         android:layout_marginBottom="30dp"
         android:hint="@string/tester_details"
         app:layout_constraintHeight_percent="0.1"
         app:layout_constraintWidth_percent="0.8"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/date"
-
+        app:layout_constraintTop_toBottomOf="@+id/institution_symbol_edittext"
+        />
+    <EditText
+        android:id="@+id/address"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="30dp"
+        android:hint="@string/address"
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintWidth_percent="0.8"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/testerDetails_edit_text"
+        />
+    <EditText
+        android:id="@+id/study_place_phone"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="30dp"
+        android:hint="@string/study_place_phone"
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintWidth_percent="0.8"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/address"
+        />
+    <EditText
+        android:id="@+id/manager_details"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="30dp"
+        android:hint="@string/manager_details"
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintWidth_percent="0.8"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/study_place_phone"
         />
 
+    <EditText
+        android:id="@+id/inspector_details"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="30dp"
+        android:hint="@string/inspector_details"
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/manager_details"
+        app:layout_constraintWidth_percent="0.8" />
+
+    <EditText
+        android:id="@+id/study_place_participants"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="30dp"
+        android:hint="@string/study_place_participants"
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintWidth_percent="0.8"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/inspector_details"
+        />
+    <EditText
+        android:id="@+id/authority_participants"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="30dp"
+        android:hint="@string/authority_participants"
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintWidth_percent="0.8"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/study_place_participants"
+        />
+    <EditText
+        android:id="@+id/students_number"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="30dp"
+        android:hint="@string/students_number"
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintWidth_percent="0.8"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/authority_participants"
+        />
+    <EditText
+        android:id="@+id/ownership"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="30dp"
+        android:hint="@string/ownership"
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintWidth_percent="0.8"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/students_number"
+        />
+    <EditText
+        android:id="@+id/founding_year"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="30dp"
+        android:hint="@string/founding_year"
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintWidth_percent="0.8"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ownership"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
     <Button
         android:id="@+id/confirm_button"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:text="@string/confirm"
-        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintTop_toBottomOf="@id/scrollview"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/testerDetails_edit_text"
-        app:layout_constraintWidth_percent="0.5" />
-
-
+        app:layout_constraintWidth_percent="0.5"
+        app:layout_constraintHeight_percent="0.1"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
