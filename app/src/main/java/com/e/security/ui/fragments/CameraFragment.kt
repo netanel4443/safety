@@ -1,50 +1,58 @@
 package com.e.security.ui.fragments
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.fragment.app.Fragment
+import androidx.core.content.ContextCompat
 import com.e.security.MainActivity
+import com.e.security.R
 import com.e.security.databinding.ActivityCameraBinding
 import com.e.security.sensors.CameraOperations
 import com.e.security.ui.MainViewModel
+import javax.inject.Inject
 
-class CameraFragment:BaseSharedVmFragment() {
-    private lateinit var cameraOperations: CameraOperations
+class CameraFragment : BaseSharedVmFragment() {
+    //    private lateinit var cameraOperations: CameraOperations
+
+    @Inject
+    lateinit var cameraOperations: CameraOperations
     private lateinit var binding: ActivityCameraBinding
     private val viewModel: MainViewModel by lazy(this::getViewModel)
-    private var launcher: ActivityResultLauncher<Array<String>> =registerForActivityResult()
+    private var launcher: ActivityResultLauncher<Array<String>> = registerForActivityResult()
+    private val REQUIRED_PERMISSIONS =
+        mutableListOf(
+            Manifest.permission.CAMERA
+        ).apply {
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+                add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            }
+        }.toTypedArray()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         (requireActivity() as MainActivity).mainActivityComponent.inject(this)
-        cameraOperations= CameraOperations(requireActivity() as MainActivity)
+   }
 
+    fun registerForActivityResult(): ActivityResultLauncher<Array<String>> {
+        return registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+
+            val granted = allPermissionsGranted()
+            if (granted) {
+                cameraOperations.startCamera(binding.viewFinder)
+            } else {
+                viewModel.toast(R.string.permission_not_granted)
+            }
+        }
     }
-
-  fun registerForActivityResult():ActivityResultLauncher<Array<String>> {
-   return   registerForActivityResult(
-          ActivityResultContracts.RequestMultiplePermissions()
-      ) { permissions ->
-
-          val granted = cameraOperations.allPermissionsGranted()
-          if (granted) {
-              cameraOperations.startCamera(binding.viewFinder)
-          } else {
-              Toast.makeText(
-                  requireActivity(),
-                  "Permissions not granted by the user.",
-                  Toast.LENGTH_SHORT
-              ).show()
-
-          }
-      }
-  }
 
 
     override fun onCreateView(
@@ -52,28 +60,42 @@ class CameraFragment:BaseSharedVmFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding= ActivityCameraBinding.inflate(inflater)
-          return binding.root
+        binding = ActivityCameraBinding.inflate(inflater)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-       val bool= cameraOperations.requestPermissions()
-        if (bool){
+//        cameraOperations= CameraOperations(requireActivity() as MainActivity,viewLifecycleOwner)
+        cameraOperations.bindLifeCycle(viewLifecycleOwner)
+        val bool = requestPermissions()
+        if (bool) {
             cameraOperations.startCamera(binding.viewFinder)
-        }else{
-            launcher.launch(cameraOperations.REQUIRED_PERMISSIONS)
+        } else {
+            launcher.launch(REQUIRED_PERMISSIONS)
         }
 
         binding.takePhotoBtn.setOnClickListener {
-            cameraOperations.takePhoto(){
+            cameraOperations.takePhoto() {
                 viewModel.setProblemImage(it)
+                viewModel.popFragment()
             }
         }
     }
 
+    private fun requestPermissions(): Boolean {
+        return allPermissionsGranted()
+    }
+
+    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
+        ContextCompat.checkSelfPermission(
+            requireActivity(), it
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
+
     override fun onDestroy() {
         super.onDestroy()
-            //todo check if it should be here or another place
+        //todo check if it should be here or another place
         cameraOperations.onDestroy()
     }
 }

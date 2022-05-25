@@ -1,7 +1,7 @@
 package com.e.security.data.definitions
 
 data class HmScope(
-    var area:String="",
+    var testArea:String="",
     var section:String="",
     var definition:String="",
     var school:Boolean=true,
@@ -9,4 +9,4 @@ data class HmScope(
     var boardingSchool:Boolean=true,
     var youthVillage:Boolean=true,
 
-)
+    )

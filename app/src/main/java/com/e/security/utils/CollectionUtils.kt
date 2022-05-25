@@ -22,11 +22,6 @@ private fun <T> getDifferentItems(
     return al
 }
 
-data class OldItemNewItem<T>(
-    var old:T,
-    var new:T
-)
-
 
 
 

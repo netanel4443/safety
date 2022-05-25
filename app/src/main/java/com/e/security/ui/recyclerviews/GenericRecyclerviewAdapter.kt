@@ -1,20 +1,16 @@
 package com.e.security.ui.recyclerviews
 
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.e.security.ui.recyclerviews.viewholders.GenericViewHolder
 import com.e.security.ui.recyclerviews.helpers.CreateVh
 import com.e.security.ui.recyclerviews.helpers.GenericItemClickListener
 
 open class GenericRecyclerviewAdapter<T, C : CreateVh<T>>(
-    private val layoutId: Int,
     private val clazz: Class<C>
-) : RecyclerView.Adapter<GenericViewHolder<T>>() {
+) : RecyclerView.Adapter<CreateVh<T>.GenericViewHolder>() {
     protected val items = ArrayList<T>()
     protected var itemClick: GenericItemClickListener<T>? = null
-    var block: ((view: View) -> GenericViewHolder<T>)? = null
+
 
     fun addItems(items: List<T>) {
         this.items.addAll(items)
@@ -33,6 +29,9 @@ open class GenericRecyclerviewAdapter<T, C : CreateVh<T>>(
                 return
             }
         }
+    }
+    fun removeAllItems(){
+        items.clear()
     }
 
     fun changeItems(newItems: List<Pair<T, T>>) {
@@ -60,15 +59,13 @@ open class GenericRecyclerviewAdapter<T, C : CreateVh<T>>(
         itemClick = itemClickListener
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GenericViewHolder<T> {
-        val inflater = LayoutInflater.from(parent.context)
-        val view = inflater.inflate(layoutId, parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CreateVh<T>.GenericViewHolder {
         val instance = clazz.newInstance()
-        return instance.createViewHolder(view, itemClick)
+        return instance.getViewHolder(parent, itemClick)
     }
 
 
-    override fun onBindViewHolder(holder: GenericViewHolder<T>, position: Int) {
+    override fun onBindViewHolder(holder: CreateVh<T>.GenericViewHolder, position: Int) {
         holder.bind(items[position])
     }
 

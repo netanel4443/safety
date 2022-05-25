@@ -10,8 +10,8 @@ import io.reactivex.rxjava3.functions.Consumer
 import java.util.concurrent.TimeUnit
 
 
-fun  View.throttleClick(time:Long,block: Consumer<Unit>):Disposable{
-   return clicks().throttleFirst(time,TimeUnit.MILLISECONDS)
+fun  View.throttleClick(block: Consumer<Unit>):Disposable{
+   return clicks().throttleFirst(2000,TimeUnit.MILLISECONDS)
        .observeOn(AndroidSchedulers.mainThread())
        .subscribe(block,::printErrorIfDbg)
 }

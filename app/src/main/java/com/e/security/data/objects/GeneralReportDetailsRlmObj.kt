@@ -8,8 +8,8 @@ open class GeneralReportDetailsRlmObj:RealmObject() {
 
     var city:String=""
     var placeName:String=""
+    var educationalInstitution:String=""
     var institutionSymbol=""
-    var date:String=""
     var testerDetails:String=""
     var ownership:String=""
     var studentsNumber:String=""

@@ -5,29 +5,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.Toast
 import com.e.security.MainActivity
 import com.e.security.R
-import com.e.security.data.ReportDetailsDataHolder
+import com.e.security.data.StudyPlaceDetailsDataHolder
 import com.e.security.databinding.StudyPlaceInfoBinding
 import com.e.security.ui.MainViewModel
-import com.e.security.ui.fragments.VmDialogFragment
-import com.e.security.ui.recyclerviews.celldata.TextViewVhCell
-import com.e.security.ui.recyclerviews.viewholders.CreateTextViewVh
+import com.e.security.ui.fragments.BaseSharedVmFragment
 import com.e.security.ui.utils.rxjava.throttleClick
-import com.e.security.ui.viewmodels.effects.Effects
 
-class StudyPlaceInfoDialog() : VmDialogFragment() {
+class StudyPlaceInfoFscreen() : BaseSharedVmFragment() {
 
     private val viewModel: MainViewModel by lazy(this::getViewModel)
 
     private lateinit var binding: StudyPlaceInfoBinding
-    private var recyclerViewDialog: RecyclerViewDialog<TextViewVhCell>? = null
+//    private var recyclerViewDialog: RecyclerViewDialog<TextViewVhCell>? = null
 
 
     companion object {
-        const val TAG = "StudyPlaceInfoDialog"
+        const val TAG = "StudyPlaceInfoFscreen"
     }
 
     override fun onAttach(context: Context) {
@@ -35,20 +31,12 @@ class StudyPlaceInfoDialog() : VmDialogFragment() {
         (requireActivity() as MainActivity).mainActivityComponent.inject(this)
     }
 
-    //todo check about this window
-    override fun onStart() {
-        super.onStart()
-        dialog?.window?.setLayout(
-            WindowManager.LayoutParams.MATCH_PARENT,
-            WindowManager.LayoutParams.MATCH_PARENT
-        )
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = StudyPlaceInfoBinding.inflate(inflater, null, false)
         return binding.root
     }
@@ -56,14 +44,15 @@ class StudyPlaceInfoDialog() : VmDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         binding.educationalInstitution.setOnClickListener {
-            viewModel.showEducationalInstitutionsDialog(resources.getStringArray(R.array.hozer_types))
+            viewModel.showStringRecyclerViewDialog(resources.getStringArray(R.array.hozer_types),
+            viewModel::changeEducationalInstitution)
         }
 
-        binding.confirmButton.throttleClick(3000) {
+        binding.confirmButton.throttleClick() {
             val text = binding.placeNameEdittext.text.toString()
-            if (text.isNotBlank() && binding.educationalInstitution.text.isEmpty()) {
+            if (text.isNotBlank() && binding.educationalInstitution.text.isNotEmpty()) {
                 viewModel.createNewStudyPlace(
-                    ReportDetailsDataHolder(
+                    StudyPlaceDetailsDataHolder(
                         placeName = text,
                         city = binding.cityEdittext.text.toString(),
                         address = binding.address.text.toString(),
@@ -76,10 +65,12 @@ class StudyPlaceInfoDialog() : VmDialogFragment() {
                         inspectorDetails = binding.inspectorDetails.text.toString(),
                         studyPlaceParticipants = binding.studyPlaceParticipants.text.toString(),
                         authorityParticipants = binding.authorityParticipants.text.toString(),
-                        testerDetails = binding.testerDetailsEditText.text.toString()
+                        testerDetails = binding.testerDetailsEditText.text.toString(),
+                        educationalInstitution = binding.educationalInstitution.text.toString()
                     )
                 )
-                dismiss()
+                requireActivity().supportFragmentManager.popBackStack()
+                viewModel.popFragment()
             } else {
                 Toast.makeText(context, "לא הוכנס טקסט", Toast.LENGTH_SHORT).show()
             }
@@ -92,22 +83,23 @@ class StudyPlaceInfoDialog() : VmDialogFragment() {
     }
 
     private fun initEffectObserver() {
-        viewModel.viewEffect.observe(viewLifecycleOwner) { effect ->
-            when (effect) {
-                is Effects.ShowEducationalInstitutionDialog -> showEducationalInstitutionsDialog(
-                    effect.items
-                )
-
-            }
-        }
+//        viewModel.viewEffect.observe(viewLifecycleOwner) { effect ->
+//            when (effect) {
+//                is Effects.ShowStringRecyclerViewDialog -> showEducationalInstitutionsDialog(
+//                    effect.items,
+//                    effect.func
+//                )
+//
+//            }
+//        }
     }
 
 
     private fun initStateObserver() {
         viewModel.viewState.observe(viewLifecycleOwner, { state ->
 
-            val currentState = state.currentState.studyPlaceFragmentState
-            val prevState = state.prevState.studyPlaceFragmentState
+            val currentState = state.currentState.studyPlaceInfoFragmentState
+            val prevState = state.prevState.studyPlaceInfoFragmentState
             if (currentState != prevState) {
                 if (currentState.reportDetails.educationalInstitution !=
                     prevState.reportDetails.educationalInstitution
@@ -119,7 +111,7 @@ class StudyPlaceInfoDialog() : VmDialogFragment() {
             }
 
         }) { initialState ->
-            val data = initialState.currentState.studyPlaceFragmentState.reportDetails
+            val data = initialState.currentState.studyPlaceInfoFragmentState.reportDetails
             binding.placeNameEdittext.setText(data.placeName)
             binding.cityEdittext.setText(data.city)
             binding.address.setText(data.address)
@@ -137,22 +129,9 @@ class StudyPlaceInfoDialog() : VmDialogFragment() {
         }
     }
 
-    private fun showEducationalInstitutionsDialog(items: List<TextViewVhCell>) {
-        recyclerViewDialog?.run { showDialog() } ?: createEducationalInstitutionsDialog(items)
+
+//        recyclerViewDialog!!.onClick = {
+//            viewModel.changeEducationalInstitution(it)
+//        }
+//
     }
-
-    private fun createEducationalInstitutionsDialog(items: List<TextViewVhCell>) {
-
-        recyclerViewDialog = RecyclerViewDialog(
-            requireActivity(),
-            CreateTextViewVh::class.java,
-            R.layout.textview_vh_cell_design
-        )
-        recyclerViewDialog!!.showDialog()
-        recyclerViewDialog!!.onClick = {
-            viewModel.changeEducationalInstitution(it.item)
-        }
-
-        recyclerViewDialog!!.addItems(items)
-    }
-}

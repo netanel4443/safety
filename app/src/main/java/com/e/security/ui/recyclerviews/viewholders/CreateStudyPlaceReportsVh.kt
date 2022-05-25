@@ -1,43 +1,45 @@
 package com.e.security.ui.recyclerviews.viewholders
 
 import android.view.View
+import android.view.ViewGroup
+import com.e.security.R
 import com.e.security.databinding.ReportVhCellDesignBinding
 import com.e.security.ui.recyclerviews.celldata.ReportVhCell
 import com.e.security.ui.recyclerviews.clicklisteners.ReportVhItemClick
 import com.e.security.ui.recyclerviews.helpers.CreateVh
 import com.e.security.ui.recyclerviews.helpers.GenericItemClickListener
 
-class CreateStudyPlaceReportsVh : CreateVh<ReportVhCell> {
-    override fun createViewHolder(
-        view: View,
+class CreateStudyPlaceReportsVh : CreateVh<ReportVhCell>() {
+    private var binding: ReportVhCellDesignBinding? = null
+    private var itmClk: ReportVhItemClick? = null
+
+    override fun getViewHolder(
+        parent: ViewGroup,
         itemClick: GenericItemClickListener<ReportVhCell>?
-    ): GenericViewHolder<ReportVhCell> {
-        val vh =ReportVh(view)
-        vh.setItemClickListener(itemClick)
-        return vh
+    ): GenericViewHolder {
+        return createVh(parent, R.layout.report_vh_cell_design, itemClick)
     }
 
-    private inner class ReportVh(view:View):GenericViewHolder<ReportVhCell>(view){
-        private val binding: ReportVhCellDesignBinding = ReportVhCellDesignBinding.bind(view)
-        private var itmClk:ReportVhItemClick<ReportVhCell>?=null
-
-        override fun setItemClickListener(itemClickListener: GenericItemClickListener<ReportVhCell>?) {
-            itmClk=itemClickListener as ReportVhItemClick<ReportVhCell>
+    override fun onInitVh(view: View) {
+        binding = ReportVhCellDesignBinding.bind(view)
+        binding!!.parent.setOnClickListener {
+            itmClk!!.onItemClick(cachedItem!!)
         }
-
-        init {
-            binding.parent.setOnClickListener {
-                itmClk!!.onItemClick(cachedItem!!)
-            }
-            binding.editBtn.setOnClickListener {
-                itmClk!!.onEditBtnClick()
-            }
+        binding!!.editBtn.setOnClickListener {
+            itmClk!!.onEditBtnClick(cachedItem!!)
         }
-
-        override fun bind(item: ReportVhCell) {
-           super.bind(item)
-            binding.date.text=item.date
+        binding!!.parent.setOnLongClickListener {
+            itmClk!!.onLongClick(cachedItem!!)
         }
     }
 
+    override fun bindData(item: ReportVhCell) {
+        binding!!.date.text = item.date
     }
+
+    override fun setClickListener(itemClickListener: GenericItemClickListener<ReportVhCell>?) {
+        itmClk = itemClickListener as ReportVhItemClick
+    }
+}
+
+

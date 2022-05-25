@@ -6,6 +6,6 @@ class ReportDataHolder {
 
   var id:ObjectId = ObjectId()
   var date:String=""
-  var findingArr=Array<HashMap<ObjectId,FindingDataHolder>>(3,{ HashMap()})
+  var findingArr=Array<HashMap<ObjectId,FindingDataHolder>>(3) { HashMap() }
 
 }

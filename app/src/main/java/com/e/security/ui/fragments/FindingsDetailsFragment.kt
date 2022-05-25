@@ -8,12 +8,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.e.security.MainActivity
 import com.e.security.R
-import com.e.security.databinding.FragmentRecyclerviewAddBtnBinding
+import com.e.security.databinding.RecyclerviewAddBtnScreenBinding
 import com.e.security.di.ApplicationComponent
 import com.e.security.ui.MainViewModel
 import com.e.security.ui.recyclerviews.GenericRecyclerviewAdapter
-import com.e.security.ui.recyclerviews.celldata.FindingVhCellData
-import com.e.security.ui.recyclerviews.helpers.GenericItemClickListener
+import com.e.security.ui.recyclerviews.celldata.FindingVhCell
+import com.e.security.ui.recyclerviews.clicklisteners.FindingVhItemClick
 import com.e.security.ui.recyclerviews.viewholders.CreateFindingDetailsViewHolder
 import com.e.security.ui.utils.addFragment
 import com.e.security.ui.viewmodels.effects.Effects
@@ -21,12 +21,12 @@ import com.e.security.utils.differentItems
 
 class FindingsDetailsFragment : BaseSharedVmFragment() {
 
-    lateinit var applicationComponent: ApplicationComponent
     private val viewModel: MainViewModel by lazy(this::getViewModel)
-    private lateinit var binding: FragmentRecyclerviewAddBtnBinding
+    private lateinit var binding: RecyclerviewAddBtnScreenBinding
     private lateinit var recyclerviewAdapter: GenericRecyclerviewAdapter<
-            FindingVhCellData, CreateFindingDetailsViewHolder
+            FindingVhCell, CreateFindingDetailsViewHolder
             >
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         (requireActivity() as MainActivity).mainActivityComponent.inject(this)
@@ -36,12 +36,12 @@ class FindingsDetailsFragment : BaseSharedVmFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-         binding=FragmentRecyclerviewAddBtnBinding.inflate(inflater,container,false)
+        binding = RecyclerviewAddBtnScreenBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-       initUi()
+        initUi()
         initEffectObserver()
         initStateObserver()
         viewModel.getReportListFindings()
@@ -49,28 +49,31 @@ class FindingsDetailsFragment : BaseSharedVmFragment() {
 
     private fun initStateObserver() {
         viewModel.viewState.observe(viewLifecycleOwner) { state ->
-            val prev=state.prevState
-            val curr=state.currentState
+            val prev = state.prevState
+            val curr = state.currentState
 
             when {
 
                 recyclerviewAdapter.hasNoItems() -> {
-                    recyclerviewAdapter.addItems(curr.findingArrayList)
+                    recyclerviewAdapter.addItems(curr.findingVhCellArrayList)
                 }
-                prev.findingArrayList.size < curr.findingArrayList.size -> {
-                    val newItems = curr.findingArrayList.differentItems(prev.findingArrayList)
+                prev.findingVhCellArrayList.size < curr.findingVhCellArrayList.size -> {
+                    val newItems =
+                        curr.findingVhCellArrayList.differentItems(prev.findingVhCellArrayList)
                     recyclerviewAdapter.addItems(newItems)
                 }
-                prev.findingArrayList.size > curr.findingArrayList.size -> {
+                prev.findingVhCellArrayList.size > curr.findingVhCellArrayList.size -> {
                     val itemsToRemove =
-                        curr.findingArrayList.differentItems(prev.findingArrayList)
+                        curr.findingVhCellArrayList.differentItems(prev.findingVhCellArrayList)
                     recyclerviewAdapter.removeItems(itemsToRemove)
                 }
                 // if we arrived to this point , one item has been updated
                 // so we need to reflect it on the ui
-                prev.findingArrayList != curr.findingArrayList ->{
-                    val itemsToRemove=curr.findingArrayList.differentItems(prev.findingArrayList)
-                    val itemsToAdd=prev.findingArrayList.differentItems(curr.findingArrayList)
+                prev.findingVhCellArrayList != curr.findingVhCellArrayList -> {
+                    val itemsToRemove =
+                        curr.findingVhCellArrayList.differentItems(prev.findingVhCellArrayList)
+                    val itemsToAdd =
+                        prev.findingVhCellArrayList.differentItems(curr.findingVhCellArrayList)
                     recyclerviewAdapter.removeItems(itemsToRemove)
                     recyclerviewAdapter.addItems(itemsToAdd)
                 }
@@ -80,15 +83,15 @@ class FindingsDetailsFragment : BaseSharedVmFragment() {
 
     private fun initEffectObserver() {
         viewModel.viewEffect.observe(viewLifecycleOwner) { effect ->
-            when(effect){
-                is Effects.StartCreateFindingFragment-> startCreateFindingFragment()
+            when (effect) {
+                is Effects.StartCreateFindingFragment -> startCreateFindingFragment()
             }
         }
     }
 
     private fun startCreateFindingFragment() {
-        val fragment=CreateFindingFragment()
-        requireActivity().addFragment(fragment,R.id.fragment_container,"CreateFindingFragment")
+        val fragment = CreateFindingFragment()
+        requireActivity().addFragment(fragment, R.id.fragment_container, "CreateFindingFragment")
     }
 
 
@@ -103,21 +106,24 @@ class FindingsDetailsFragment : BaseSharedVmFragment() {
         val recyclerView = binding.recyclerview
         recyclerviewAdapter =
             GenericRecyclerviewAdapter(
-                R.layout.finding_recyclerview_cell_design,
                 CreateFindingDetailsViewHolder::class.java
             )
-        recyclerviewAdapter.setItemClickListener(object:GenericItemClickListener<FindingVhCellData>{
-            override fun onItemClick(item: FindingVhCellData) {
+        recyclerviewAdapter.setItemClickListener(object : FindingVhItemClick {
+            override fun onItemClick(item: FindingVhCell) {
                 viewModel.editAFinding(item.id)
+            }
+
+            override fun onLongClick(item: FindingVhCell): Boolean {
+                viewModel.showDeleteFindingDialog(item.id, viewModel::deleteFinding)
+                return true
             }
         })
 
 
         recyclerView.adapter = recyclerviewAdapter
 
-        //todo is require context the right one here?
         recyclerView.layoutManager = LinearLayoutManager(
-            requireContext(),
+            requireActivity(),
             LinearLayoutManager.VERTICAL,
             false
         )

@@ -5,7 +5,7 @@ import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import org.bson.types.ObjectId
 
-open class FindingListRlmObj :RealmObject() {
+open class ReportRlmObj :RealmObject() {
 
   @PrimaryKey
   var _id:ObjectId=ObjectId()

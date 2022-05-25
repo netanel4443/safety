@@ -25,7 +25,13 @@ fun FragmentActivity.addFragment(fragment: Fragment, container: Int, tag:String)
     }
 }
 
-////todo check if childfragmentmanager is correct
+fun FragmentActivity.removeFragmentByTag(tag:String){
+    val fragment=  supportFragmentManager.findFragmentByTag(tag)
+    if (fragment != null && fragment.isVisible){
+        supportFragmentManager.beginTransaction().remove(fragment).commit()
+    }
+}
+
 //fun Fragment.addFragment(fragment: Fragment, container: Int, tag:String) {
 //    val currentFragment = childFragmentManager.findFragmentByTag(tag)
 //    if (currentFragment == null) {

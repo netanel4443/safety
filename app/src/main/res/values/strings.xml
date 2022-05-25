@@ -27,8 +27,25 @@
     <string name="educationalInstitution">מוסד לימודי</string>
     <string name="confirm">אישור</string>
     <string name="cancel">ביטול</string>
-    <string name="edit">ערוך</string>
+    <string name="saved_successfully">נשמר בהצלחה</string>
+    <string name="delete_study_place">מחיקת מוסד לימודים זה , תוביל למחיקת כל הדוחות השמורים. האם ברצונך להמשיך?</string>
+    <string name="delete_report">מחיקת דו"ח זה , תוביל למחיקת כל הדוחות השמורים. האם ברצונך להמשיך?</string>
+    <string name="delete_finding">למחוק ממצא זה?</string>
+    <string name="deleted_successfully">נמחק בהצלחה</string>
 
+    <!--    operations-->
+    <string name="edit">לערוך</string>
+    <string name="delete">למחוק</string>
+    <string name="export">לייצא</string>
+
+<!--    e- edit e-export d-delete    -->
+    <string-array name="esd">
+        <item>@string/edit</item>
+        <item>@string/export</item>
+        <item>@string/delete</item>
+    </string-array>
+
+    <string name="permission_not_granted">יש צורך לאשר כדי להמשיך</string>
 
     <string-array name="priority_array">
         <item>0</item>
@@ -37,7 +54,7 @@
     </string-array>
 
     <string-array name="hozer_types">
-        <item >@string/school</item>
+        <item>@string/school</item>
         <item>@string/kindergarten</item>
         <item>@string/boarding_school</item>
         <item>@string/youth_village</item>

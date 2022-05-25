@@ -2,41 +2,38 @@
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/parent"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
-    android:id="@+id/parent">
+    android:layout_height="100dp">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <androidx.cardview.widget.CardView
+        android:layout_height="match_parent"
+        app:layout_constraintRight_toRightOf="parent"
+        >
+
+        <TextView
+            android:id="@+id/date"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:id="@+id/date_card"
-            app:layout_constraintWidth_percent="0.7"
-            app:layout_constraintRight_toRightOf="parent">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/date"
-                android:textSize="30sp"
-                android:textColor="@color/black"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
-        </androidx.cardview.widget.CardView>
+            android:gravity="right|center"
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.8"/>
 
-        <Button
+        <ImageView
+            android:id="@+id/edit_btn"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintHeight_percent="0.8"
-            android:id="@+id/edit_btn"
-            android:text="@string/edit"
-            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/ic_baseline_edit_black_24"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintWidth_percent="0.2"
+            app:layout_constraintHeight_percent="0.5"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/date_card"/>
-
-
+            app:layout_constraintRight_toLeftOf="@id/date"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.1" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>

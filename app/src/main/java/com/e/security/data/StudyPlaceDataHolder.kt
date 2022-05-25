@@ -5,7 +5,7 @@ import org.bson.types.ObjectId
 class StudyPlaceDataHolder {
 
     var id: ObjectId = ObjectId()
-    var reportDetails: ReportDetailsDataHolder = ReportDetailsDataHolder()
+    var reportDetails: StudyPlaceDetailsDataHolder = StudyPlaceDetailsDataHolder()
     var reportList: HashMap<ObjectId, ReportDataHolder> = HashMap()
 
 }

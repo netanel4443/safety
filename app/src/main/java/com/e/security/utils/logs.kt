@@ -12,7 +12,7 @@ fun printErrorIfDbg(tag:String,message:String?){
 }
 fun printErrorIfDbg(e:Throwable){
     if (DBG){
-        e.printStackTrace()
+        Log.e(e.javaClass.name,e.message.toString())
     }
 }
 

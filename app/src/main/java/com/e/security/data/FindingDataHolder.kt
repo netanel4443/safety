@@ -5,7 +5,7 @@ import org.bson.types.ObjectId
 data class FindingDataHolder(
     var id: ObjectId = ObjectId(),
     var priority:String ="0",//initial data
-    var section:String="",
+    var testArea:String="",
     var sectionInAssessmentList:String="",
     var requirement:String="",
     var problem:String="",

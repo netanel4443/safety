@@ -2,6 +2,7 @@ package com.e.security.data.localdatabase.utils
 
 import io.reactivex.rxjava3.core.Single
 import io.realm.*
+import org.bson.types.ObjectId
 
 /** Returns the desired [RealmObject], if is not existed , create it.
  * Should be wrapped with try & catch .
@@ -65,3 +66,25 @@ fun <T : RealmObject, K , V> Realm.getLists(
         }
     }
 }
+
+fun <T> Realm.rxSingleTransactionAsync(block: (Realm) -> T):Single<T>{
+    return Single.create { emitter->
+        try {
+            executeTransactionAsync{ realm->
+            val message=  block(realm)
+                emitter.onSuccess(message)
+            }
+
+        }catch (e:Exception){
+            emitter.onError(e)
+        }
+    }
+}
+
+
+fun <T:RealmObject> Realm.findObjectById(
+        clazz:Class<T>,
+        id: ObjectId):T?{
+       return where(clazz).equalTo("_id",id).findFirst()
+}
+

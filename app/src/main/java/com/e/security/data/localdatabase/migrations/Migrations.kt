@@ -11,8 +11,8 @@ class Migrations : RealmMigration {
         var oldVersion=oldVersion
 
         if (oldVersion==0L){
-            migration1to2(realm.schema)
-            oldVersion++
+//            migration1to2(realm.schema)
+//            oldVersion++
         }
 
     }

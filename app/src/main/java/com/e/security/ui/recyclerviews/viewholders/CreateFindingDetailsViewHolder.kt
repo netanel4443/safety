@@ -1,34 +1,45 @@
 package com.e.security.ui.recyclerviews.viewholders
 
 import android.view.View
+import android.view.ViewGroup
+import com.e.security.R
 import com.e.security.databinding.FindingRecyclerviewCellDesignBinding
+import com.e.security.ui.recyclerviews.celldata.FindingVhCell
+import com.e.security.ui.recyclerviews.clicklisteners.FindingVhItemClick
 import com.e.security.ui.recyclerviews.helpers.CreateVh
 import com.e.security.ui.recyclerviews.helpers.GenericItemClickListener
-import com.e.security.ui.recyclerviews.celldata.FindingVhCellData
 
-class CreateFindingDetailsViewHolder: CreateVh<FindingVhCellData> {
-    override fun createViewHolder(
-        view: View,
-        itemClick: GenericItemClickListener<FindingVhCellData>?
-    ): GenericViewHolder<FindingVhCellData> {
-
-        val vh=FindingsDetailsViewHolder(view)
-        vh.setItemClickListener(itemClick)
-        return vh
+class CreateFindingDetailsViewHolder : CreateVh<FindingVhCell>() {
+    private var binding: FindingRecyclerviewCellDesignBinding? = null
+    private var itmClick: FindingVhItemClick? = null
+    override fun getViewHolder(
+        parent: ViewGroup,
+        itemClick: GenericItemClickListener<FindingVhCell>?
+    ):  GenericViewHolder {
+        return createVh(
+            parent,
+            R.layout.finding_recyclerview_cell_design,
+            itemClick
+        )
     }
 
-    private inner class FindingsDetailsViewHolder(view:View):GenericViewHolder<FindingVhCellData>(view){
-        private val binding=FindingRecyclerviewCellDesignBinding.bind(view)
-
-            init {
-                binding.parent.setOnClickListener {
-                    itemClick!!.onItemClick(cachedItem!!)
-                }
-            }
-        override fun bind(item: FindingVhCellData) {
-            super.bind(item)
-            binding.problem.text=item.problem
-            binding.section.text=item.findingSection
+    override fun onInitVh(view: View) {
+        binding = FindingRecyclerviewCellDesignBinding.bind(view)
+        binding!!.parent.setOnClickListener {
+            itmClick!!.onItemClick(cachedItem!!)
         }
+
+        binding!!.parent.setOnLongClickListener {
+            itmClick!!.onLongClick(cachedItem!!)
+        }
+    }
+
+    override fun bindData(item: FindingVhCell) {
+        binding!!.problem.text = item.problem
+        binding!!.section.text = item.findingSection
+    }
+
+    override fun setClickListener(itemClickListener: GenericItemClickListener<FindingVhCell>?) {
+        itmClick = itemClickListener as FindingVhItemClick
     }
 }

@@ -12,9 +12,10 @@ class CalendarDialog(
     var onClick: ((String) -> Unit)? = null
 
     fun showDialog() {
-        alert?.run {
-            show()
-        } ?: create()
+        if (alert == null) {
+            create()
+        }
+        alert?.show()
     }
 
     private fun create() {
@@ -26,6 +27,7 @@ class CalendarDialog(
         val binding = CalendarDialogBinding.inflate(inflater)
         alertDialog.setView(binding.root)
         alert = alertDialog.create()
+        alert!!.setCanceledOnTouchOutside(true)
 
         binding.calendar.setOnDateChangeListener { calendar, year, month, day ->
             d = day
@@ -46,8 +48,6 @@ class CalendarDialog(
         binding.cancelButton.setOnClickListener {
             alert!!.dismiss()
         }
-
-        alert!!.show()
     }
 
 }

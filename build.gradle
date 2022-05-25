@@ -7,7 +7,7 @@ buildscript {
 
         def realm_version="10.10.1"
         classpath "io.realm:realm-gradle-plugin:$realm_version"
-    }
+     }
 }
 
 
