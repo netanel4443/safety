@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dialog_not_created">"Can't show a dialog before it's creation"</string>
+</resources>

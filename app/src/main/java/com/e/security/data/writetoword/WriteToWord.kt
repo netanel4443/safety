@@ -4,13 +4,14 @@ package com.e.security.data.writetoword
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Environment
 import com.e.security.R
 import com.e.security.data.FindingDataHolder
 import com.e.security.data.ReportDataHolder
 import com.e.security.data.StudyPlaceDetailsDataHolder
 import com.e.security.data.definitions.rikuzBdikotArray
 import com.e.security.utils.printErrorIfDbg
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.CompletableEmitter
 import io.reactivex.rxjava3.core.Single
 import org.apache.poi.util.Units
 import org.apache.poi.xwpf.usermodel.*
@@ -31,24 +32,15 @@ class WriteToWord(private val context: Context) {
 
     private var numID: BigInteger? = null
 
-    fun exportData(): Single<Intent> {
+    fun exportData(): Single<String> {
 
         return Single.fromCallable {
             createFile()
         }
     }
 
-    private fun createFile(): Intent {
-        context.getExternalFilesDir(
-            Environment.DIRECTORY_DOWNLOADS,
-        );
-
-        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
-            addCategory(Intent.CATEGORY_OPENABLE)
-            type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-            putExtra(Intent.EXTRA_TITLE, "invoice")
-        }
-        return intent
+    private fun createFile(): String {
+        return "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     }
 
     fun save(
@@ -79,27 +71,26 @@ class WriteToWord(private val context: Context) {
         }
     }
 
-    private fun write(
+     fun write(
         reportDataHolder: ReportDataHolder,
         details: StudyPlaceDetailsDataHolder
     ) {
+            document = XWPFDocument()
 
-        document = XWPFDocument()
+            writeGeneralDetails(details, reportDataHolder.date)
 
-        writeGeneralDetails(details, reportDataHolder.date)
+            run = document!!.createParagraph().createRun()
+            run!!.addBreak(BreakType.PAGE)
+            addText(ParagraphAlignment.CENTER, "פירוט הממצאים")
 
-        run = document!!.createParagraph().createRun()
-        run!!.addBreak(BreakType.PAGE)
-        addText(ParagraphAlignment.CENTER, "פירוט הממצאים")
+            reportDataHolder.findingArr.forEach {
+                writeFindingListTableTitles(it.values)
+            }
 
-        reportDataHolder.findingArr.forEach {
-            writeFindingListTableTitles(it.values)
-        }
+            run = document!!.createParagraph().createRun()
+            run!!.addBreak(BreakType.PAGE)
 
-        run = document!!.createParagraph().createRun()
-        run!!.addBreak(BreakType.PAGE)
-
-        addRikuzBdikotBetihut()
+            addRikuzBdikotBetihut()
     }
 
 

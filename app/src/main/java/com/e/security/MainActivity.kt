@@ -22,7 +22,6 @@ import com.e.security.ui.recyclerviews.viewholders.CreateStudyPlacesVh
 import com.e.security.ui.recyclerviews.viewholders.CreateTextViewVh
 import com.e.security.ui.utils.addFragment
 import com.e.security.ui.viewmodels.effects.Effects
-import com.e.security.utils.differentItems
 
 
 class MainActivity : BaseActivity() {
@@ -74,14 +73,8 @@ class MainActivity : BaseActivity() {
                     resources.getString(effect.message),
                     effect.func
                 )
-                is Effects.ShowStringRecyclerViewDialog -> showEducationalInstitutionsDialog(
-                    effect.items,
-                    effect.func
-                )
                 is Effects.PopBackStack -> popFragment()
-
             }
-
         }
     }
 
@@ -98,33 +91,8 @@ class MainActivity : BaseActivity() {
         viewModel.viewState.observe(this) { state ->
             val prev = state.prevState
             val curr = state.currentState
+            recyclerviewAdapter.submitList(curr.studyPlacesVhCellArrayList)
 
-            when {
-
-                recyclerviewAdapter.hasNoItems() -> {
-                    recyclerviewAdapter.addItems(curr.studyPlacesVhCellArrayList)
-                }
-                prev.studyPlacesVhCellArrayList.size < curr.studyPlacesVhCellArrayList.size -> {
-                    val newItems =
-                        curr.studyPlacesVhCellArrayList.differentItems(prev.studyPlacesVhCellArrayList)
-                    recyclerviewAdapter.addItems(newItems)
-                }
-                prev.studyPlacesVhCellArrayList.size > curr.studyPlacesVhCellArrayList.size -> {
-                    val itemsToRemove =
-                        curr.studyPlacesVhCellArrayList.differentItems(prev.studyPlacesVhCellArrayList)
-                    recyclerviewAdapter.removeItems(itemsToRemove)
-                }
-                // if we arrived to this point , one item has been updated
-                // so we need to reflect it on the ui
-
-                prev.studyPlacesVhCellArrayList != curr.studyPlacesVhCellArrayList -> {
-                    val itemsToRemove =
-                        curr.studyPlacesVhCellArrayList.differentItems(prev.studyPlacesVhCellArrayList)
-                    val itemsToAdd =
-                        prev.studyPlacesVhCellArrayList.differentItems(curr.studyPlacesVhCellArrayList)
-                    recyclerviewAdapter.changeItem(Pair(itemsToRemove[0], itemsToAdd[0]))
-                }
-            }
         }
     }
 
@@ -132,7 +100,7 @@ class MainActivity : BaseActivity() {
         initRecyclerview()
 
         binding.addBtn.setOnClickListener {
-            viewModel.showEmptyStudyPlaceInfoDialogFragment()
+          viewModel.showEmptyStudyPlaceInfoDialogFragment()
         }
     }
 
@@ -172,6 +140,8 @@ class MainActivity : BaseActivity() {
             false
         )
         recyclerview.setHasFixedSize(true)
+        binding.recyclerview.setOnClickListener {
+        }
     }
 
     private fun initDeleteDialog(message: String, func: () -> Unit) {
@@ -179,24 +149,5 @@ class MainActivity : BaseActivity() {
         deleteDialog!!.onClick = { func.invoke() }
         deleteDialog!!.showDialog(message)
     }
-
-    private fun showEducationalInstitutionsDialog(
-        items: List<TextViewVhCell>,
-        func: (TextViewVhCell) -> Unit
-    ) {
-        if (recyclerViewDialog == null) {
-            createEducationalInstitutionsDialog()
-        }
-
-        recyclerViewDialog!!.showDialog(func)
-        recyclerViewDialog!!.addItems(items)
-    }
-
-    private fun createEducationalInstitutionsDialog() {
-
-        recyclerViewDialog = RecyclerViewDialog(
-            this,
-            CreateTextViewVh::class.java,
-        )
-    }
 }
+

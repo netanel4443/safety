@@ -26,6 +26,7 @@ class FilterResultsDialog<T>(
     private var helper: IFilterResultsDialogHelper<T>? = null
     private var filterObservable: Observable<List<T>>? = null
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
+    private var binding: FilterResultsDialogBinding? = null
 
     fun showDialog() {
         if (alert == null) {
@@ -40,14 +41,14 @@ class FilterResultsDialog<T>(
         val alertDialog = AlertDialog.Builder(context)
 
         val inflater = LayoutInflater.from(context)
-        val binding = FilterResultsDialogBinding.inflate(inflater)
+        binding = FilterResultsDialogBinding.inflate(inflater)
 
-        alertDialog.setView(binding.root)
+        alertDialog.setView(binding!!.root)
         alert = alertDialog.create()
         alert?.setCanceledOnTouchOutside(true)
         alert?.setOnDismissListener { onDismiss() }
 
-        binding.cancelButton.setOnClickListener{ onDismiss() }
+        binding!!.cancelButton.setOnClickListener { onDismiss() }
 
         recyclerviewAdapter = GenericRecyclerviewAdapter(cVh)
         recyclerviewAdapter?.setItemClickListener(object : GenericItemClickListener<T> {
@@ -57,13 +58,13 @@ class FilterResultsDialog<T>(
             }
         })
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        binding.recyclerview.adapter = recyclerviewAdapter
-        binding.recyclerview.layoutManager = layoutManager
-        binding.recyclerview.setHasFixedSize(true)
+        binding!!.recyclerview.adapter = recyclerviewAdapter
+        binding!!.recyclerview.layoutManager = layoutManager
+       // binding!!.recyclerview.setHasFixedSize(true)
 
-        filterObservable = binding.editText.textChanges()
-            .debounce(1000, TimeUnit.MILLISECONDS)
-            .filter { it.isNotBlank() && it.length > 2 }
+        filterObservable = binding!!.editText.textChanges()
+            .debounce(500, TimeUnit.MILLISECONDS)
+            .filter { it.isNotBlank() }
             .switchMap { helper!!.textChanges(it) }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -71,27 +72,32 @@ class FilterResultsDialog<T>(
         subscribeForFilter()
     }
 
-    fun setIHelper(helper:IFilterResultsDialogHelper<T>){
-            this.helper=helper
+    fun setIHelper(helper: IFilterResultsDialogHelper<T>) {
+        this.helper = helper
     }
 
-    private fun addItems(items: List<T>) {
-        if (!recyclerviewAdapter!!.hasNoItems()) {
-            recyclerviewAdapter!!.removeAllItems()
-        }
-        recyclerviewAdapter!!.addItems(items)
+    fun addItems(items: List<T>) {
+        recyclerviewAdapter!!.submitList(items)
     }
 
     private fun show() {
+        helper?.onShowDialog()
         alert?.show()
     }
 
     private fun subscribeForFilter() {
-        compositeDisposable.add(filterObservable!!.subscribe(::addItems, ::printErrorIfDbg))
+        compositeDisposable.add(
+            filterObservable!!.subscribe(
+                helper!!::onItemsReady,
+                ::printErrorIfDbg
+            )
+        )
     }
 
     private fun onDismiss() {
         compositeDisposable.clear()
+        binding!!.editText.text.clear()
+        helper?.onDismissDialog()
         alert!!.dismiss()
     }
 }

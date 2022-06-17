@@ -2,7 +2,7 @@ package com.e.security.data.definitions
 
 val rikuzBdikotArray = arrayListOf<RikuzBdikotBetihutObj>(
     RikuzBdikotBetihutObj(
-        testAtea = "יציבות ותקינות המבנים (לרבות מבנים יבילים) ",
+        testAtea = "יציבות ותקינות המבנים (לרבות מבנים יבילים)",
         frequency = "1.\tבמקרה ונצפו כשלי יציבות דוגמת שקיעות וסדקים.\n" +
                 "2.\tמבנה יביל – אחת לחמש שנים\n",
         examiningBody = "מהנדס מבנים"

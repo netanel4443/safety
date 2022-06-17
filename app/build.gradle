@@ -93,5 +93,8 @@ dependencies {
 
     //picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
+
+    implementation 'com.tom-roush:pdfbox-android:2.0.22.0'
+
 }
 

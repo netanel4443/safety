@@ -23,8 +23,10 @@ import com.e.security.usecase.HozerMankalUseCase
 import com.e.security.usecase.WriteToWordUseCase
 import com.e.security.utils.printErrorIfDbg
 import com.e.security.utils.printIfDbg
+import com.e.security.utils.subscribeBlock
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import org.bson.types.ObjectId
 import java.util.*
@@ -185,24 +187,12 @@ class MainViewModel @Inject constructor(
     fun editExportDeleteMenuSelection(textViewVhCell: TextViewVhCell) {
         when (textViewVhCell.item) {
             resources.getString(R.string.edit) -> showCalendarDialog()
-            resources.getString(R.string.export) -> exportReport()
+            resources.getString(R.string.export_word) -> exportWord()
+            resources.getString(R.string.export_pdf) -> exportPdf()
             resources.getString(R.string.delete) -> showDeleteReportDialog(::deleteReport)
-
         }
     }
 
-    private fun exportReport() {
-        val studyPlace = data[chosenStudyPlaceId]
-        val studyPlaceDetailsDataHolder = data[chosenStudyPlaceId]!!.reportDetails
-        val chosenReport = studyPlace!!.reportList[chosenReportId]!!
-        writeToWordUseCase.write(chosenReport, studyPlaceDetailsDataHolder)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe ({
-                _viewEffect.value=Effects.StartActivityForResult(it)
-//                _viewEffect.value=Effects.Toast(it)
-            },::printErrorIfDbg)
-    }
 
     fun setChosenReportId(id: ObjectId) {
         chosenReportId = id
@@ -447,14 +437,24 @@ class MainViewModel @Inject constructor(
         _viewEffect.value = Effects.ShowCalendarDialog
     }
 
-    fun showStringRecyclerViewDialog(items: Array<String>, func: (TextViewVhCell) -> Unit) {
+    fun showStringRecyclerViewDialog(items: Array<String>) {
+        val tvList = createTextViewVhCell(items)
+        _viewEffect.value = Effects.ShowEducationalInstitutionsDialog(tvList)
+    }
+
+    fun showReportFragmentRecyclerViewMenu(items: Array<String>) {
+        val tvList = createTextViewVhCell(items)
+        _viewEffect.value = Effects.ShowReportFragmentRecyclerViewMenu(tvList)
+    }
+
+    private fun createTextViewVhCell(items: Array<String>): ArrayList<TextViewVhCell> {
         val tvList = ArrayList<TextViewVhCell>()
         items.forEach {
             tvList.add(
                 TextViewVhCell(item = it)
             )
         }
-        _viewEffect.value = Effects.ShowStringRecyclerViewDialog(tvList, func)
+        return tvList
     }
 
 
@@ -576,7 +576,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-     fun toast(stringRes: Int) {
+    fun toast(stringRes: Int) {
         _viewEffect.value = Effects.Toast(resources.getString(stringRes))
     }
 
@@ -590,7 +590,6 @@ class MainViewModel @Inject constructor(
                 )
             }
             .toList().toObservable()
-
     }
 
     fun showHozerMankalDialog() {
@@ -606,25 +605,130 @@ class MainViewModel @Inject constructor(
         updateChosenFindingUi(finding)
     }
 
-    fun saveFile(uri: Uri) {
+    fun saveWordFile(uri: Uri) {
+        val studyPlace = data[chosenStudyPlaceId]
+        val studyPlaceDetailsDataHolder = data[chosenStudyPlaceId]!!.reportDetails
+        val chosenReport = studyPlace!!.reportList[chosenReportId]!!
+        val single = writeToWordUseCase
+            .saveWordFile(uri, chosenReport, studyPlaceDetailsDataHolder)
+        saveFile(single)
+    }
+
+    fun savePdfFile(uri: Uri) {
+        val single = writeToWordUseCase.savePdfFile(uri)
+        saveFile(single)
+    }
+
+    private fun saveFile(single: Single<String>) {
+        single.subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                _viewEffect.value = Effects.Toast(it)
+            }, ::printErrorIfDbg)
+            .addDisposable()
+    }
+
+
+    private fun exportPdf() {
+
+        exportFile(writeToWordUseCase::exportPdf)
+            .subscribe({
+                _viewEffect.value = Effects.StartActivityForResultPdf(it)
+            }, ::printErrorIfDbg)
+            .addDisposable()
+    }
+
+    private fun exportWord() {
+        writeToWordUseCase.getWordFileType()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                _viewEffect.value = Effects.StartActivityForResultWord(it)
+            }, ::printErrorIfDbg)
+            .addDisposable()
+    }
+
+    private fun exportFile(
+        func: (
+            reportDataHolder: ReportDataHolder,
+            studyPlaceDetailsDataHolder: StudyPlaceDetailsDataHolder
+        ) -> Single<String>,
+    ): Single<String> {
         val studyPlace = data[chosenStudyPlaceId]
         val studyPlaceDetailsDataHolder = data[chosenStudyPlaceId]!!.reportDetails
         val chosenReport = studyPlace!!.reportList[chosenReportId]!!
 
-            writeToWordUseCase.saveFile(uri,chosenReport, studyPlaceDetailsDataHolder)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe {
-
-                }
-                .subscribe({
-                    _viewEffect.value=Effects.Toast(it)
-
-                },::printErrorIfDbg)
+        return func.invoke(chosenReport, studyPlaceDetailsDataHolder)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
     }
+
 
     fun popFragment() {
-        _viewEffect.value=Effects.PopBackStack
+        _viewEffect.value = Effects.PopBackStack
     }
+
+    fun getAppropriateHozerItems() {
+        hozerMankalUSeCase.selectedHozerMankal(
+            data[chosenStudyPlaceId]!!.reportDetails.educationalInstitution
+        ).subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBlock {
+                val vhCellArray = ArrayList<HozerMankalVhCell>()
+                it.forEach { hm ->
+                    vhCellArray.add(
+                        HozerMankalVhCell(
+                            requirement = hm.definition,
+                            sectionInAssessmentList = hm.section,
+                            testArea = hm.testArea
+                        )
+                    )
+                }
+                updateChosenHozerMankalRecyclerItems(vhCellArray)
+            }.addDisposable()
+    }
+
+    fun updateChosenHozerMankalRecyclerItems(items: List<HozerMankalVhCell>) {
+        val newState = _viewState.value!!.currentState.createFindingFragmentState.copy(
+            chosenHozerMankalRecyclerItems = items
+        )
+        updateCreateFindingFragmentState(newState)
+    }
+
+    private fun updateCreateFindingFragmentState(state: MainViewState.CreateFindingFragmentState) {
+        _viewState.mviValue {
+            it.copy(
+                createFindingFragmentState = state
+            )
+        }
+    }
+
+    fun onDismissFilterResultDialog(isVisible: Boolean) {
+        val newState = _viewState.value!!.currentState.createFindingFragmentState.copy(
+            isFilterResultsDialogVisible = isVisible
+        )
+        updateCreateFindingFragmentState(newState)
+    }
+
+    fun showPhotoUploadDialog(items: Array<String>) {
+        val tvhc=createTextViewVhCell(items)
+        _viewEffect.value = Effects.ShowPhotoUploadDialog(tvhc)
+    }
+
+    fun uploadPhotoUserSelection(item: TextViewVhCell) {
+        when (item.item) {
+            resources.getString(R.string.take_photo) -> takePhoto()
+            resources.getString(R.string.select_photo) -> selectPhoto()
+        }
+    }
+
+    private fun takePhoto() {
+        _viewEffect.value = Effects.TakePhoto
+    }
+
+    private fun selectPhoto() {
+        _viewEffect.value = Effects.SelectPhoto
+    }
+
 
 }

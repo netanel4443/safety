@@ -1,6 +1,5 @@
 package com.e.security.ui.viewmodels.effects
 
-import android.content.Intent
 import com.e.security.ui.recyclerviews.celldata.TextViewVhCell
 
 sealed class Effects {
@@ -10,15 +9,17 @@ sealed class Effects {
     object ShowCalendarDialog : Effects()
     object ShowStudyPlaceInfoDialogFragment : Effects()
     object ShowHozerMankalDialog : Effects()
-    object  PopBackStack : Effects()
+    object PopBackStack : Effects()
+    object TakePhoto : Effects()
+    object SelectPhoto : Effects()
 
-    data class StartActivityForResult(val intent: Intent) : Effects()
-    data class ShowDeleteDialog(val message: Int, val func: () -> Unit) : Effects()
+    data class StartActivityForResultWord(val type: String) : Effects()
+    data class StartActivityForResultPdf(val type: String) : Effects()
     data class Toast(val message: String) : Effects()
-    data class ShowStringRecyclerViewDialog(
-        val items: List<TextViewVhCell>,
-        val func: (TextViewVhCell) -> Unit
-    ) : Effects()
+    data class ShowDeleteDialog(val message: Int, val func: () -> Unit) : Effects()
+    data class ShowEducationalInstitutionsDialog(val items: List<TextViewVhCell>) : Effects()
+    data class ShowReportFragmentRecyclerViewMenu(val items: List<TextViewVhCell>) : Effects()
+    data class ShowPhotoUploadDialog(val items: List<TextViewVhCell>) : Effects()
 
 
 }

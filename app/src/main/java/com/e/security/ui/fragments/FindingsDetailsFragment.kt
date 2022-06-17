@@ -51,33 +51,33 @@ class FindingsDetailsFragment : BaseSharedVmFragment() {
         viewModel.viewState.observe(viewLifecycleOwner) { state ->
             val prev = state.prevState
             val curr = state.currentState
-
-            when {
-
-                recyclerviewAdapter.hasNoItems() -> {
-                    recyclerviewAdapter.addItems(curr.findingVhCellArrayList)
-                }
-                prev.findingVhCellArrayList.size < curr.findingVhCellArrayList.size -> {
-                    val newItems =
-                        curr.findingVhCellArrayList.differentItems(prev.findingVhCellArrayList)
-                    recyclerviewAdapter.addItems(newItems)
-                }
-                prev.findingVhCellArrayList.size > curr.findingVhCellArrayList.size -> {
-                    val itemsToRemove =
-                        curr.findingVhCellArrayList.differentItems(prev.findingVhCellArrayList)
-                    recyclerviewAdapter.removeItems(itemsToRemove)
-                }
-                // if we arrived to this point , one item has been updated
-                // so we need to reflect it on the ui
-                prev.findingVhCellArrayList != curr.findingVhCellArrayList -> {
-                    val itemsToRemove =
-                        curr.findingVhCellArrayList.differentItems(prev.findingVhCellArrayList)
-                    val itemsToAdd =
-                        prev.findingVhCellArrayList.differentItems(curr.findingVhCellArrayList)
-                    recyclerviewAdapter.removeItems(itemsToRemove)
-                    recyclerviewAdapter.addItems(itemsToAdd)
-                }
-            }
+                recyclerviewAdapter.submitList(curr.findingVhCellArrayList)
+//            when {
+//
+//                recyclerviewAdapter.hasNoItems() -> {
+//                    recyclerviewAdapter.addItems(curr.findingVhCellArrayList)
+//                }
+//                prev.findingVhCellArrayList.size < curr.findingVhCellArrayList.size -> {
+//                    val newItems =
+//                        curr.findingVhCellArrayList.differentItems(prev.findingVhCellArrayList)
+//                    recyclerviewAdapter.addItems(newItems)
+//                }
+//                prev.findingVhCellArrayList.size > curr.findingVhCellArrayList.size -> {
+//                    val itemsToRemove =
+//                        curr.findingVhCellArrayList.differentItems(prev.findingVhCellArrayList)
+//                    recyclerviewAdapter.removeItems(itemsToRemove)
+//                }
+//                // if we arrived to this point , one item has been updated
+//                // so we need to reflect it on the ui
+//                prev.findingVhCellArrayList != curr.findingVhCellArrayList -> {
+//                    val itemsToRemove =
+//                        curr.findingVhCellArrayList.differentItems(prev.findingVhCellArrayList)
+//                    val itemsToAdd =
+//                        prev.findingVhCellArrayList.differentItems(curr.findingVhCellArrayList)
+//                    recyclerviewAdapter.removeItems(itemsToRemove)
+//                    recyclerviewAdapter.addItems(itemsToAdd)
+//                }
+//            }
         }
     }
 

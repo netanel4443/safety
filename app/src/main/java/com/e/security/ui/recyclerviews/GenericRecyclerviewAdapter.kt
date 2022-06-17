@@ -1,16 +1,33 @@
 package com.e.security.ui.recyclerviews
 
 import android.view.ViewGroup
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.e.security.ui.recyclerviews.helpers.CreateVh
 import com.e.security.ui.recyclerviews.helpers.GenericItemClickListener
 
-open class GenericRecyclerviewAdapter<T, C : CreateVh<T>>(
-    private val clazz: Class<C>
+open class GenericRecyclerviewAdapter<T, CVH : CreateVh<T>>(
+    private val clazz: Class<CVH>
 ) : RecyclerView.Adapter<CreateVh<T>.GenericViewHolder>() {
     protected val items = ArrayList<T>()
     protected var itemClick: GenericItemClickListener<T>? = null
 
+    protected val diffUtil= object:DiffUtil.ItemCallback<T>(){
+        override fun areItemsTheSame(oldItem: T, newItem: T): Boolean {
+           return oldItem == newItem
+        }
+
+        override fun areContentsTheSame(oldItem: T, newItem: T): Boolean {
+         return newItem == oldItem
+        }
+    }
+
+    protected val listDiffer:AsyncListDiffer<T> = AsyncListDiffer(this,diffUtil)
+
+    fun submitList(list:List<T>){
+        listDiffer.submitList(list)
+    }
 
     fun addItems(items: List<T>) {
         this.items.addAll(items)
@@ -64,12 +81,11 @@ open class GenericRecyclerviewAdapter<T, C : CreateVh<T>>(
         return instance.getViewHolder(parent, itemClick)
     }
 
-
     override fun onBindViewHolder(holder: CreateVh<T>.GenericViewHolder, position: Int) {
-        holder.bind(items[position])
+        holder.bind(listDiffer.currentList.get(position))
     }
 
     override fun getItemCount(): Int {
-        return items.size
+      return  listDiffer.currentList.size
     }
 }

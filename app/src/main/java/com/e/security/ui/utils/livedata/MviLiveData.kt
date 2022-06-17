@@ -9,13 +9,14 @@ open class MviLiveData<T>:LiveData<T> {
     constructor(t:T):super(t)
 
 
-
-    fun observe(owner: LifecycleOwner, observer: Observer<in T>,block:(T)->Unit) {
+        fun observe(owner: LifecycleOwner, observer: Observer<in T>,block:(T)->Unit) {
         super.observe(owner, observer)
         value?.let{
+
             block.invoke(it)
         }
     }
+
 
 
 }

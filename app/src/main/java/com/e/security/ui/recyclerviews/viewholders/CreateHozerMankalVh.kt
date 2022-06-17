@@ -23,7 +23,7 @@ class CreateHozerMankalVh : CreateVh<HozerMankalVhCell>() {
     }
 
     override fun onInitVh(view: View) {
-        binding = HozerMankalVhCellDesignBinding.bind(view!!)
+        binding = HozerMankalVhCellDesignBinding.bind(view)
         binding!!.parent.setOnClickListener {
             itemClick!!.onItemClick(cachedItem!!)
         }

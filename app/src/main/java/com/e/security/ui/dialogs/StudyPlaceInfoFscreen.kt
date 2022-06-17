@@ -12,13 +12,19 @@ import com.e.security.data.StudyPlaceDetailsDataHolder
 import com.e.security.databinding.StudyPlaceInfoBinding
 import com.e.security.ui.MainViewModel
 import com.e.security.ui.fragments.BaseSharedVmFragment
+import com.e.security.ui.recyclerviews.celldata.TextViewVhCell
+import com.e.security.ui.recyclerviews.helpers.GenericItemClickListener
+import com.e.security.ui.recyclerviews.viewholders.CreateTextViewVh
 import com.e.security.ui.utils.rxjava.throttleClick
+import com.e.security.ui.viewmodels.effects.Effects
 
 class StudyPlaceInfoFscreen() : BaseSharedVmFragment() {
 
     private val viewModel: MainViewModel by lazy(this::getViewModel)
 
     private lateinit var binding: StudyPlaceInfoBinding
+    private var recyclerViewDialog: RecyclerViewDialog<TextViewVhCell>? = null
+
 //    private var recyclerViewDialog: RecyclerViewDialog<TextViewVhCell>? = null
 
 
@@ -44,8 +50,9 @@ class StudyPlaceInfoFscreen() : BaseSharedVmFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         binding.educationalInstitution.setOnClickListener {
-            viewModel.showStringRecyclerViewDialog(resources.getStringArray(R.array.hozer_types),
-            viewModel::changeEducationalInstitution)
+            viewModel.showStringRecyclerViewDialog(
+                resources.getStringArray(R.array.hozer_types)
+            )
         }
 
         binding.confirmButton.throttleClick() {
@@ -83,15 +90,14 @@ class StudyPlaceInfoFscreen() : BaseSharedVmFragment() {
     }
 
     private fun initEffectObserver() {
-//        viewModel.viewEffect.observe(viewLifecycleOwner) { effect ->
-//            when (effect) {
-//                is Effects.ShowStringRecyclerViewDialog -> showEducationalInstitutionsDialog(
-//                    effect.items,
-//                    effect.func
-//                )
-//
-//            }
-//        }
+        viewModel.viewEffect.observe(viewLifecycleOwner) { effect ->
+            when (effect) {
+                is Effects.ShowEducationalInstitutionsDialog -> showEducationalInstitutionsDialog(
+                    effect.items
+                )
+
+            }
+        }
     }
 
 
@@ -129,9 +135,35 @@ class StudyPlaceInfoFscreen() : BaseSharedVmFragment() {
         }
     }
 
+    private fun showEducationalInstitutionsDialog(
+        items: List<TextViewVhCell>
+    ) {
+        if (recyclerViewDialog == null) {
+            createEducationalInstitutionsDialog()
+        }
+        recyclerViewDialog!!.addItems(items)
+        recyclerViewDialog!!.showDialog()
+    }
+
+    private fun createEducationalInstitutionsDialog() {
+
+        recyclerViewDialog = RecyclerViewDialog(
+            requireActivity(),
+            CreateTextViewVh::class.java,
+        )
+        recyclerViewDialog!!.create()
+
+        recyclerViewDialog!!.setItemClickListener(object :
+            GenericItemClickListener<TextViewVhCell> {
+            override fun onItemClick(item: TextViewVhCell) {
+                recyclerViewDialog!!.dismissDialog()
+                viewModel.changeEducationalInstitution(item)
+            }
+        })
+    }
 
 //        recyclerViewDialog!!.onClick = {
 //            viewModel.changeEducationalInstitution(it)
 //        }
 //
-    }
+}

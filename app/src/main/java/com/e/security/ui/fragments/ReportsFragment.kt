@@ -1,28 +1,30 @@
 package com.e.security.ui.fragments
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.e.security.MainActivity
 import com.e.security.R
 import com.e.security.databinding.RecyclerviewAddBtnScreenBinding
 import com.e.security.ui.MainViewModel
+import com.e.security.ui.activityresults.SaveFileResultContract
 import com.e.security.ui.dialogs.CalendarDialog
+import com.e.security.ui.dialogs.RecyclerViewDialog
 import com.e.security.ui.recyclerviews.GenericRecyclerviewAdapter
 import com.e.security.ui.recyclerviews.celldata.ReportVhCell
+import com.e.security.ui.recyclerviews.celldata.TextViewVhCell
 import com.e.security.ui.recyclerviews.clicklisteners.ReportVhItemClick
+import com.e.security.ui.recyclerviews.helpers.GenericItemClickListener
 import com.e.security.ui.recyclerviews.viewholders.CreateStudyPlaceReportsVh
+import com.e.security.ui.recyclerviews.viewholders.CreateTextViewVh
 import com.e.security.ui.utils.addFragment
 import com.e.security.ui.viewmodels.effects.Effects
-import com.e.security.utils.differentItems
 
 class ReportsFragment : BaseSharedVmFragment() {
 
@@ -33,11 +35,17 @@ class ReportsFragment : BaseSharedVmFragment() {
                     CreateStudyPlaceReportsVh>
 
     private var calendarDialog: CalendarDialog? = null
-    private var launcher = registerForActivityResult()
+    private var recyclerViewDialog: RecyclerViewDialog<TextViewVhCell>? = null
+
+    private lateinit var wordLauncher: ActivityResultLauncher<String?>
+    private lateinit var pdfLauncher: ActivityResultLauncher<String?>
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         (requireActivity() as MainActivity).mainActivityComponent.inject(this)
+        wordLauncher = registerForActivityResult(viewModel::saveWordFile)
+        pdfLauncher = registerForActivityResult(viewModel::savePdfFile)
+
     }
 
     override fun onCreateView(
@@ -65,36 +73,11 @@ class ReportsFragment : BaseSharedVmFragment() {
     }
 
     private fun initStateObserver() {
+
         viewModel.viewState.observe(viewLifecycleOwner) { state ->
             val prev = state.prevState
             val curr = state.currentState
-            println("  ${prev.reportVhCellArrayList} ${curr.reportVhCellArrayList}")
-            when {
-                recyclerviewAdapter.hasNoItems() -> {
-                    recyclerviewAdapter.addItems(curr.reportVhCellArrayList)
-                }
-                prev.reportVhCellArrayList.size < curr.reportVhCellArrayList.size -> {
-                    val newItems =
-                        curr.reportVhCellArrayList.differentItems(prev.reportVhCellArrayList)
-                    recyclerviewAdapter.addItems(newItems)
-                }
-                prev.reportVhCellArrayList.size > curr.reportVhCellArrayList.size -> {
-                    val itemsToRemove =
-                        curr.reportVhCellArrayList.differentItems(prev.reportVhCellArrayList)
-                    recyclerviewAdapter.removeItems(itemsToRemove)
-                }
-
-                // if we arrived to this point , one item has been updated
-                // so we need to reflect it on the ui
-
-                prev.reportVhCellArrayList != curr.reportVhCellArrayList -> {
-                    val itemsToRemove =
-                        curr.reportVhCellArrayList.differentItems(prev.reportVhCellArrayList)
-                    val itemsToAdd =
-                        prev.reportVhCellArrayList.differentItems(curr.reportVhCellArrayList)
-                    recyclerviewAdapter.changeItem(Pair(itemsToRemove[0], itemsToAdd[0]))
-                }
-            }
+            recyclerviewAdapter.submitList(curr.reportVhCellArrayList)
         }
     }
 
@@ -108,27 +91,35 @@ class ReportsFragment : BaseSharedVmFragment() {
                     effect.message,
                     Toast.LENGTH_SHORT
                 ).show()
-                is Effects.StartActivityForResult -> saveFileIntent(effect.intent)
+                is Effects.StartActivityForResultWord -> saveWordFile(effect.type)
+                is Effects.StartActivityForResultPdf -> savePdfFile(effect.type)
+                is Effects.ShowReportFragmentRecyclerViewMenu -> showEducationalInstitutionsDialog(
+                    effect.items
+                )
 //                is Effects.ShowDeleteDialogReportScreen ->Toast.makeText(requireActivity(),effect.message,Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun saveFileIntent(intent: Intent) {
-        launcher.launch(intent)
+    private fun saveWordFile(type: String) {
+        wordLauncher.launch(type)
     }
 
-    private fun registerForActivityResult(): ActivityResultLauncher<Intent> {
-        return registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
+    private fun savePdfFile(type: String) {
+        pdfLauncher.launch(type)
+    }
 
-                result.data?.data?.let {
-                    println(it)
-                    viewModel.saveFile(it)
+    private fun registerForActivityResult(func: (Uri) -> Unit): ActivityResultLauncher<String?> {
+        return registerForActivityResult(SaveFileResultContract()) { result ->
+
+            result?.let {
+                it.data?.let { uri ->
+                    func.invoke(uri)
                 }
             }
         }
     }
+
 
     private fun startFindingDetailsFragment() {
         val fragment = FindingsDetailsFragment()
@@ -152,10 +143,11 @@ class ReportsFragment : BaseSharedVmFragment() {
 
             override fun onEditBtnClick(item: ReportVhCell) {
                 viewModel.setChosenReportId(item.id)
-                viewModel.showStringRecyclerViewDialog(
-                    resources.getStringArray(R.array.esd),
-                    viewModel::editExportDeleteMenuSelection
-                )
+//                viewModel.showStringRecyclerViewDialog(
+//                    resources.getStringArray(R.array.esd),
+//                    viewModel::editExportDeleteMenuSelection
+//                )
+                viewModel.showReportFragmentRecyclerViewMenu(resources.getStringArray(R.array.esd))
             }
 
             override fun onLongClick(item: ReportVhCell): Boolean {
@@ -185,5 +177,31 @@ class ReportsFragment : BaseSharedVmFragment() {
             viewModel.setReportDate(date)
         }
         calendarDialog!!.showDialog()
+    }
+
+    private fun showEducationalInstitutionsDialog(
+        items: List<TextViewVhCell>
+    ) {
+        if (recyclerViewDialog == null) {
+            createEducationalInstitutionsDialog()
+        }
+        recyclerViewDialog!!.addItems(items)
+        recyclerViewDialog!!.showDialog()
+    }
+
+    private fun createEducationalInstitutionsDialog() {
+
+        recyclerViewDialog = RecyclerViewDialog(
+            requireActivity(),
+            CreateTextViewVh::class.java,
+        )
+        recyclerViewDialog!!.create()
+        recyclerViewDialog!!.setItemClickListener(object :
+            GenericItemClickListener<TextViewVhCell> {
+            override fun onItemClick(item: TextViewVhCell) {
+                recyclerViewDialog!!.dismissDialog()
+                viewModel.editExportDeleteMenuSelection(item)
+            }
+        })
     }
 }

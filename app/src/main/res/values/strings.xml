@@ -33,15 +33,36 @@
     <string name="delete_finding">למחוק ממצא זה?</string>
     <string name="deleted_successfully">נמחק בהצלחה</string>
 
+    <string name="test_area">תחום הבדיקה</string>
+    <string name="frequency">תדירות</string>
+    <string name="examine_body">הגוף המקצועי הבודק והמאשר</string>
+
+
+    <string name="sectionInAssessmentList">סעיף ברשימת מבדק</string>
+    <string name="problem">הממצא, מהותו ומיקומו</string>
+    <string name="pic">תמונה</string>
+    <string name="section">סעיף</string>
+
+
     <!--    operations-->
     <string name="edit">לערוך</string>
     <string name="delete">למחוק</string>
-    <string name="export">לייצא</string>
+    <string name="export_word">לייצא לword</string>
+    <string name="export_pdf">לייצא לpdf</string>
 
-<!--    e- edit e-export d-delete    -->
+    <!-- image operations   -->
+    <string name="select_photo">העלאת תמונה</string>
+    <string name="take_photo">צילום תמונה</string>
+    <string-array name="photo_operations">
+    <item>@string/select_photo</item>
+    <item>@string/take_photo</item>
+    </string-array>
+
+    <!--    e- edit e-export_word d-delete    -->
     <string-array name="esd">
         <item>@string/edit</item>
-        <item>@string/export</item>
+        <item>@string/export_word</item>
+        <item>@string/export_pdf</item>
         <item>@string/delete</item>
     </string-array>
 
@@ -59,4 +80,5 @@
         <item>@string/boarding_school</item>
         <item>@string/youth_village</item>
     </string-array>
-</resources>
+
+    </resources>
