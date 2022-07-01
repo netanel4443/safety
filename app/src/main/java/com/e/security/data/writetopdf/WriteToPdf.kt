@@ -1,6 +1,6 @@
 package com.e.security.data.writetopdf
 
-import android.content.Context
+import android.app.Application
 import android.content.Intent
 import android.graphics.*
 import android.graphics.pdf.PdfDocument
@@ -11,20 +11,22 @@ import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextDirectionHeuristics
 import android.text.TextPaint
+import androidx.core.graphics.scale
 import com.e.security.R
 import com.e.security.data.ReportDataHolder
 import com.e.security.data.StudyPlaceDetailsDataHolder
 import com.e.security.data.definitions.rikuzBdikotArray
+import com.e.security.di.scopes.ActivityScope
 import com.e.security.utils.printErrorIfDbg
 import com.e.security.utils.printIfDbg
 import io.reactivex.rxjava3.core.Single
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
+import javax.inject.Inject
 
-
-//todo need to reset for next document creation
-class WriteToPdf(private val context: Context) {
+@ActivityScope
+class WriteToPdf @Inject constructor(private val application: Application) {
     private val STARTED_X_LOCATION = 20
     private val A4_WIDTH = 598
     private val MARGIN_PAGE_WIDTH = 558
@@ -102,6 +104,8 @@ class WriteToPdf(private val context: Context) {
             drawLastPage()
             finishPage()
 
+
+
             fileType()
 
         }
@@ -112,7 +116,8 @@ class WriteToPdf(private val context: Context) {
     ): Single<String> {
         return Single.fromCallable {
             try {
-                val contentResolver = context.contentResolver
+
+                val contentResolver = application.contentResolver
                 val takeFlags: Int =
                     Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
                 contentResolver.takePersistableUriPermission(fileUri, takeFlags)
@@ -131,7 +136,7 @@ class WriteToPdf(private val context: Context) {
             } catch (e: IOException) {
                 printErrorIfDbg(e)
             }
-            context.getString(R.string.saved_successfully)
+            application.getString(R.string.saved_successfully)
         }
     }
 
@@ -167,11 +172,11 @@ class WriteToPdf(private val context: Context) {
         val staticLayoutArray = ArrayList<StaticLayout>()
 
         calculateXspaceBetweenCells(5)
-        staticLayoutArray.add(prepareTableCellForDrawing(context.getString(R.string.students_number)))
-        staticLayoutArray.add(prepareTableCellForDrawing(context.getString(R.string.symbol)))
-        staticLayoutArray.add(prepareTableCellForDrawing(context.getString(R.string.place_name)))
-        staticLayoutArray.add(prepareTableCellForDrawing(context.getString(R.string.ownership)))
-        staticLayoutArray.add(prepareTableCellForDrawing(context.getString(R.string.city)))
+        staticLayoutArray.add(prepareTableCellForDrawing(application.getString(R.string.students_number)))
+        staticLayoutArray.add(prepareTableCellForDrawing(application.getString(R.string.symbol)))
+        staticLayoutArray.add(prepareTableCellForDrawing(application.getString(R.string.place_name)))
+        staticLayoutArray.add(prepareTableCellForDrawing(application.getString(R.string.ownership)))
+        staticLayoutArray.add(prepareTableCellForDrawing(application.getString(R.string.city)))
 
         drawTableRow(staticLayoutArray)
         //clear prev data
@@ -191,9 +196,9 @@ class WriteToPdf(private val context: Context) {
         addYMargin(20)
 
         calculateXspaceBetweenCells(3)
-        staticLayoutArray.add(prepareTableCellForDrawing(context.getString(R.string.study_place_phone)))
-        staticLayoutArray.add(prepareTableCellForDrawing(context.getString(R.string.founding_year)))
-        staticLayoutArray.add(prepareTableCellForDrawing(context.getString(R.string.address)))
+        staticLayoutArray.add(prepareTableCellForDrawing(application.getString(R.string.study_place_phone)))
+        staticLayoutArray.add(prepareTableCellForDrawing(application.getString(R.string.founding_year)))
+        staticLayoutArray.add(prepareTableCellForDrawing(application.getString(R.string.address)))
 
         drawTableRow(staticLayoutArray)
         //clear prev data
@@ -211,10 +216,10 @@ class WriteToPdf(private val context: Context) {
         addYMargin(20)
 
         calculateXspaceBetweenCells(4)
-        staticLayoutArray.add(prepareTableCellForDrawing(context.getString(R.string.authority_participants)))
-        staticLayoutArray.add(prepareTableCellForDrawing(context.getString(R.string.study_place_participants)))
-        staticLayoutArray.add(prepareTableCellForDrawing(context.getString(R.string.inspector_details)))
-        staticLayoutArray.add(prepareTableCellForDrawing(context.getString(R.string.manager_details)))
+        staticLayoutArray.add(prepareTableCellForDrawing(application.getString(R.string.authority_participants)))
+        staticLayoutArray.add(prepareTableCellForDrawing(application.getString(R.string.study_place_participants)))
+        staticLayoutArray.add(prepareTableCellForDrawing(application.getString(R.string.inspector_details)))
+        staticLayoutArray.add(prepareTableCellForDrawing(application.getString(R.string.manager_details)))
 
         drawTableRow(staticLayoutArray)
         //clear prev data
@@ -233,8 +238,8 @@ class WriteToPdf(private val context: Context) {
         addYMargin(20)
 
         calculateXspaceBetweenCells(2)
-        staticLayoutArray.add(prepareTableCellForDrawing(context.getString(R.string.tester_details)))
-        staticLayoutArray.add(prepareTableCellForDrawing(context.getString(R.string.date)))
+        staticLayoutArray.add(prepareTableCellForDrawing(application.getString(R.string.tester_details)))
+        staticLayoutArray.add(prepareTableCellForDrawing(application.getString(R.string.date)))
 
         drawTableRow(staticLayoutArray)
         //clear prev data
@@ -338,9 +343,9 @@ class WriteToPdf(private val context: Context) {
         calculateXspaceBetweenCells(3)
 
         val staticLayoutArray = ArrayList<StaticLayout>(3)
-        staticLayoutArray.add(prepareTableCellForDrawing(context.getString(R.string.test_area)))
-        staticLayoutArray.add(prepareTableCellForDrawing(context.getString(R.string.frequency)))
-        staticLayoutArray.add(prepareTableCellForDrawing(context.getString(R.string.examine_body)))
+        staticLayoutArray.add(prepareTableCellForDrawing(application.getString(R.string.test_area)))
+        staticLayoutArray.add(prepareTableCellForDrawing(application.getString(R.string.frequency)))
+        staticLayoutArray.add(prepareTableCellForDrawing(application.getString(R.string.examine_body)))
         drawTableRow(staticLayoutArray)
 
         staticLayoutArray.clear()
@@ -395,12 +400,12 @@ class WriteToPdf(private val context: Context) {
             updateXlocation(STARTED_X_LOCATION)
 
             val staticLayoutArray = ArrayList<StaticLayout>()
-            staticLayoutArray.add(prepareTableCellForDrawing(context.getString(R.string.pic)))
-            staticLayoutArray.add(prepareTableCellForDrawing(context.getString(R.string.problem)))
-            staticLayoutArray.add(prepareTableCellForDrawing(context.getString(R.string.requirement)))
-            staticLayoutArray.add(prepareTableCellForDrawing(context.getString(R.string.sectionInAssessmentList)))
-            staticLayoutArray.add(prepareTableCellForDrawing(context.getString(R.string.test_area)))
-            staticLayoutArray.add(prepareTableCellForDrawing(context.getString(R.string.section)))
+            staticLayoutArray.add(prepareTableCellForDrawing(application.getString(R.string.pic)))
+            staticLayoutArray.add(prepareTableCellForDrawing(application.getString(R.string.problem)))
+            staticLayoutArray.add(prepareTableCellForDrawing(application.getString(R.string.requirement)))
+            staticLayoutArray.add(prepareTableCellForDrawing(application.getString(R.string.sectionInAssessmentList)))
+            staticLayoutArray.add(prepareTableCellForDrawing(application.getString(R.string.test_area)))
+            staticLayoutArray.add(prepareTableCellForDrawing(application.getString(R.string.section)))
 
             drawTableRow(staticLayoutArray)
 
@@ -416,12 +421,15 @@ class WriteToPdf(private val context: Context) {
                 val imageHeight = 150
                 shouldUpdateBiggestCellHeight(imageHeight)
 
-                drawImageUri(
-                    findingDataHolder.pic, xSpaceCell,
-                    imageHeight,
-                    xLocation.toFloat(),
-                    yLocation.toFloat()
-                )
+               if (findingDataHolder.pic.isNotEmpty()){
+                   drawImageUri(
+                       findingDataHolder.pic, xSpaceCell,
+                       imageHeight,
+                       xLocation.toFloat(),
+                       yLocation.toFloat()
+                   )
+               }
+
 
                 drawTableRectangle(
                     xLocation.toFloat(),
@@ -444,7 +452,7 @@ class WriteToPdf(private val context: Context) {
         var yLoc = y
         // biggestCellHeight because we want all table cells to be drawn at the same line
         // if we will use anything different from biggestCellHeight this calculation
-        // is not going to be calculated equally for all row cells
+        // is not going to be calculated equally for all row`s cells
 
         if (biggestCellHeight + heightSum > pageInfo!!.pageHeight) {
             finishPage()
@@ -460,17 +468,24 @@ class WriteToPdf(private val context: Context) {
 
             if (Build.VERSION.SDK_INT < 28) {
                 MediaStore.Images.Media.getBitmap(
-                    context.contentResolver, Uri.parse(path)
+                    application.contentResolver, Uri.parse(path)
                 )
             } else {
-                val source = ImageDecoder.createSource(context.contentResolver, Uri.parse(path))
+                val source = ImageDecoder.createSource(application.contentResolver, Uri.parse(path))
                 val bitmap = ImageDecoder.decodeBitmap(source)
                 bitmap.copy(Bitmap.Config.ARGB_8888, true)
             }
 
+        val wid: Int = bitmap.width
+        val hei: Int = bitmap.height
+
+        val newWidth = wid /2
+        val newHeight = hei/2
+       val scaledBitmap = bitmap.scale(newWidth,newHeight) // decrease bitmap size by 50%
+
         canvas!!.save()
         updateCanvasXYCoordinates(x, yLoc)
-        canvas?.drawBitmap(bitmap, null, rect, null)
+        canvas?.drawBitmap(scaledBitmap, null, rect, null)
         canvas!!.restore()
     }
 
@@ -572,7 +587,7 @@ class WriteToPdf(private val context: Context) {
 
     private fun textPaint(): TextPaint {
 
-        val tf = Typeface.createFromAsset(context.assets, "font/davidlibre.ttf")
+        val tf = Typeface.createFromAsset(application.assets, "font/davidlibre.ttf")
         val textPaint = TextPaint()
 
         textPaint.typeface = tf

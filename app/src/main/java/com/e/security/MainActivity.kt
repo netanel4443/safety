@@ -11,17 +11,16 @@ import com.e.security.di.components.MainActivityComponent
 import com.e.security.ui.MainViewModel
 import com.e.security.ui.activities.BaseActivity
 import com.e.security.ui.dialogs.DeleteDialog
-import com.e.security.ui.dialogs.RecyclerViewDialog
 import com.e.security.ui.dialogs.StudyPlaceInfoFscreen
 import com.e.security.ui.fragments.ReportsFragment
-import com.e.security.ui.recyclerviews.GenericRecyclerviewAdapter
+import com.e.security.ui.recyclerviews.generics.GenericRecyclerviewAdapter
 import com.e.security.ui.recyclerviews.celldata.StudyPlaceDataVhCell
-import com.e.security.ui.recyclerviews.celldata.TextViewVhCell
 import com.e.security.ui.recyclerviews.clicklisteners.StudyPlaceVhItemClick
 import com.e.security.ui.recyclerviews.viewholders.CreateStudyPlacesVh
-import com.e.security.ui.recyclerviews.viewholders.CreateTextViewVh
 import com.e.security.ui.utils.addFragment
 import com.e.security.ui.viewmodels.effects.Effects
+import com.e.security.usecase.WriteToWordUseCase
+import javax.inject.Inject
 
 
 class MainActivity : BaseActivity() {
@@ -33,7 +32,7 @@ class MainActivity : BaseActivity() {
             GenericRecyclerviewAdapter<StudyPlaceDataVhCell, CreateStudyPlacesVh>
     private var deleteDialog: DeleteDialog? = null
     private var TAG = javaClass.name
-    private var recyclerViewDialog: RecyclerViewDialog<TextViewVhCell>? = null
+    @Inject lateinit var word: WriteToWordUseCase
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -60,7 +59,6 @@ class MainActivity : BaseActivity() {
             ),
             PackageManager.PERMISSION_GRANTED
         )
-
     }
 
     private fun initEffectObserver() {

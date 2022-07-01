@@ -1,4 +1,4 @@
-package com.e.security.ui.recyclerviews
+package com.e.security.ui.recyclerviews.generics
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -82,7 +82,7 @@ open class GenericRecyclerviewAdapter<T, CVH : CreateVh<T>>(
     }
 
     override fun onBindViewHolder(holder: CreateVh<T>.GenericViewHolder, position: Int) {
-        holder.bind(listDiffer.currentList.get(position))
+        holder.bind(listDiffer.currentList[position])
     }
 
     override fun getItemCount(): Int {

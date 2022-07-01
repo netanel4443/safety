@@ -77,9 +77,8 @@ dependencies {
 // https://mvnrepository.com/artifact/fr.opensagres.xdocreport/fr.opensagres.poi.xwpf.converter.pdf
 //    implementation("fr.opensagres.xdocreport:fr.opensagres.poi.xwpf.converter.core:2.0.2")
 
-
     //rxjava 3
-    implementation 'io.reactivex.rxjava3:rxjava:3.0.3'
+    implementation 'io.reactivex.rxjava3:rxjava:3.1.5'
     //rxAndroid
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
 

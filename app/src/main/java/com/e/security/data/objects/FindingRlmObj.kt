@@ -9,6 +9,7 @@ open class FindingRlmObj:RealmObject() {
     var _id: ObjectId = ObjectId()
     var testArea: String = ""
     var sectionInAssessmentList: String = ""
+    var problemLocation: String = ""
     var requirement: String = ""
     var problem: String = ""
     var picPath: String = ""

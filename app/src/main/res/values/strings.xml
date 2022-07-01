@@ -5,6 +5,7 @@
     <string name="finding">ממצא</string>
     <string name="requirement">דרישה</string>
     <string name="instructions">הנחיות</string>
+    <string name="problem_location">מיקום הבעיה</string>
     <string name="tester_details">פרטי הבודק</string>
     <string name="institution_symbol">סמל המוסד</string>
     <string name="city">עיר</string>
@@ -32,6 +33,7 @@
     <string name="delete_report">מחיקת דו"ח זה , תוביל למחיקת כל הדוחות השמורים. האם ברצונך להמשיך?</string>
     <string name="delete_finding">למחוק ממצא זה?</string>
     <string name="deleted_successfully">נמחק בהצלחה</string>
+    <string name="to_conclude">לסיכום</string>
 
     <string name="test_area">תחום הבדיקה</string>
     <string name="frequency">תדירות</string>

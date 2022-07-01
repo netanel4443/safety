@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import com.e.security.R
 import com.e.security.databinding.FindingRecyclerviewCellDesignBinding
 import com.e.security.ui.recyclerviews.celldata.FindingVhCell
-import com.e.security.ui.recyclerviews.clicklisteners.FindingVhItemClick
+import com.e.security.ui.recyclerviews.generics.FindingVhItemClick
 import com.e.security.ui.recyclerviews.helpers.CreateVh
 import com.e.security.ui.recyclerviews.helpers.GenericItemClickListener
 
@@ -32,6 +32,7 @@ class CreateFindingDetailsViewHolder : CreateVh<FindingVhCell>() {
         binding!!.parent.setOnLongClickListener {
             itmClick!!.onLongClick(cachedItem!!)
         }
+
     }
 
     override fun bindData(item: FindingVhCell) {

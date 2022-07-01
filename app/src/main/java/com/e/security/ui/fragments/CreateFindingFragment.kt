@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import com.e.fakerestapi.ui.recyclerviews.helpers.GenericVhItem
 import com.e.security.MainActivity
 import com.e.security.R
 import com.e.security.data.FindingDataHolder
@@ -16,8 +17,11 @@ import com.e.security.ui.MainViewModel
 import com.e.security.ui.dialogs.FilterResultsDialog
 import com.e.security.ui.dialogs.RecyclerViewDialog
 import com.e.security.ui.dialogs.helpers.IFilterResultsDialogHelper
+import com.e.security.ui.recyclerviews.adapters.HozerMankalRecyclerViewAdapter
 import com.e.security.ui.recyclerviews.celldata.HozerMankalVhCell
 import com.e.security.ui.recyclerviews.celldata.TextViewVhCell
+import com.e.security.ui.recyclerviews.generics.GenericRecyclerviewAdapter2
+import com.e.security.ui.recyclerviews.generics.VhItemSetters
 import com.e.security.ui.recyclerviews.helpers.GenericItemClickListener
 import com.e.security.ui.recyclerviews.viewholders.CreateHozerMankalVh
 import com.e.security.ui.recyclerviews.viewholders.CreateTextViewVh
@@ -34,7 +38,7 @@ class CreateFindingFragment : BaseSharedVmFragment() {
     private lateinit var binding: CreateFindingBinding
     private var imagePath: String = ""
     private var findingToEdit = FindingDataHolder()
-    private var filterResultsDialog: FilterResultsDialog<HozerMankalVhCell>? = null
+    private var filterResultsDialog: FilterResultsDialog<GenericVhItem>? = null
     private var imageOptionsDialog: RecyclerViewDialog<TextViewVhCell>? = null
     private lateinit var photoLauncher: ActivityResultLauncher<Array<String>>
 
@@ -113,6 +117,7 @@ class CreateFindingFragment : BaseSharedVmFragment() {
         binding.sectionInAssessmentList.text = finding.sectionInAssessmentList
         binding.requirement.text = finding.requirement
         binding.problemDescription.setText(finding.problem)
+        binding.locationDescription.setText(finding.problemLocation)
     }
 
     private fun initUi() {
@@ -132,6 +137,7 @@ class CreateFindingFragment : BaseSharedVmFragment() {
             findingToEdit.priority = binding.priority.selectedItem.toString()
             findingToEdit.sectionInAssessmentList = binding.sectionInAssessmentList.text.toString()
             findingToEdit.problem = binding.problemDescription.text.toString()
+            findingToEdit.problemLocation = binding.locationDescription.text.toString()
             findingToEdit.requirement = binding.requirement.text.toString()
             findingToEdit.pic = imagePath
 
@@ -149,21 +155,31 @@ class CreateFindingFragment : BaseSharedVmFragment() {
     }
 
     private fun createFilterResultDialog() {
-        filterResultsDialog = FilterResultsDialog(
-            requireActivity(),
-            CreateHozerMankalVh::class.java
-        )
-        filterResultsDialog?.setIHelper(object : IFilterResultsDialogHelper<HozerMankalVhCell> {
+        filterResultsDialog = FilterResultsDialog(requireActivity())
+
+        val adapter = HozerMankalRecyclerViewAdapter()
+
+        adapter.setHozerMankalVhCellClickListener(object :GenericItemClickListener<HozerMankalVhCell>{
             override fun onItemClick(item: HozerMankalVhCell) {
+                filterResultsDialog!!.dismissDialog()
                 viewModel.changeRequirement(item)
             }
+        })
 
-            override fun textChanges(charSequence: CharSequence): Observable<List<HozerMankalVhCell>> {
-                return viewModel.filterHozerMankal(charSequence.toString())
+        filterResultsDialog!!.setRecyclerViewAdapter(adapter)
+        filterResultsDialog!!.setVerticalLinearLayoutManager()
+
+        filterResultsDialog!!.setIHelper(object : IFilterResultsDialogHelper<GenericVhItem> {
+            override fun onItemClick(item: GenericVhItem) {
+
             }
 
-            override fun onItemsReady(items: List<HozerMankalVhCell>) {
-                viewModel.updateChosenHozerMankalRecyclerItems(items)
+            override fun textChanges(charSequence: CharSequence): Observable<List<GenericVhItem>> {
+                return viewModel.filterHozerMankal(charSequence.toString()) as Observable<List<GenericVhItem>>
+            }
+
+            override fun onItemsReady(items: List<GenericVhItem>) {
+                viewModel.updateChosenHozerMankalRecyclerItems(items as List<HozerMankalVhCell>)
             }
 
             override fun onDismissDialog() {
@@ -186,15 +202,24 @@ class CreateFindingFragment : BaseSharedVmFragment() {
     }
 
     private fun createImageOptionsDialog() {
-        imageOptionsDialog = RecyclerViewDialog(requireActivity(), CreateTextViewVh::class.java)
+        imageOptionsDialog = RecyclerViewDialog(requireActivity())
         imageOptionsDialog!!.create()
-        imageOptionsDialog!!.setItemClickListener(object :
+
+        val setter = VhItemSetters<TextViewVhCell>()
+        setter.createVh = CreateTextViewVh::class.java
+        setter.clickListener = object :
             GenericItemClickListener<TextViewVhCell> {
             override fun onItemClick(item: TextViewVhCell) {
                 imageOptionsDialog!!.dismissDialog()
                 viewModel.uploadPhotoUserSelection(item)
             }
-        })
+        }
+
+        imageOptionsDialog!!.setRecyclerViewAdapter(GenericRecyclerviewAdapter2())
+            .setVhItemSetter(setter)
+
+        imageOptionsDialog!!.setVerticalLinearLayoutManager()
+
     }
 
     private fun takePhoto() {

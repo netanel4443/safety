@@ -1572,7 +1572,7 @@ class HozerMankalArray {
                         "המגרש, באופן שימולא מבחוץ, בלי שמכלית\n" +
                         "הגז תיכנס לחצר."
             ),
-            //todo check if it is ok in phone
+
             HmScope(
                 testArea = "מכל נפט, סולר",
                 section = "10.4",

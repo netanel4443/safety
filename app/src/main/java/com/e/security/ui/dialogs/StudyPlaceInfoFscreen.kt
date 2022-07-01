@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.e.security.MainActivity
 import com.e.security.R
 import com.e.security.data.StudyPlaceDetailsDataHolder
@@ -13,6 +14,8 @@ import com.e.security.databinding.StudyPlaceInfoBinding
 import com.e.security.ui.MainViewModel
 import com.e.security.ui.fragments.BaseSharedVmFragment
 import com.e.security.ui.recyclerviews.celldata.TextViewVhCell
+import com.e.security.ui.recyclerviews.generics.GenericRecyclerviewAdapter2
+import com.e.security.ui.recyclerviews.generics.VhItemSetters
 import com.e.security.ui.recyclerviews.helpers.GenericItemClickListener
 import com.e.security.ui.recyclerviews.viewholders.CreateTextViewVh
 import com.e.security.ui.utils.rxjava.throttleClick
@@ -148,18 +151,24 @@ class StudyPlaceInfoFscreen() : BaseSharedVmFragment() {
     private fun createEducationalInstitutionsDialog() {
 
         recyclerViewDialog = RecyclerViewDialog(
-            requireActivity(),
-            CreateTextViewVh::class.java,
+            requireActivity()
         )
-        recyclerViewDialog!!.create()
 
-        recyclerViewDialog!!.setItemClickListener(object :
+        val setter = VhItemSetters<TextViewVhCell>()
+        setter.createVh = CreateTextViewVh::class.java
+        setter.clickListener = object :
             GenericItemClickListener<TextViewVhCell> {
             override fun onItemClick(item: TextViewVhCell) {
                 recyclerViewDialog!!.dismissDialog()
                 viewModel.changeEducationalInstitution(item)
             }
-        })
+        }
+
+        recyclerViewDialog!!.create()
+        recyclerViewDialog!!.setRecyclerViewAdapter(GenericRecyclerviewAdapter2())
+            .setVhItemSetter(setter)
+
+        recyclerViewDialog!!.setVerticalLinearLayoutManager()
     }
 
 //        recyclerViewDialog!!.onClick = {

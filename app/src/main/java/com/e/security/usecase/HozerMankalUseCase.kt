@@ -23,27 +23,26 @@ class HozerMankalUseCase @Inject constructor(
 
     fun sortHozerim(): Completable {
         return Completable.fromAction {
-         val hozerMankalArray=   HozerMankalArray().create()
-                 selectedHozerMankal=hozerMankalArray // init with global one at first
-                hozerMankalArray.forEach {
-                    if (it.boardingSchool) {
-                        boardingSchoolHozer.add(it)
-                    }
-                    if (it.school) {
-                        schoolHozer.add(it)
-                    }
-                    if (it.kindergarten) {
-                        kindergartenHozer.add(it)
-                    }
-                    if (it.youthVillage) {
-                        youthVillageHozer.add(it)
-                    }
+            val hozerMankalArray = HozerMankalArray().create()
+            selectedHozerMankal = hozerMankalArray // init with global one at first
+            hozerMankalArray.forEach {
+                if (it.boardingSchool) {
+                    boardingSchoolHozer.add(it)
                 }
+                if (it.school) {
+                    schoolHozer.add(it)
+                }
+                if (it.kindergarten) {
+                    kindergartenHozer.add(it)
+                }
+                if (it.youthVillage) {
+                    youthVillageHozer.add(it)
+                }
+            }
         }
     }
 
-
-    fun selectedHozerMankal(selectedHozer: String): Single<ArrayList<HmScope>> {
+    fun selectedHozerMankal(selectedHozer: String): Single<HashMap<String, ArrayList<HmScope>>> {
         return Single.fromCallable {
             if (selectedHozer == resources.getString(R.string.school)) {
                 selectedHozerMankal = schoolHozer
@@ -58,14 +57,33 @@ class HozerMankalUseCase @Inject constructor(
                 selectedHozerMankal = boardingSchoolHozer
             }
             selectedHozerMankal
+        }.flatMap {
+            Observable.fromIterable(it)
+                .collectInto(HashMap(), ::collectHmScope)
         }
     }
 
-    fun filterHozerMankal(string: String): Observable<HmScope> {
+    fun filterHozerMankal(string: String): Single<HashMap<String, ArrayList<HmScope>>> {
+
         return Observable.fromIterable(selectedHozerMankal)
-            .filter { it.definition.contains(string) || it.section.contains(string) }
+            .filter {
+                it.definition.contains(string) ||
+                        it.section.contains(string) ||
+                        it.testArea.contains(string)
+            }.collectInto(HashMap(), ::collectHmScope)
+    }
 
+    private fun collectHmScope(
+        hMap: HashMap<String, ArrayList<HmScope>>,
+        hmScope: HmScope
+    ): HashMap<String, ArrayList<HmScope>> {
 
+        if (hMap.containsKey(hmScope.testArea)) {
+            hMap[hmScope.testArea]!!.add(hmScope)
+        } else {
+            hMap[hmScope.testArea] = arrayListOf(hmScope)
+        }
+        return hMap
     }
 
 

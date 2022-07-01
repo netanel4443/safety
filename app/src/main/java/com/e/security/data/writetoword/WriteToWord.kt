@@ -1,7 +1,7 @@
 package com.e.security.data.writetoword
 
 
-import android.content.Context
+import android.app.Application
 import android.content.Intent
 import android.net.Uri
 import com.e.security.R
@@ -9,9 +9,8 @@ import com.e.security.data.FindingDataHolder
 import com.e.security.data.ReportDataHolder
 import com.e.security.data.StudyPlaceDetailsDataHolder
 import com.e.security.data.definitions.rikuzBdikotArray
+import com.e.security.di.scopes.ActivityScope
 import com.e.security.utils.printErrorIfDbg
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.CompletableEmitter
 import io.reactivex.rxjava3.core.Single
 import org.apache.poi.util.Units
 import org.apache.poi.xwpf.usermodel.*
@@ -21,9 +20,10 @@ import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
 import java.math.BigInteger
+import javax.inject.Inject
 
-
-class WriteToWord(private val context: Context) {
+@ActivityScope
+class WriteToWord @Inject constructor(private val application: Application) {
 
     private var document: XWPFDocument? = null
     private var table: XWPFTable? = null
@@ -49,7 +49,7 @@ class WriteToWord(private val context: Context) {
     ): Single<String> {
         return Single.fromCallable {
             try {
-                val contentResolver = context.contentResolver
+                val contentResolver = application.contentResolver
                 val takeFlags: Int =
                     Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
                 contentResolver.takePersistableUriPermission(fileUri, takeFlags)
@@ -67,30 +67,35 @@ class WriteToWord(private val context: Context) {
             } catch (e: IOException) {
                 printErrorIfDbg(e)
             }
-            context.getString(R.string.saved_successfully)
+            application.getString(R.string.saved_successfully)
         }
     }
 
-     fun write(
+    private fun write(
         reportDataHolder: ReportDataHolder,
         details: StudyPlaceDetailsDataHolder
     ) {
-            document = XWPFDocument()
+        document = XWPFDocument()
 
-            writeGeneralDetails(details, reportDataHolder.date)
+        writeGeneralDetails(details, reportDataHolder.date)
 
-            run = document!!.createParagraph().createRun()
-            run!!.addBreak(BreakType.PAGE)
-            addText(ParagraphAlignment.CENTER, "פירוט הממצאים")
+        createNewPage()
 
-            reportDataHolder.findingArr.forEach {
-                writeFindingListTableTitles(it.values)
-            }
+        addText(ParagraphAlignment.CENTER, "פירוט הממצאים")
 
-            run = document!!.createParagraph().createRun()
-            run!!.addBreak(BreakType.PAGE)
+        reportDataHolder.findingArr.forEachIndexed() { index: Int, hm ->
+            writeFindingListTableTitles(index, hm.values)
+        }
 
-            addRikuzBdikotBetihut()
+        createNewPage()
+        addRikuzBdikotBetihut()
+        createNewPage()
+        conclusionPage(reportDataHolder.conclusion)
+    }
+
+    private fun createNewPage() {
+        run = document!!.createParagraph().createRun()
+        run!!.addBreak(BreakType.PAGE)
     }
 
 
@@ -103,7 +108,7 @@ class WriteToWord(private val context: Context) {
         addText(ParagraphAlignment.LEFT, "נתונים כליים")
         createTable(2, 5)
         // for sapce between tables
-        paragraph = document!!.createParagraph()
+        createParagraph()
         table!!.setTableAlignment(TableRowAlign.CENTER)
 
         var tableRow = table!!.getRow(0)
@@ -123,7 +128,7 @@ class WriteToWord(private val context: Context) {
 
         createTable(2, 3)
         // for sapce between tables
-        paragraph = document!!.createParagraph()
+        createParagraph()
         table!!.setTableAlignment(TableRowAlign.CENTER)
 
         tableRow = table!!.getRow(0)
@@ -138,7 +143,7 @@ class WriteToWord(private val context: Context) {
 
         createTable(2, 4)
         // for sapce between tables
-        paragraph = document!!.createParagraph()
+        createParagraph()
         table!!.setTableAlignment(TableRowAlign.CENTER)
 
         tableRow = table!!.getRow(0)
@@ -156,7 +161,7 @@ class WriteToWord(private val context: Context) {
 
         createTable(2, 2)
         // for sapce between tables
-        paragraph = document!!.createParagraph()
+        createParagraph()
         table!!.setTableAlignment(TableRowAlign.CENTER)
 
 
@@ -197,16 +202,27 @@ class WriteToWord(private val context: Context) {
         table = document!!.createTable(row, col)
     }
 
-    fun writeFindingListTableTitles(findingList: MutableCollection<FindingDataHolder>) {
-        paragraph = document!!.createParagraph()
-        run = paragraph!!.createRun()
-        run!!.setText("קדימות 0")
+    /** priority is according to array index as determined in  [ReportDataHolder]*/
+    private fun writeFindingListTableTitles(
+        priority: Int,
+        findingList: MutableCollection<FindingDataHolder>
+    ) {
+        //for space
+        createParagraph()
+
+        addText(
+            ParagraphAlignment.CENTER,
+            "קדימות $priority"
+        )
+        // for space
+        createParagraph()
+
         //+1 for titles
         table = document!!.createTable(findingList.size + 1, 6)
         val tableRow = table!!.getRow(0)
         tableRow.getCell(0).text = "תמונה"
-        tableRow.getCell(1).text = "הממצא, מהותו ומיקומו"
-        tableRow.getCell(2).text = "הדרישה"
+        tableRow.getCell(1).text = "הדרישה לתיקון ושיפור"
+        tableRow.getCell(2).text = "הממצא, מהותו ומיקומו"
         tableRow.getCell(3).text = "סעיף ברשימת מבדק"
         tableRow.getCell(4).text = "תחום הבדיקה"
         tableRow.getCell(5).text = "ספ"
@@ -220,7 +236,13 @@ class WriteToWord(private val context: Context) {
         val tableRow = table!!.getRow(rowIndex + 1)
 
         tableRow.getCell(1).text = findingDataHolder.problem.chunked(20).joinToString("\n")
-        tableRow.getCell(2).text = findingDataHolder.requirement.chunked(20).joinToString("\n")
+        tableRow.getCell(2).text =
+            StringBuilder().append(findingDataHolder.requirement)
+                .append("\n")
+                .append(findingDataHolder.problemLocation)
+                .toString().chunked(20).joinToString("\n")
+
+
         tableRow.getCell(3).text =
             findingDataHolder.sectionInAssessmentList.chunked(20).joinToString("\n")
         tableRow.getCell(4).text = findingDataHolder.testArea.chunked(20).joinToString("\n")
@@ -228,7 +250,7 @@ class WriteToWord(private val context: Context) {
 
         run = tableRow.getCell(0).addParagraph().createRun()
         run!!.addPicture(
-            context.contentResolver.openInputStream(Uri.parse(findingDataHolder.pic)),
+            application.contentResolver.openInputStream(Uri.parse(findingDataHolder.pic)),
             XWPFDocument.PICTURE_TYPE_PNG,
             "imgFile",
             Units.toEMU(100.0),
@@ -256,21 +278,31 @@ class WriteToWord(private val context: Context) {
     }
 
     private fun setNumberingText(text: String) {
-
-        paragraph = document!!.createParagraph();
-        paragraph!!.numID = numID;
-        run = paragraph!!.createRun();
-        run!!.setText(text);
+        createParagraph()
+        paragraph!!.numID = numID
+        run = paragraph!!.createRun()
+        run!!.setText(text)
     }
 
-    private fun addText(alignment: ParagraphAlignment, text: String) {
-        paragraph = document!!.createParagraph()
+    private fun createText(alignment: ParagraphAlignment) {
+        createParagraph()
         paragraph!!.alignment = alignment
         run = paragraph!!.createRun()
-
-        run!!.setText(text)
-
     }
+
+    private fun addText(
+        alignment: ParagraphAlignment,
+        text: String,
+        fontSize: Int = 12,
+        isBold: Boolean = false
+    ) {
+        createText(alignment)
+        run!!.fontSize = fontSize
+        run!!.isBold = isBold
+        run!!.setText(text)
+    }
+
+
 
     private fun addRikuzBdikotBetihut() {
         addText(
@@ -293,6 +325,39 @@ class WriteToWord(private val context: Context) {
             tableRow.getCell(1).text = rikuzBdikotBetihutObj.frequency
             tableRow.getCell(0).text = rikuzBdikotBetihutObj.examiningBody
         }
+    }
+
+    private fun conclusionPage(conclusion: String) {
+        addText(
+            ParagraphAlignment.CENTER,
+            application.getString(R.string.to_conclude),
+            20,
+            true
+        )
+
+        addText(
+            ParagraphAlignment.RIGHT,
+            conclusion
+        )
+
+        addText(
+            ParagraphAlignment.RIGHT,
+            "בברכה,",
+            isBold = true
+        )
+        //for double space
+        createParagraph()
+        createParagraph()
+
+        addText(
+            ParagraphAlignment.RIGHT,
+            "חתימת יועץ בטיחות:"
+        )
+
+    }
+
+    private fun createParagraph(){
+        paragraph = document!!.createParagraph()
     }
 
 

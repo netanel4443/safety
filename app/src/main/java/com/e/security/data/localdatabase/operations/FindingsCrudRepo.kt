@@ -9,9 +9,9 @@ import com.e.security.data.localdatabase.configuration.FindingsDetailsSchema
 import com.e.security.data.localdatabase.utils.findObjectById
 import com.e.security.data.localdatabase.utils.getLists
 import com.e.security.data.localdatabase.utils.rxSingleTransactionAsync
-import com.e.security.data.objects.ReportRlmObj
 import com.e.security.data.objects.FindingRlmObj
 import com.e.security.data.objects.GeneralReportDetailsRlmObj
+import com.e.security.data.objects.ReportRlmObj
 import com.e.security.data.objects.StudyPlaceRlmObj
 import com.e.security.di.scopes.ApplicationScope
 import io.reactivex.rxjava3.core.Completable
@@ -23,6 +23,7 @@ import javax.inject.Inject
 class FindingsCrudRepo @Inject constructor() {
 
     private val realm = FindingsDetailsSchema().getRealmInstance()
+    private var cachedStudyPlaceData = HashMap<ObjectId, StudyPlaceDataHolder>()
 
     //todo check if id is already exists? maybe not needed because objectid
     fun saveFinding(listId: ObjectId, finding: FindingDataHolder): Completable {
@@ -35,6 +36,7 @@ class FindingsCrudRepo @Inject constructor() {
                     val newFinding = realm.createObject(FindingRlmObj::class.java, finding.id)
                     newFinding.picPath = finding.pic
                     newFinding.problem = finding.problem
+                    newFinding.problemLocation = finding.problemLocation
                     newFinding.requirement = finding.requirement
                     newFinding.testArea = finding.testArea
                     newFinding.sectionInAssessmentList = finding.sectionInAssessmentList
@@ -79,8 +81,10 @@ class FindingsCrudRepo @Inject constructor() {
         }
     }
 
-     fun updateStudyPlace(id: ObjectId,
-                                 details: StudyPlaceDetailsDataHolder): Single<String> {
+    fun updateStudyPlace(
+        id: ObjectId,
+        details: StudyPlaceDetailsDataHolder
+    ): Single<String> {
         return Single.create { emitter ->
             try {
                 realm.executeTransactionAsync { realm ->
@@ -115,7 +119,7 @@ class FindingsCrudRepo @Inject constructor() {
         generalReportDetailsRlmObj.studentsNumber = placeDetails.studentsNumber
         generalReportDetailsRlmObj.yearOfFounding = placeDetails.yearOfFounding
         generalReportDetailsRlmObj.studyPlacePhone = placeDetails.studyPlacePhone
-        generalReportDetailsRlmObj.educationalInstitution  = placeDetails.educationalInstitution
+        generalReportDetailsRlmObj.educationalInstitution = placeDetails.educationalInstitution
     }
 
     fun createNewReport(placeId: ObjectId, id: ObjectId, date: String): Completable {
@@ -147,6 +151,7 @@ class FindingsCrudRepo @Inject constructor() {
                         .findFirst()
                     rlmObj!!.picPath = finding.pic
                     rlmObj.problem = finding.problem
+                    rlmObj.problemLocation = finding.problemLocation
                     rlmObj.requirement = finding.requirement
                     rlmObj.testArea = finding.testArea
                     rlmObj.sectionInAssessmentList = finding.sectionInAssessmentList
@@ -177,11 +182,14 @@ class FindingsCrudRepo @Inject constructor() {
         }
     }
 
-    fun getAllFindings(): Single<HashMap<ObjectId, StudyPlaceDataHolder>> {
+    fun getAllStudyPlacesData(): Single<HashMap<ObjectId, StudyPlaceDataHolder>> {
 
         return realm.getLists(StudyPlaceRlmObj::class.java) { realmResults ->
+
             val hashMap = HashMap<ObjectId, StudyPlaceDataHolder>()
+
             realmResults.forEach { studyPlaceRlmObj ->
+
                 val studyPlaceDataHolder = StudyPlaceDataHolder()
                 val generalReportDetailsRlmObj = studyPlaceRlmObj.generalReportDetailsRlmObj
                 studyPlaceDataHolder.id = studyPlaceRlmObj._id
@@ -217,6 +225,7 @@ class FindingsCrudRepo @Inject constructor() {
                             testArea = findingRealmObj.testArea,
                             priority = findingRealmObj.priority,
                             sectionInAssessmentList = findingRealmObj.sectionInAssessmentList,
+                            problemLocation = findingRealmObj.problemLocation,
                             requirement = findingRealmObj.requirement,
                             problem = findingRealmObj.problem,
                             pic = findingRealmObj.picPath
@@ -234,42 +243,42 @@ class FindingsCrudRepo @Inject constructor() {
         }
     }
 
-    fun deleteFinding(id: ObjectId):Single<String> {
+    fun deleteFinding(id: ObjectId): Single<String> {
         return realm.rxSingleTransactionAsync { realm ->
-           val obj= realm.findObjectById(FindingRlmObj::class.java,id)
+            val obj = realm.findObjectById(FindingRlmObj::class.java, id)
             obj!!.deleteFromRealm()
             "נמחק בהצלחה"
         }
     }
 
-    fun deleteReport(id: ObjectId):Single<Int>{
-        return realm.rxSingleTransactionAsync { realm->
+    fun deleteReport(id: ObjectId): Single<Int> {
+        return realm.rxSingleTransactionAsync { realm ->
             println("test ${realm.where(FindingRlmObj::class.java).findAll()}")
-            val obj= realm.findObjectById(ReportRlmObj::class.java,id)
-            for (i in obj!!.findingList.size-1 downTo  0){
+            val obj = realm.findObjectById(ReportRlmObj::class.java, id)
+            for (i in obj!!.findingList.size - 1 downTo 0) {
                 obj.findingList.deleteFromRealm(i)
             }
             obj.deleteFromRealm()
-           R.string.deleted_successfully
+            R.string.deleted_successfully
         }
     }
 
-    fun deleteStudyPlace(id: ObjectId):Single<Int>{
-        return realm.rxSingleTransactionAsync { realm->
-            val studyPlaceRlmObj= realm.findObjectById(StudyPlaceRlmObj::class.java,id)!!
+    fun deleteStudyPlace(id: ObjectId): Single<Int> {
+        return realm.rxSingleTransactionAsync { realm ->
+            val studyPlaceRlmObj = realm.findObjectById(StudyPlaceRlmObj::class.java, id)!!
 
-            val reportList=studyPlaceRlmObj.reportList
+            val reportList = studyPlaceRlmObj.reportList
 
-            for (i in reportList.size-1 downTo 0){
-             val findingList = reportList.elementAt(i).findingList
-                for (j in findingList.size-1 downTo 0){
+            for (i in reportList.size - 1 downTo 0) {
+                val findingList = reportList.elementAt(i).findingList
+                for (j in findingList.size - 1 downTo 0) {
                     findingList.deleteFromRealm(j)
                 }
-              reportList.deleteFromRealm(i)
+                reportList.deleteFromRealm(i)
             }
-             studyPlaceRlmObj.deleteFromRealm()
+            studyPlaceRlmObj.deleteFromRealm()
 
-             R.string.deleted_successfully
+            R.string.deleted_successfully
         }
     }
 }

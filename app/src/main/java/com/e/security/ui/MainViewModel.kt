@@ -3,6 +3,7 @@ package com.e.security.ui
 import android.content.res.Resources
 import android.net.Uri
 import androidx.lifecycle.LiveData
+import com.e.fakerestapi.ui.recyclerviews.helpers.GenericVhItem
 import com.e.security.R
 import com.e.security.data.FindingDataHolder
 import com.e.security.data.ReportDataHolder
@@ -31,6 +32,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import org.bson.types.ObjectId
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 @ActivityScope
 class MainViewModel @Inject constructor(
@@ -51,7 +53,6 @@ class MainViewModel @Inject constructor(
     private var chosenStudyPlaceId = ObjectId()
     private var chosenReportId = ObjectId()
     private var chosenFindingId: ObjectId = ObjectId()
-    private var chosenHmScope: HmScope = HmScope()
 
     //edit state
     private var studyPlaceInfoFragmentEditable: Boolean = false
@@ -71,7 +72,7 @@ class MainViewModel @Inject constructor(
     fun getStudyPlacesAndTheirFindings() {
         if (data.isNotEmpty()) return
 
-        crud.getAllFindings()
+        crud.getAllStudyPlacesData()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 createStudyPlaceDataVhCell(it)
@@ -338,6 +339,7 @@ class MainViewModel @Inject constructor(
         val findingsArr = data[chosenStudyPlaceId]!!
             .reportList[chosenReportId]!!
             .findingArr
+
         var findings: HashMap<ObjectId, FindingDataHolder>? = null
 
         findingsArr.forEach {
@@ -580,16 +582,29 @@ class MainViewModel @Inject constructor(
         _viewEffect.value = Effects.Toast(resources.getString(stringRes))
     }
 
-    fun filterHozerMankal(string: String): Observable<List<HozerMankalVhCell>> {
+    fun filterHozerMankal(string: String): Observable<ArrayList<GenericVhItem>> {
         return hozerMankalUSeCase.filterHozerMankal(string)
-            .map {
-                HozerMankalVhCell(
-                    requirement = it.definition,
-                    sectionInAssessmentList = it.section,
-                    testArea = it.testArea
-                )
+            .map(::mapHozerMankalToState)
+            .toObservable()
+    }
+
+    private fun mapHozerMankalToState(hm: HashMap<String, ArrayList<HmScope>>):ArrayList<GenericVhItem>{
+        val arrList = ArrayList<GenericVhItem>()
+        hm.entries.forEach { entry ->
+
+            val textViewVhCell = TextViewVhCell(entry.key, entry.key)
+            arrList.add(textViewVhCell)
+
+            entry.value.forEach { hmScope ->
+                arrList.add(HozerMankalVhCell(
+                    ObjectId(),
+                    requirement = hmScope.definition,
+                    sectionInAssessmentList = hmScope.section,
+                    testArea = hmScope.testArea
+                ))
             }
-            .toList().toObservable()
+        }
+        return arrList
     }
 
     fun showHozerMankalDialog() {
@@ -667,28 +682,18 @@ class MainViewModel @Inject constructor(
     fun popFragment() {
         _viewEffect.value = Effects.PopBackStack
     }
-
+        //todo Fix this immediately , need to contain titles of testArea
     fun getAppropriateHozerItems() {
         hozerMankalUSeCase.selectedHozerMankal(
             data[chosenStudyPlaceId]!!.reportDetails.educationalInstitution
-        ).subscribeOn(Schedulers.io())
+        ).map(::mapHozerMankalToState)
+            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribeBlock {
-                val vhCellArray = ArrayList<HozerMankalVhCell>()
-                it.forEach { hm ->
-                    vhCellArray.add(
-                        HozerMankalVhCell(
-                            requirement = hm.definition,
-                            sectionInAssessmentList = hm.section,
-                            testArea = hm.testArea
-                        )
-                    )
-                }
-                updateChosenHozerMankalRecyclerItems(vhCellArray)
-            }.addDisposable()
+            .subscribeBlock { updateChosenHozerMankalRecyclerItems(it) }
+            .addDisposable()
     }
 
-    fun updateChosenHozerMankalRecyclerItems(items: List<HozerMankalVhCell>) {
+    fun updateChosenHozerMankalRecyclerItems(items: List<GenericVhItem>) {
         val newState = _viewState.value!!.currentState.createFindingFragmentState.copy(
             chosenHozerMankalRecyclerItems = items
         )
@@ -711,7 +716,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun showPhotoUploadDialog(items: Array<String>) {
-        val tvhc=createTextViewVhCell(items)
+        val tvhc = createTextViewVhCell(items)
         _viewEffect.value = Effects.ShowPhotoUploadDialog(tvhc)
     }
 

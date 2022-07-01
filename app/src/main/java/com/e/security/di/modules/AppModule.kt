@@ -9,7 +9,6 @@ import dagger.Provides
 @Module
 object AppModule {
 
-    @JvmStatic
     @Provides
     @ApplicationScope
     fun provideResources(app: Application): Resources{

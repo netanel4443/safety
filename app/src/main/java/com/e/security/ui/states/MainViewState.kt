@@ -1,6 +1,7 @@
 package com.e.security.ui.states
 
 import android.net.Uri
+import com.e.fakerestapi.ui.recyclerviews.helpers.GenericVhItem
 import com.e.security.data.FindingDataHolder
 import com.e.security.data.StudyPlaceDetailsDataHolder
 import com.e.security.ui.recyclerviews.celldata.FindingVhCell
@@ -18,7 +19,7 @@ data class MainViewState(
     data class CreateFindingFragmentState(
         var finding: FindingDataHolder = FindingDataHolder(),
         var problemImage: Uri? = null,
-        var chosenHozerMankalRecyclerItems: List<HozerMankalVhCell> = ArrayList(),
+        var chosenHozerMankalRecyclerItems: List<GenericVhItem> = ArrayList(),
         var isFilterResultsDialogVisible: Boolean = false
     )
 

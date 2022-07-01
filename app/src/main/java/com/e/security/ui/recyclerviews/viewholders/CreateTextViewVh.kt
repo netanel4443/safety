@@ -25,7 +25,7 @@ class CreateTextViewVh : CreateVh<TextViewVhCell>() {
     override fun onInitVh(view: View) {
         binding = TextviewVhCellDesignBinding.bind(view)
         binding!!.parent.setOnClickListener {
-            itemClick!!.onItemClick(cachedItem!!)
+            itemClick?.onItemClick(cachedItem!!)
         }
     }
 

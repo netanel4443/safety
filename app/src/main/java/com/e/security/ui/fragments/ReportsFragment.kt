@@ -16,10 +16,12 @@ import com.e.security.ui.MainViewModel
 import com.e.security.ui.activityresults.SaveFileResultContract
 import com.e.security.ui.dialogs.CalendarDialog
 import com.e.security.ui.dialogs.RecyclerViewDialog
-import com.e.security.ui.recyclerviews.GenericRecyclerviewAdapter
+import com.e.security.ui.recyclerviews.generics.GenericRecyclerviewAdapter
 import com.e.security.ui.recyclerviews.celldata.ReportVhCell
 import com.e.security.ui.recyclerviews.celldata.TextViewVhCell
 import com.e.security.ui.recyclerviews.clicklisteners.ReportVhItemClick
+import com.e.security.ui.recyclerviews.generics.GenericRecyclerviewAdapter2
+import com.e.security.ui.recyclerviews.generics.VhItemSetters
 import com.e.security.ui.recyclerviews.helpers.GenericItemClickListener
 import com.e.security.ui.recyclerviews.viewholders.CreateStudyPlaceReportsVh
 import com.e.security.ui.recyclerviews.viewholders.CreateTextViewVh
@@ -45,7 +47,6 @@ class ReportsFragment : BaseSharedVmFragment() {
         (requireActivity() as MainActivity).mainActivityComponent.inject(this)
         wordLauncher = registerForActivityResult(viewModel::saveWordFile)
         pdfLauncher = registerForActivityResult(viewModel::savePdfFile)
-
     }
 
     override fun onCreateView(
@@ -191,17 +192,23 @@ class ReportsFragment : BaseSharedVmFragment() {
 
     private fun createEducationalInstitutionsDialog() {
 
-        recyclerViewDialog = RecyclerViewDialog(
-            requireActivity(),
-            CreateTextViewVh::class.java,
-        )
-        recyclerViewDialog!!.create()
-        recyclerViewDialog!!.setItemClickListener(object :
+        recyclerViewDialog = RecyclerViewDialog(requireActivity())
+
+        val setter = VhItemSetters<TextViewVhCell>()
+        setter.createVh = CreateTextViewVh::class.java
+        setter.clickListener = object :
             GenericItemClickListener<TextViewVhCell> {
             override fun onItemClick(item: TextViewVhCell) {
                 recyclerViewDialog!!.dismissDialog()
                 viewModel.editExportDeleteMenuSelection(item)
             }
-        })
+        }
+
+        recyclerViewDialog!!.create()
+
+        recyclerViewDialog!!.setRecyclerViewAdapter(GenericRecyclerviewAdapter2())
+            .setVhItemSetter(setter)
+
+        recyclerViewDialog!!.setVerticalLinearLayoutManager()
     }
 }
