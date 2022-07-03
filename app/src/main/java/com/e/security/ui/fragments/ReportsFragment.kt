@@ -123,11 +123,11 @@ class ReportsFragment : BaseSharedVmFragment() {
 
 
     private fun startFindingDetailsFragment() {
-        val fragment = FindingsDetailsFragment()
+        val fragment = FindingsFragment()
         requireActivity().addFragment(
             fragment,
             binding.fragmentContainer.id,
-            "FindingsDetailsFragment"
+            "FindingsFragment"
         )
     }
 

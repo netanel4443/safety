@@ -118,7 +118,7 @@
             android:id="@+id/problem_description"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="@string/instructions" />
+            android:hint="@string/problem_description" />
     </androidx.cardview.widget.CardView>
 
     <androidx.constraintlayout.widget.Guideline

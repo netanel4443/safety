@@ -37,6 +37,7 @@ open class RecyclerViewDialog<T : GenericVhItem>(private var context: Context) {
         alert = alertDialog.create()
         alert!!.setCanceledOnTouchOutside(true)
 
+
     }
 
     protected fun setRecyclerView(recyclerView: RecyclerView) {

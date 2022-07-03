@@ -30,9 +30,9 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import org.bson.types.ObjectId
+import java.nio.file.FileVisitOption
 import java.util.*
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
 @ActivityScope
 class MainViewModel @Inject constructor(
@@ -367,7 +367,7 @@ class MainViewModel @Inject constructor(
                         findings!![finding.id] = finding
                     }
                     val findingVhCellArrayList = ArrayList<FindingVhCell>()
-                    _viewState.currentState().copy().findingVhCellArrayList.forEach {
+                    _viewState.currentState().findingFragmentState.copy().findingVhCellArrayList.forEach {
                         val tmpFinding: FindingVhCell =
                             if (it.id != finding.id) {
                                 it
@@ -389,7 +389,7 @@ class MainViewModel @Inject constructor(
                 .subscribe({
                     val findingVhCellArrayList = ArrayList<FindingVhCell>()
                     findingVhCellArrayList.addAll(
-                        _viewState.currentState().copy().findingVhCellArrayList
+                        _viewState.currentState().copy().findingFragmentState.findingVhCellArrayList
                     )
                     findingVhCellArrayList.add(
                         FindingVhCell(
@@ -407,7 +407,9 @@ class MainViewModel @Inject constructor(
     private fun updateFindingVhCellArrayList(findingArrayList: ArrayList<FindingVhCell>) {
         _viewState.mviValue {
             it.copy(
-                findingVhCellArrayList = findingArrayList
+                findingFragmentState = it.findingFragmentState.copy(
+                    findingVhCellArrayList = findingArrayList
+                )
             )
         }
     }
@@ -538,7 +540,7 @@ class MainViewModel @Inject constructor(
                             return@forEach
                         }
                         val newArr: ArrayList<FindingVhCell> =
-                            ArrayList(_viewState.currentState().findingVhCellArrayList)
+                            ArrayList(_viewState.currentState().findingFragmentState.findingVhCellArrayList)
                         newArr.forEach {
                             if (it.id == chosenFindingId) {
                                 newArr.remove(it)
@@ -588,7 +590,7 @@ class MainViewModel @Inject constructor(
             .toObservable()
     }
 
-    private fun mapHozerMankalToState(hm: HashMap<String, ArrayList<HmScope>>):ArrayList<GenericVhItem>{
+    private fun mapHozerMankalToState(hm: HashMap<String, ArrayList<HmScope>>): ArrayList<GenericVhItem> {
         val arrList = ArrayList<GenericVhItem>()
         hm.entries.forEach { entry ->
 
@@ -596,12 +598,14 @@ class MainViewModel @Inject constructor(
             arrList.add(textViewVhCell)
 
             entry.value.forEach { hmScope ->
-                arrList.add(HozerMankalVhCell(
-                    ObjectId(),
-                    requirement = hmScope.definition,
-                    sectionInAssessmentList = hmScope.section,
-                    testArea = hmScope.testArea
-                ))
+                arrList.add(
+                    HozerMankalVhCell(
+                        ObjectId(),
+                        requirement = hmScope.definition,
+                        sectionInAssessmentList = hmScope.section,
+                        testArea = hmScope.testArea
+                    )
+                )
             }
         }
         return arrList
@@ -682,7 +686,7 @@ class MainViewModel @Inject constructor(
     fun popFragment() {
         _viewEffect.value = Effects.PopBackStack
     }
-        //todo Fix this immediately , need to contain titles of testArea
+
     fun getAppropriateHozerItems() {
         hozerMankalUSeCase.selectedHozerMankal(
             data[chosenStudyPlaceId]!!.reportDetails.educationalInstitution
@@ -733,6 +737,24 @@ class MainViewModel @Inject constructor(
 
     private fun selectPhoto() {
         _viewEffect.value = Effects.SelectPhoto
+    }
+
+    fun showReportConclusionDialog() {
+        _viewEffect.value = Effects.ShowReportConclusionDialog
+    }
+
+    fun isReportConclusionDialogVisible(visibility: Boolean){
+        _viewState.mviValue {
+            it.copy(
+                findingFragmentState = it.findingFragmentState.copy(
+                    reportConclusionDialogVisibility = visibility
+                )
+            )
+        }
+    }
+
+    fun saveReportConclusion(text: String) {
+
     }
 
 

@@ -4,7 +4,7 @@
     <string name="study_place_details">פרטי המוסד</string>
     <string name="finding">ממצא</string>
     <string name="requirement">דרישה</string>
-    <string name="instructions">הנחיות</string>
+    <string name="problem_description">תיאור הבעיה</string>
     <string name="problem_location">מיקום הבעיה</string>
     <string name="tester_details">פרטי הבודק</string>
     <string name="institution_symbol">סמל המוסד</string>

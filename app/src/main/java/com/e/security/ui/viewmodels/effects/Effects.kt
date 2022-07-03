@@ -12,6 +12,7 @@ sealed class Effects {
     object PopBackStack : Effects()
     object TakePhoto : Effects()
     object SelectPhoto : Effects()
+    object ShowReportConclusionDialog : Effects()
 
     data class StartActivityForResultWord(val type: String) : Effects()
     data class StartActivityForResultPdf(val type: String) : Effects()

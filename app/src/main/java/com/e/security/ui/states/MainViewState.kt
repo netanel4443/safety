@@ -10,7 +10,7 @@ import com.e.security.ui.recyclerviews.celldata.ReportVhCell
 import com.e.security.ui.recyclerviews.celldata.StudyPlaceDataVhCell
 
 data class MainViewState(
-    var findingVhCellArrayList: ArrayList<FindingVhCell> = ArrayList(),
+    var findingFragmentState: FindingFragmentState = FindingFragmentState(),
     var studyPlacesVhCellArrayList: ArrayList<StudyPlaceDataVhCell> = ArrayList(),
     var reportVhCellArrayList: ArrayList<ReportVhCell> = ArrayList(),
     var createFindingFragmentState: CreateFindingFragmentState = CreateFindingFragmentState(),
@@ -27,6 +27,13 @@ data class MainViewState(
         val reportDetails: StudyPlaceDetailsDataHolder = StudyPlaceDetailsDataHolder(),
         val educationalInstitutions: List<String> = ArrayList()
     )
+
+    data class FindingFragmentState(
+        var findingVhCellArrayList: ArrayList<FindingVhCell> = ArrayList(),
+        var reportConclusionDialogVisibility: Boolean = false,
+        var conclusionText: String = ""
+        )
+
 //    data class ReportFragmentState(
 //        var reportList:ArrayList<ReportVhCell> = ArrayList(),
 //
