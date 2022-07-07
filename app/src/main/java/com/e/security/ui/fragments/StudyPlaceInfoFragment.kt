@@ -1,4 +1,4 @@
-package com.e.security.ui.dialogs
+package com.e.security.ui.fragments
 
 import android.content.Context
 import android.os.Bundle
@@ -12,11 +12,10 @@ import com.e.security.data.StudyPlaceDetailsDataHolder
 import com.e.security.databinding.StudyPlaceInfoBinding
 import com.e.security.ui.MainViewModel
 import com.e.security.ui.dialogfragments.EducationalInstitutionsRvDialog
-import com.e.security.ui.fragments.BaseSharedVmFragment
 import com.e.security.ui.utils.rxjava.throttleClick
 import com.e.security.ui.viewmodels.effects.Effects
 
-class StudyPlaceInfoFscreen() : BaseSharedVmFragment() {
+class StudyPlaceInfoFragment() : BaseSharedVmFragment() {
 
     private val viewModel: MainViewModel by lazy(this::getViewModel)
 
@@ -24,7 +23,7 @@ class StudyPlaceInfoFscreen() : BaseSharedVmFragment() {
     private val educationalInstitutionsRvDialogTag = "EducationalInstitutionsRvDialog"
 
     companion object {
-        const val TAG = "StudyPlaceInfoFscreen"
+        const val TAG = "StudyPlaceInfoFragment"
     }
 
     override fun onAttach(context: Context) {
