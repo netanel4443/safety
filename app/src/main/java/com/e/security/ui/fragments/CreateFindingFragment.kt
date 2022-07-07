@@ -8,29 +8,24 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import com.e.fakerestapi.ui.recyclerviews.helpers.GenericVhItem
 import com.e.security.MainActivity
 import com.e.security.R
 import com.e.security.data.FindingDataHolder
 import com.e.security.databinding.CreateFindingBinding
 import com.e.security.ui.MainViewModel
-import com.e.security.ui.dialogs.FilterResultsDialog
+import com.e.security.ui.dialogfragments.FilterResultsDialogFragment
+import com.e.security.ui.dialogfragments.ImageOptionsDialog
 import com.e.security.ui.dialogs.RecyclerViewDialog
-import com.e.security.ui.dialogs.helpers.IFilterResultsDialogHelper
-import com.e.security.ui.recyclerviews.adapters.HozerMankalRecyclerViewAdapter
-import com.e.security.ui.recyclerviews.celldata.HozerMankalVhCell
 import com.e.security.ui.recyclerviews.celldata.TextViewVhCell
 import com.e.security.ui.recyclerviews.generics.GenericRecyclerviewAdapter2
 import com.e.security.ui.recyclerviews.generics.VhItemSetters
 import com.e.security.ui.recyclerviews.helpers.GenericItemClickListener
-import com.e.security.ui.recyclerviews.viewholders.CreateHozerMankalVh
 import com.e.security.ui.recyclerviews.viewholders.CreateTextViewVh
 import com.e.security.ui.spinners.GenericSpinner
 import com.e.security.ui.utils.addFragment
 import com.e.security.ui.utils.rxjava.throttleClick
 import com.e.security.ui.viewmodels.effects.Effects
 import com.squareup.picasso.Picasso
-import io.reactivex.rxjava3.core.Observable
 
 class CreateFindingFragment : BaseSharedVmFragment() {
 
@@ -38,11 +33,11 @@ class CreateFindingFragment : BaseSharedVmFragment() {
     private lateinit var binding: CreateFindingBinding
     private var imagePath: String = ""
     private var findingToEdit = FindingDataHolder()
-    private var filterResultsDialog: FilterResultsDialog<GenericVhItem>? = null
-    private var imageOptionsDialog: RecyclerViewDialog<TextViewVhCell>? = null
     private lateinit var photoLauncher: ActivityResultLauncher<Array<String>>
+    private val filterResultsDialogFragmentTag = "FilterResultsDialogFragment"
+    private val imageOptionsDialogDialogTag = "ImageOptionsDialog"
 
-   override fun onAttach(context: Context) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         (requireActivity() as MainActivity).mainActivityComponent.inject(this)
         photoLauncher = initPhotoLauncher()
@@ -66,9 +61,10 @@ class CreateFindingFragment : BaseSharedVmFragment() {
         viewModel.viewEffect.observe(viewLifecycleOwner) { effect ->
             when (effect) {
                 is Effects.ShowHozerMankalDialog -> showFilterResultDialog()
-                is Effects.ShowPhotoUploadDialog -> showImageOptionsDialog(effect.items)
+                is Effects.ShowPhotoUploadDialog -> showImageOptionsDialog()
                 is Effects.TakePhoto -> takePhoto()
                 is Effects.SelectPhoto -> pickImage()
+                else -> {}
             }
         }
     }
@@ -92,16 +88,9 @@ class CreateFindingFragment : BaseSharedVmFragment() {
                 binding.sectionInAssessmentList.text = curr.finding.sectionInAssessmentList
                 findingToEdit.testArea = curr.finding.testArea
             }
-            if (prev.chosenHozerMankalRecyclerItems != curr.chosenHozerMankalRecyclerItems) {
-                filterResultsDialog?.addItems(curr.chosenHozerMankalRecyclerItems)
-            }
         }) {
             val currentState = it.currentState.createFindingFragmentState
             fillViewsWithData(currentState.finding)
-            if (currentState.isFilterResultsDialogVisible) {
-                showFilterResultDialog()
-                filterResultsDialog?.addItems(currentState.chosenHozerMankalRecyclerItems)
-            }
         }
     }
 
@@ -133,7 +122,7 @@ class CreateFindingFragment : BaseSharedVmFragment() {
         val spinnerAdapter = GenericSpinner()
         binding.priority.adapter = spinnerAdapter.create(requireActivity(), R.array.priority_array)
 
-        binding.confirmButton.throttleClick() {
+        binding.confirmButton.throttleClick {
             findingToEdit.priority = binding.priority.selectedItem.toString()
             findingToEdit.sectionInAssessmentList = binding.sectionInAssessmentList.text.toString()
             findingToEdit.problem = binding.problemDescription.text.toString()
@@ -147,80 +136,16 @@ class CreateFindingFragment : BaseSharedVmFragment() {
     }
 
     private fun showFilterResultDialog() {
-
-        if (filterResultsDialog == null) {
-            createFilterResultDialog()
-        }
-        filterResultsDialog?.showDialog()
+        val filterResultsDialogFragment = FilterResultsDialogFragment()
+        filterResultsDialogFragment.show(childFragmentManager, filterResultsDialogFragmentTag)
     }
 
-    private fun createFilterResultDialog() {
-        filterResultsDialog = FilterResultsDialog(requireActivity())
 
-        val adapter = HozerMankalRecyclerViewAdapter()
-
-        adapter.setHozerMankalVhCellClickListener(object :GenericItemClickListener<HozerMankalVhCell>{
-            override fun onItemClick(item: HozerMankalVhCell) {
-                filterResultsDialog!!.dismissDialog()
-                viewModel.changeRequirement(item)
-            }
-        })
-
-        filterResultsDialog!!.setRecyclerViewAdapter(adapter)
-        filterResultsDialog!!.setVerticalLinearLayoutManager()
-
-        filterResultsDialog!!.setIHelper(object : IFilterResultsDialogHelper<GenericVhItem> {
-            override fun onItemClick(item: GenericVhItem) {
-
-            }
-
-            override fun textChanges(charSequence: CharSequence): Observable<List<GenericVhItem>> {
-                return viewModel.filterHozerMankal(charSequence.toString()) as Observable<List<GenericVhItem>>
-            }
-
-            override fun onItemsReady(items: List<GenericVhItem>) {
-                viewModel.updateChosenHozerMankalRecyclerItems(items as List<HozerMankalVhCell>)
-            }
-
-            override fun onDismissDialog() {
-                viewModel.onDismissFilterResultDialog(false)
-            }
-
-            override fun onShowDialog() {
-                viewModel.onDismissFilterResultDialog(true)
-            }
-        })
+    private fun showImageOptionsDialog() {
+        val imageOptionsDialogD = ImageOptionsDialog()
+        imageOptionsDialogD.show(childFragmentManager, imageOptionsDialogDialogTag)
     }
 
-    fun showImageOptionsDialog(items: List<TextViewVhCell>) {
-        if (imageOptionsDialog == null) {
-            createImageOptionsDialog()
-        }
-        imageOptionsDialog!!.addItems(items)
-        imageOptionsDialog!!.showDialog()
-
-    }
-
-    private fun createImageOptionsDialog() {
-        imageOptionsDialog = RecyclerViewDialog(requireActivity())
-        imageOptionsDialog!!.create()
-
-        val setter = VhItemSetters<TextViewVhCell>()
-        setter.createVh = CreateTextViewVh::class.java
-        setter.clickListener = object :
-            GenericItemClickListener<TextViewVhCell> {
-            override fun onItemClick(item: TextViewVhCell) {
-                imageOptionsDialog!!.dismissDialog()
-                viewModel.uploadPhotoUserSelection(item)
-            }
-        }
-
-        imageOptionsDialog!!.setRecyclerViewAdapter(GenericRecyclerviewAdapter2())
-            .setVhItemSetter(setter)
-
-        imageOptionsDialog!!.setVerticalLinearLayoutManager()
-
-    }
 
     private fun takePhoto() {
         val fragment = CameraFragment()
@@ -233,8 +158,7 @@ class CreateFindingFragment : BaseSharedVmFragment() {
         }
     }
 
-    private fun pickImage(){
+    private fun pickImage() {
         photoLauncher.launch(arrayOf("image/*"))
     }
-
 }

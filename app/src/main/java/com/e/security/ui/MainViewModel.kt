@@ -30,7 +30,6 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import org.bson.types.ObjectId
-import java.nio.file.FileVisitOption
 import java.util.*
 import javax.inject.Inject
 
@@ -77,6 +76,7 @@ class MainViewModel @Inject constructor(
             .subscribe({
                 createStudyPlaceDataVhCell(it)
                 data = it
+                printIfDbg(TAG, "items $it")
             }, { printErrorIfDbg(TAG, it.message) }).addDisposable()
     }
 
@@ -97,20 +97,22 @@ class MainViewModel @Inject constructor(
 
     fun getReportListFindings() {
         val tmpArray = ArrayList<FindingVhCell>()
-        data[chosenStudyPlaceId]!!.reportList[chosenReportId]!!
-            .findingArr.forEach { findingPriorityList ->
-                findingPriorityList.forEach { finding ->
-                    val value = finding.value
-                    val reportVhCell = FindingVhCell(
-                        id = value.id,
-                        problem = value.problem,
-                        findingSection = value.testArea
-                    )
-                    tmpArray.add(reportVhCell)
-                }
+        val report = data[chosenStudyPlaceId]!!.reportList[chosenReportId]!!
+        report.findingArr.forEach { findingPriorityList ->
+            findingPriorityList.forEach { finding ->
+                val value = finding.value
+                val reportVhCell = FindingVhCell(
+                    id = value.id,
+                    problem = value.problem,
+                    findingSection = value.testArea
+                )
+                tmpArray.add(reportVhCell)
             }
+        }
 
         updateFindingVhCellArrayList(tmpArray)
+        println("conclusion ${report.conclusion}")
+        updateUpdateReportConclusionState(report.conclusion)
     }
 
     private fun createStudyPlaceDataVhCell(data: HashMap<ObjectId, StudyPlaceDataHolder>) {
@@ -442,14 +444,34 @@ class MainViewModel @Inject constructor(
     }
 
     fun showStringRecyclerViewDialog(items: Array<String>) {
+        _viewEffect.value = Effects.ShowEducationalInstitutionsDialog
+        updateEducationalInstitutionsRvItems(items)
+    }
+
+    private fun updateEducationalInstitutionsRvItems(items: Array<String>) {
         val tvList = createTextViewVhCell(items)
-        _viewEffect.value = Effects.ShowEducationalInstitutionsDialog(tvList)
+        _viewState.mviValue {
+            it.copy(
+                educationalInstitutionsRvItems = tvList
+            )
+        }
     }
 
     fun showReportFragmentRecyclerViewMenu(items: Array<String>) {
+        _viewEffect.value = Effects.ShowReportFragmentRecyclerViewMenu
         val tvList = createTextViewVhCell(items)
-        _viewEffect.value = Effects.ShowReportFragmentRecyclerViewMenu(tvList)
+        updateReportFragmentRecyclerViewMenuItems(tvList)
+
     }
+
+    private fun updateReportFragmentRecyclerViewMenuItems(items: ArrayList<TextViewVhCell>){
+        _viewState.mviValue {
+            it.copy(
+                reportFragmentMenuRvDialogRvItems = items
+            )
+        }
+    }
+
 
     private fun createTextViewVhCell(items: Array<String>): ArrayList<TextViewVhCell> {
         val tvList = ArrayList<TextViewVhCell>()
@@ -712,16 +734,21 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun onDismissFilterResultDialog(isVisible: Boolean) {
-        val newState = _viewState.value!!.currentState.createFindingFragmentState.copy(
-            isFilterResultsDialogVisible = isVisible
-        )
-        updateCreateFindingFragmentState(newState)
-    }
 
     fun showPhotoUploadDialog(items: Array<String>) {
+        _viewEffect.value = Effects.ShowPhotoUploadDialog
+        updateImageOptionsItems(items)
+    }
+
+    private fun updateImageOptionsItems(items: Array<String>) {
         val tvhc = createTextViewVhCell(items)
-        _viewEffect.value = Effects.ShowPhotoUploadDialog(tvhc)
+        _viewState.mviValue {
+            it.copy(
+                createFindingFragmentState = it.createFindingFragmentState.copy(
+                    imageOptionsRvItems = tvhc
+                )
+            )
+        }
     }
 
     fun uploadPhotoUserSelection(item: TextViewVhCell) {
@@ -740,10 +767,11 @@ class MainViewModel @Inject constructor(
     }
 
     fun showReportConclusionDialog() {
-        _viewEffect.value = Effects.ShowReportConclusionDialog
+        _viewEffect.value =
+            Effects.ShowReportConclusionDialog(_viewState.currentState().findingFragmentState.conclusion)
     }
 
-    fun isReportConclusionDialogVisible(visibility: Boolean){
+    fun isReportConclusionDialogVisible(visibility: Boolean) {
         _viewState.mviValue {
             it.copy(
                 findingFragmentState = it.findingFragmentState.copy(
@@ -753,8 +781,24 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun saveReportConclusion(text: String) {
+    fun saveReportConclusion(conclusion: String) {
+        crud.setConclusion(chosenReportId, conclusion)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBlock { message ->
+                data[chosenStudyPlaceId]!!.reportList[chosenReportId]!!.conclusion = conclusion
+                updateUpdateReportConclusionState(conclusion)
+                _viewEffect.value = Effects.Toast(message)
+            }
+    }
 
+    fun updateUpdateReportConclusionState(conclusion: String) {
+        _viewState.mviValue {
+            it.copy(
+                findingFragmentState = it.findingFragmentState.copy(
+                    conclusion = conclusion
+                )
+            )
+        }
     }
 
 

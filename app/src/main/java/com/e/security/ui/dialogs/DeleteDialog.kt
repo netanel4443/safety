@@ -7,7 +7,7 @@ import com.e.security.databinding.TextviewDeleteDialogBinding
 
 class DeleteDialog(
     private var context: Context
-) {
+):BaseAlertDialog(context) {
     private var alert: AlertDialog? = null
     private var binding: TextviewDeleteDialogBinding? = null
     var onClick: (() -> Unit)? = null

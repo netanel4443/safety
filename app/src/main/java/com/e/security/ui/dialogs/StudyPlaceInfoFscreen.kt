@@ -6,18 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.e.security.MainActivity
 import com.e.security.R
 import com.e.security.data.StudyPlaceDetailsDataHolder
 import com.e.security.databinding.StudyPlaceInfoBinding
 import com.e.security.ui.MainViewModel
+import com.e.security.ui.dialogfragments.EducationalInstitutionsRvDialog
 import com.e.security.ui.fragments.BaseSharedVmFragment
-import com.e.security.ui.recyclerviews.celldata.TextViewVhCell
-import com.e.security.ui.recyclerviews.generics.GenericRecyclerviewAdapter2
-import com.e.security.ui.recyclerviews.generics.VhItemSetters
-import com.e.security.ui.recyclerviews.helpers.GenericItemClickListener
-import com.e.security.ui.recyclerviews.viewholders.CreateTextViewVh
 import com.e.security.ui.utils.rxjava.throttleClick
 import com.e.security.ui.viewmodels.effects.Effects
 
@@ -26,10 +21,7 @@ class StudyPlaceInfoFscreen() : BaseSharedVmFragment() {
     private val viewModel: MainViewModel by lazy(this::getViewModel)
 
     private lateinit var binding: StudyPlaceInfoBinding
-    private var recyclerViewDialog: RecyclerViewDialog<TextViewVhCell>? = null
-
-//    private var recyclerViewDialog: RecyclerViewDialog<TextViewVhCell>? = null
-
+    private val educationalInstitutionsRvDialogTag = "EducationalInstitutionsRvDialog"
 
     companion object {
         const val TAG = "StudyPlaceInfoFscreen"
@@ -95,10 +87,8 @@ class StudyPlaceInfoFscreen() : BaseSharedVmFragment() {
     private fun initEffectObserver() {
         viewModel.viewEffect.observe(viewLifecycleOwner) { effect ->
             when (effect) {
-                is Effects.ShowEducationalInstitutionsDialog -> showEducationalInstitutionsDialog(
-                    effect.items
-                )
-
+                is Effects.ShowEducationalInstitutionsDialog -> showEducationalInstitutionsDialog()
+                else -> {}
             }
         }
     }
@@ -138,41 +128,11 @@ class StudyPlaceInfoFscreen() : BaseSharedVmFragment() {
         }
     }
 
-    private fun showEducationalInstitutionsDialog(
-        items: List<TextViewVhCell>
-    ) {
-        if (recyclerViewDialog == null) {
-            createEducationalInstitutionsDialog()
-        }
-        recyclerViewDialog!!.addItems(items)
-        recyclerViewDialog!!.showDialog()
-    }
-
-    private fun createEducationalInstitutionsDialog() {
-
-        recyclerViewDialog = RecyclerViewDialog(
-            requireActivity()
+    private fun showEducationalInstitutionsDialog() {
+        val educationalInstitutionsRvDialog = EducationalInstitutionsRvDialog()
+        educationalInstitutionsRvDialog.show(
+            childFragmentManager,
+            educationalInstitutionsRvDialogTag
         )
-
-        val setter = VhItemSetters<TextViewVhCell>()
-        setter.createVh = CreateTextViewVh::class.java
-        setter.clickListener = object :
-            GenericItemClickListener<TextViewVhCell> {
-            override fun onItemClick(item: TextViewVhCell) {
-                recyclerViewDialog!!.dismissDialog()
-                viewModel.changeEducationalInstitution(item)
-            }
-        }
-
-        recyclerViewDialog!!.create()
-        recyclerViewDialog!!.setRecyclerViewAdapter(GenericRecyclerviewAdapter2())
-            .setVhItemSetter(setter)
-
-        recyclerViewDialog!!.setVerticalLinearLayoutManager()
     }
-
-//        recyclerViewDialog!!.onClick = {
-//            viewModel.changeEducationalInstitution(it)
-//        }
-//
 }

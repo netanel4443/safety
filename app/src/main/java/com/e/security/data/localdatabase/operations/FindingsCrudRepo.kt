@@ -1,5 +1,6 @@
 package com.e.security.data.localdatabase.operations
 
+import android.app.Application
 import com.e.security.R
 import com.e.security.data.FindingDataHolder
 import com.e.security.data.ReportDataHolder
@@ -20,10 +21,16 @@ import org.bson.types.ObjectId
 import javax.inject.Inject
 
 @ApplicationScope
-class FindingsCrudRepo @Inject constructor() {
+class FindingsCrudRepo @Inject constructor(
+    private val app: Application
+) {
 
     private val realm = FindingsDetailsSchema().getRealmInstance()
     private var cachedStudyPlaceData = HashMap<ObjectId, StudyPlaceDataHolder>()
+    private var chosenStudyPlaceId = ObjectId()
+    private var chosenReportId = ObjectId()
+    private var chosenFindingId: ObjectId = ObjectId()
+
 
     //todo check if id is already exists? maybe not needed because objectid
     fun saveFinding(listId: ObjectId, finding: FindingDataHolder): Completable {
@@ -51,6 +58,16 @@ class FindingsCrudRepo @Inject constructor() {
                 emitter.onError(e)
             }
 
+        }
+    }
+
+    fun setConclusion(id: ObjectId, conclusion: String): Single<String> {
+        return realm.rxSingleTransactionAsync { realm ->
+            val reportRlmObj = realm.findObjectById(ReportRlmObj::class.java, id)
+            println("conclusinnnnnn $conclusion")
+            reportRlmObj!!.conclusion = conclusion
+            realm.insertOrUpdate(reportRlmObj)
+            app.getString(R.string.saved_successfully)
         }
     }
 
@@ -218,6 +235,7 @@ class FindingsCrudRepo @Inject constructor() {
                     val findingListDataHolder = ReportDataHolder()
                     findingListDataHolder.id = findingListRlmObj._id
                     findingListDataHolder.date = findingListRlmObj.date
+                    findingListDataHolder.conclusion = findingListRlmObj.conclusion
 
                     findingListRlmObj.findingList.forEach { findingRealmObj ->
                         val findingsDataObj = FindingDataHolder(
@@ -247,13 +265,13 @@ class FindingsCrudRepo @Inject constructor() {
         return realm.rxSingleTransactionAsync { realm ->
             val obj = realm.findObjectById(FindingRlmObj::class.java, id)
             obj!!.deleteFromRealm()
-            "נמחק בהצלחה"
+
+            app.getString(R.string.deleted_successfully)
         }
     }
 
     fun deleteReport(id: ObjectId): Single<Int> {
         return realm.rxSingleTransactionAsync { realm ->
-            println("test ${realm.where(FindingRlmObj::class.java).findAll()}")
             val obj = realm.findObjectById(ReportRlmObj::class.java, id)
             for (i in obj!!.findingList.size - 1 downTo 0) {
                 obj.findingList.deleteFromRealm(i)

@@ -3,6 +3,10 @@ package com.e.security.di.components
 import com.e.security.MainActivity
 import com.e.security.di.modules.MainVmModule
 import com.e.security.di.scopes.ActivityScope
+import com.e.security.ui.dialogfragments.EducationalInstitutionsRvDialog
+import com.e.security.ui.dialogfragments.FilterResultsDialogFragment
+import com.e.security.ui.dialogfragments.ImageOptionsDialog
+import com.e.security.ui.dialogfragments.ReportFragmentMenuRvDialog
 import com.e.security.ui.dialogs.StudyPlaceInfoFscreen
 import com.e.security.ui.fragments.CameraFragment
 import com.e.security.ui.fragments.CreateFindingFragment
@@ -28,5 +32,9 @@ interface MainActivityComponent {
     fun inject(reportsFragment: ReportsFragment)
     fun inject(findingsFragment: FindingsFragment)
     fun inject(cameraFragment: CameraFragment)
+    fun inject(filterResultsDialogFragment: FilterResultsDialogFragment)
+    fun inject(educationalInstitutionsRvDialog: EducationalInstitutionsRvDialog)
+    fun inject(imageOptionsDialog: ImageOptionsDialog)
+    fun inject(reportFragmentMenuRvDialog: ReportFragmentMenuRvDialog)
 
 }

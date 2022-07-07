@@ -5,39 +5,40 @@ import com.e.fakerestapi.ui.recyclerviews.helpers.GenericVhItem
 import com.e.security.data.FindingDataHolder
 import com.e.security.data.StudyPlaceDetailsDataHolder
 import com.e.security.ui.recyclerviews.celldata.FindingVhCell
-import com.e.security.ui.recyclerviews.celldata.HozerMankalVhCell
 import com.e.security.ui.recyclerviews.celldata.ReportVhCell
 import com.e.security.ui.recyclerviews.celldata.StudyPlaceDataVhCell
+import com.e.security.ui.recyclerviews.celldata.TextViewVhCell
 
 data class MainViewState(
     var findingFragmentState: FindingFragmentState = FindingFragmentState(),
+//    var reportFragmentState: ReportFragmentState = ReportFragmentState(),
     var studyPlacesVhCellArrayList: ArrayList<StudyPlaceDataVhCell> = ArrayList(),
     var reportVhCellArrayList: ArrayList<ReportVhCell> = ArrayList(),
     var createFindingFragmentState: CreateFindingFragmentState = CreateFindingFragmentState(),
-    var studyPlaceInfoFragmentState: StudyPlaceInfoFragmentState = StudyPlaceInfoFragmentState()
+    var studyPlaceInfoFragmentState: StudyPlaceInfoFragmentState = StudyPlaceInfoFragmentState(),
+    val educationalInstitutionsRvItems: List<TextViewVhCell> = ArrayList(),
+    val reportFragmentMenuRvDialogRvItems: List<TextViewVhCell> = ArrayList()
 ) {
     data class CreateFindingFragmentState(
         var finding: FindingDataHolder = FindingDataHolder(),
         var problemImage: Uri? = null,
         var chosenHozerMankalRecyclerItems: List<GenericVhItem> = ArrayList(),
-        var isFilterResultsDialogVisible: Boolean = false
+        val imageOptionsRvItems: List<TextViewVhCell> = ArrayList(),
     )
 
     data class StudyPlaceInfoFragmentState(
         val reportDetails: StudyPlaceDetailsDataHolder = StudyPlaceDetailsDataHolder(),
-        val educationalInstitutions: List<String> = ArrayList()
     )
 
     data class FindingFragmentState(
         var findingVhCellArrayList: ArrayList<FindingVhCell> = ArrayList(),
         var reportConclusionDialogVisibility: Boolean = false,
-        var conclusionText: String = ""
-        )
+        var conclusion: String = ""
+    )
 
-//    data class ReportFragmentState(
-//        var reportList:ArrayList<ReportVhCell> = ArrayList(),
-//
-//    )
+    data class ReportFragmentState(
+        var reportVhCellArrayList: ArrayList<ReportVhCell> = ArrayList(),
+    )
 
 
 }

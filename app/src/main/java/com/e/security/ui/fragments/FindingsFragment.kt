@@ -36,7 +36,7 @@ class FindingsFragment : BaseSharedVmFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FindingFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -45,27 +45,32 @@ class FindingsFragment : BaseSharedVmFragment() {
         initUi()
         initEffectObserver()
         initStateObserver()
+        restoreState(savedInstanceState)
         viewModel.getReportListFindings()
     }
 
     private fun initStateObserver() {
-        viewModel.viewState.observe(viewLifecycleOwner,{ state ->
+        viewModel.viewState.observe(viewLifecycleOwner, { state ->
 
-            if (state.prevState.findingFragmentState !=
-                state.currentState.findingFragmentState) {
+            val prev = state.prevState.findingFragmentState
+            val curr = state.currentState.findingFragmentState
 
-                val prev = state.prevState.findingFragmentState
-                val curr = state.currentState.findingFragmentState
-                if (prev.findingVhCellArrayList != curr.findingVhCellArrayList){
-                    recyclerviewAdapter.submitList(curr.findingVhCellArrayList)
-                }
-
+            if (prev.findingVhCellArrayList != curr.findingVhCellArrayList || recyclerviewAdapter.hasNoItems()) {
+                recyclerviewAdapter.submitList(curr.findingVhCellArrayList)
             }
-        }){ state->
-            val currentState = state.currentState.findingFragmentState
-            if (currentState.reportConclusionDialogVisibility){
-                showReportConclusionDialog()
-                editTextDialog!!.setText(currentState.conclusionText)
+
+            if (prev.conclusion != curr.conclusion) {
+                binding.conclusion.text = curr.conclusion
+            }
+
+        }) { state ->
+            val curr = state.currentState.findingFragmentState
+
+            recyclerviewAdapter.submitList(curr.findingVhCellArrayList)
+            binding.conclusion.text = curr.conclusion
+
+            if (curr.reportConclusionDialogVisibility) {
+                showReportConclusionDialog(curr.conclusion)
             }
         }
     }
@@ -74,40 +79,10 @@ class FindingsFragment : BaseSharedVmFragment() {
         viewModel.viewEffect.observe(viewLifecycleOwner) { effect ->
             when (effect) {
                 is Effects.StartCreateFindingFragment -> startCreateFindingFragment()
-                is Effects.ShowReportConclusionDialog -> showReportConclusionDialog()
+                is Effects.ShowReportConclusionDialog -> showReportConclusionDialog(effect.conclusion)
             }
         }
     }
-
-    private fun startCreateFindingFragment() {
-        val fragment = CreateFindingFragment()
-        requireActivity().addFragment(fragment, R.id.fragment_container, "CreateFindingFragment")
-    }
-
-    private fun showReportConclusionDialog() {
-        if (editTextDialog == null) {
-            createReportConclusionDialog()
-        }
-        editTextDialog!!.show()
-    }
-
-    private fun createReportConclusionDialog() {
-        editTextDialog = EditTextDialog(requireActivity())
-        editTextDialog!!.setHelper(object : IeditTextDialogHelper {
-            override fun onDismissDialog() {
-                viewModel.isReportConclusionDialogVisible(false)
-            }
-
-            override fun onShowDialog() {
-                viewModel.isReportConclusionDialogVisible(true)
-            }
-
-            override fun onConfirm(text: String) {
-                viewModel.saveReportConclusion(text)
-            }
-        })
-    }
-
 
     private fun initUi() {
         initRecyclerView()
@@ -141,7 +116,6 @@ class FindingsFragment : BaseSharedVmFragment() {
 
         recyclerviewAdapter.setVhItemSetter(setter)
 
-
         recyclerView.adapter = recyclerviewAdapter
 
         recyclerView.layoutManager = LinearLayoutManager(
@@ -150,7 +124,61 @@ class FindingsFragment : BaseSharedVmFragment() {
             false
         )
         recyclerView.setHasFixedSize(true)
+    }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        //call only if dialog is showed
+        editTextDialog?.let {
+            if (it.isShowing()){
+                outState.putString("editTextDialogUserText", it.getText())
+            }
+        }
+    }
+
+    private fun restoreState(bundle: Bundle?) {
+        bundle?.run {
+            getString("editTextDialogUserText")?.let {
+                editTextDialog!!.setText(it)
+            }
+        }
+    }
+
+    private fun startCreateFindingFragment() {
+        val fragment = CreateFindingFragment()
+        requireActivity().addFragment(fragment, R.id.fragment_container, "CreateFindingFragment")
+    }
+
+
+    private fun showReportConclusionDialog(conclusion: String) {
+        if (editTextDialog == null) {
+            createReportConclusionDialog()
+        }
+        editTextDialog!!.show()
+        editTextDialog!!.setText(conclusion)
+    }
+
+    private fun createReportConclusionDialog() {
+        editTextDialog = EditTextDialog(requireActivity())
+        editTextDialog!!.setHelper(object : IeditTextDialogHelper {
+            override fun onDismissDialog() {
+                viewModel.isReportConclusionDialogVisible(false)
+            }
+
+            override fun onShowDialog() {
+                viewModel.isReportConclusionDialogVisible(true)
+            }
+
+            override fun onConfirm(text: String) {
+                viewModel.saveReportConclusion(text)
+            }
+        })
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        editTextDialog?.dismissConfigurationChanges()
     }
 
 }
+

@@ -1,43 +1,29 @@
 package com.e.security.ui.dialogs
 
-import android.app.AlertDialog
 import android.content.Context
 import android.view.LayoutInflater
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.e.fakerestapi.ui.recyclerviews.helpers.GenericVhItem
-import com.e.security.R
 import com.e.security.databinding.RecyclerViewDialogBinding
-import com.e.security.ui.dialogs.helpers.GenericDialogHelper
 import com.e.security.ui.recyclerviews.generics.GenericRecyclerviewAdapter2
 
-open class RecyclerViewDialog<T : GenericVhItem>(private var context: Context) {
+open class RecyclerViewDialog<T : GenericVhItem>(private var context: Context) :
+    BaseAlertDialog(context) {
 
-    private var alert: AlertDialog? = null
     private var recyclerviewAdapter: GenericRecyclerviewAdapter2<T>? = null
     private var binding: RecyclerViewDialogBinding? = null
     private var recyclerView: RecyclerView? = null
 
-    open fun showDialog() {
-        if (alert == null) {
-            throw NullPointerException(context.getString(R.string.dialog_not_created))
-        }
-        show()
+    init {
+        create()
     }
 
-    open fun create() {
-        val alertDialog = AlertDialog.Builder(context)
-
+    private fun create() {
         val inflater = LayoutInflater.from(context)
         binding = RecyclerViewDialogBinding.inflate(inflater)
-
+        super.create(binding!!)
         setRecyclerView(binding!!.recyclerview)
-
-        alertDialog.setView(binding!!.root)
-        alert = alertDialog.create()
-        alert!!.setCanceledOnTouchOutside(true)
-
-
     }
 
     protected fun setRecyclerView(recyclerView: RecyclerView) {
@@ -46,16 +32,6 @@ open class RecyclerViewDialog<T : GenericVhItem>(private var context: Context) {
 
     fun addItems(items: List<T>) {
         recyclerviewAdapter!!.submitList(items)
-    }
-
-    private fun show() {
-        alert?.run {
-            show()
-        }
-    }
-
-    open fun dismissDialog() {
-        alert?.run { dismiss() }
     }
 
 

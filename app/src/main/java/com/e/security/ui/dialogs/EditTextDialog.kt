@@ -1,61 +1,43 @@
 package com.e.security.ui.dialogs
 
-import android.app.AlertDialog
 import android.content.Context
 import android.view.LayoutInflater
 import com.e.security.databinding.EditTextDialogBinding
 import com.e.security.ui.dialogs.helpers.IeditTextDialogHelper
 
-open class EditTextDialog(private var context: Context) {
+open class EditTextDialog(private var context: Context) : BaseAlertDialog(context) {
 
-    private var alert: AlertDialog? = null
     private var binding: EditTextDialogBinding? = null
-    private var dialogHelper: IeditTextDialogHelper? = null
+    private var iHelper: IeditTextDialogHelper? = null
 
     init {
         create()
     }
 
     fun create() {
-        val alertDialog = AlertDialog.Builder(context)
         val inflater = LayoutInflater.from(context)
-
         binding = EditTextDialogBinding.inflate(inflater)
+        super.create(binding!!)
 
-        alertDialog.setView(binding!!.root)
-        alert = alertDialog.create()
-        alert!!.setCanceledOnTouchOutside(true)
-        alert!!.setOnDismissListener {
-            dismissDialog()
-        }
-
-        binding!!.cancelButton.setOnClickListener {
-            dismissDialog()
-        }
+        binding!!.cancelButton.setOnClickListener { dismiss() }
 
         binding!!.confirmButton.setOnClickListener {
-            dialogHelper!!.onConfirm(binding!!.editText.text.toString())
+            iHelper!!.onConfirm(binding!!.editText.text.toString())
+            dismiss()
         }
-    }
-
-    fun show() {
-        alert!!.show()
-        dialogHelper?.onShowDialog()
-    }
-
-    fun dismissDialog() {
-        alert!!.dismiss()
-        dialogHelper?.onDismissDialog()
     }
 
     fun setHelper(helper: IeditTextDialogHelper) {
-        dialogHelper = helper
+        super.setHelper(helper) // has to call super
+        iHelper = helper
     }
 
-    // for configuration changes
     fun setText(text: String) {
         binding!!.editText.setText(text)
     }
 
+    fun getText(): String {
+        return binding!!.editText.text.toString()
+    }
 }
 
