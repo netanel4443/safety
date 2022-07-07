@@ -7,7 +7,7 @@ import com.e.security.ui.dialogfragments.EducationalInstitutionsRvDialog
 import com.e.security.ui.dialogfragments.FilterResultsDialogFragment
 import com.e.security.ui.dialogfragments.ImageOptionsDialog
 import com.e.security.ui.dialogfragments.ReportFragmentMenuRvDialog
-import com.e.security.ui.dialogs.StudyPlaceInfoFscreen
+import com.e.security.ui.fragments.StudyPlaceInfoFragment
 import com.e.security.ui.fragments.CameraFragment
 import com.e.security.ui.fragments.CreateFindingFragment
 import com.e.security.ui.fragments.FindingsFragment
@@ -27,7 +27,7 @@ interface MainActivityComponent {
     }
 
     fun inject(mainActivity: MainActivity)
-    fun inject(studyPlaceInfoFscreen: StudyPlaceInfoFscreen)
+    fun inject(studyPlaceInfoFragment: StudyPlaceInfoFragment)
     fun inject(createFindingFragment: CreateFindingFragment)
     fun inject(reportsFragment: ReportsFragment)
     fun inject(findingsFragment: FindingsFragment)
