@@ -11,7 +11,7 @@ import com.e.security.di.components.MainActivityComponent
 import com.e.security.ui.MainViewModel
 import com.e.security.ui.activities.BaseActivity
 import com.e.security.ui.dialogs.DeleteDialog
-import com.e.security.ui.dialogs.StudyPlaceInfoFscreen
+import com.e.security.ui.fragments.StudyPlaceInfoFragment
 import com.e.security.ui.fragments.ReportsFragment
 import com.e.security.ui.recyclerviews.generics.GenericRecyclerviewAdapter
 import com.e.security.ui.recyclerviews.celldata.StudyPlaceDataVhCell
@@ -104,9 +104,9 @@ class MainActivity : BaseActivity() {
 
     private fun startStudyPlaceInfoFragment() {
         addFragment(
-            StudyPlaceInfoFscreen(),
+            StudyPlaceInfoFragment(),
             R.id.fragment_container,
-            StudyPlaceInfoFscreen.TAG
+            StudyPlaceInfoFragment.TAG
         )
     }
 
