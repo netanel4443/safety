@@ -10,6 +10,7 @@ data class FindingDataHolder(
     var problemLocation: String = "",
     var requirement: String = "",
     var problem: String = "",
-    var pic: String = ""
+    //todo decide if it is a list of uris or strings
+    var problemImages: ArrayList<String> = ArrayList()
 )
 

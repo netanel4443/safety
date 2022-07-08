@@ -1,10 +1,11 @@
 package com.e.security.data.objects
 
+import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import org.bson.types.ObjectId
 
-open class FindingRlmObj:RealmObject() {
+open class FindingRlmObj : RealmObject() {
     @PrimaryKey
     var _id: ObjectId = ObjectId()
     var testArea: String = ""
@@ -12,6 +13,6 @@ open class FindingRlmObj:RealmObject() {
     var problemLocation: String = ""
     var requirement: String = ""
     var problem: String = ""
-    var picPath: String = ""
-    var priority:String="0"
+    var picPaths: RealmList<String> = RealmList()
+    var priority: String = "0"
 }

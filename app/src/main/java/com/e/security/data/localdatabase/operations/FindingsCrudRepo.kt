@@ -7,9 +7,7 @@ import com.e.security.data.ReportDataHolder
 import com.e.security.data.StudyPlaceDataHolder
 import com.e.security.data.StudyPlaceDetailsDataHolder
 import com.e.security.data.localdatabase.configuration.FindingsDetailsSchema
-import com.e.security.data.localdatabase.utils.findObjectById
-import com.e.security.data.localdatabase.utils.getLists
-import com.e.security.data.localdatabase.utils.rxSingleTransactionAsync
+import com.e.security.data.localdatabase.utils.*
 import com.e.security.data.objects.FindingRlmObj
 import com.e.security.data.objects.GeneralReportDetailsRlmObj
 import com.e.security.data.objects.ReportRlmObj
@@ -41,7 +39,7 @@ class FindingsCrudRepo @Inject constructor(
                         realm.where(ReportRlmObj::class.java).equalTo("_id", listId)
                             .findFirst()
                     val newFinding = realm.createObject(FindingRlmObj::class.java, finding.id)
-                    newFinding.picPath = finding.pic
+                    newFinding.picPaths = finding.problemImages.toRealmList()
                     newFinding.problem = finding.problem
                     newFinding.problemLocation = finding.problemLocation
                     newFinding.requirement = finding.requirement
@@ -64,7 +62,6 @@ class FindingsCrudRepo @Inject constructor(
     fun setConclusion(id: ObjectId, conclusion: String): Single<String> {
         return realm.rxSingleTransactionAsync { realm ->
             val reportRlmObj = realm.findObjectById(ReportRlmObj::class.java, id)
-            println("conclusinnnnnn $conclusion")
             reportRlmObj!!.conclusion = conclusion
             realm.insertOrUpdate(reportRlmObj)
             app.getString(R.string.saved_successfully)
@@ -166,7 +163,7 @@ class FindingsCrudRepo @Inject constructor(
                     val rlmObj = realm.where(FindingRlmObj::class.java)
                         .equalTo("_id", finding.id)
                         .findFirst()
-                    rlmObj!!.picPath = finding.pic
+                    rlmObj!!.picPaths = finding.problemImages.toRealmList()
                     rlmObj.problem = finding.problem
                     rlmObj.problemLocation = finding.problemLocation
                     rlmObj.requirement = finding.requirement
@@ -246,7 +243,7 @@ class FindingsCrudRepo @Inject constructor(
                             problemLocation = findingRealmObj.problemLocation,
                             requirement = findingRealmObj.requirement,
                             problem = findingRealmObj.problem,
-                            pic = findingRealmObj.picPath
+                            problemImages = findingRealmObj.picPaths.toArrayList()
                         )
                         //sort according to priorities
                         findingListDataHolder.findingArr[findingsDataObj.priority.toInt()][findingsDataObj.id] =

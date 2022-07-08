@@ -7,7 +7,7 @@ import io.realm.RealmMigration
 
 class FindingsDetailsSchema {
 
-    private val lastVersion: Long = 3L
+    private val lastVersion: Long = 4L
 
     fun getRealmInstance(): Realm {
         val realmName = "FINDINGS_DETAILS_SCHEMA"
