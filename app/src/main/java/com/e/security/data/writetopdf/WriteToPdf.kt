@@ -421,27 +421,51 @@ class WriteToPdf @Inject constructor(private val application: Application) {
                 val imageHeight = 150
                 shouldUpdateBiggestCellHeight(imageHeight)
 
-               if (findingDataHolder.pic.isNotEmpty()){
-                   drawImageUri(
-                       findingDataHolder.pic, xSpaceCell,
-                       imageHeight,
-                       xLocation.toFloat(),
-                       yLocation.toFloat()
-                   )
-               }
-
-
+                if (findingDataHolder.problemImages.isNotEmpty()) {
+                    drawImageUri(
+                        findingDataHolder.problemImages[0], xSpaceCell,
+                        imageHeight,
+                        xLocation.toFloat(),
+                        yLocation.toFloat()
+                    )
+                }
+                //draw rectangle for the image
                 drawTableRectangle(
                     xLocation.toFloat(),
                     yLocation.toFloat(),
                     xLocation.toFloat() + xSpaceCell.toFloat(),
                     yLocation.toFloat() + biggestCellHeight.toFloat()
                 )
-
+                // increment x location for the rest of the row cells
                 addToXLocation()
-
+                // draw the rest of the cells
                 drawTableRow(findingLayoutArray)
 
+                // limit images to 6 images , 6 because the number of cells ,
+                // the logic can be changed , but for now 6 images is enough.
+                var i = 1
+                // these lines have the same height , we don't need to calculate here the biggest height
+                // of all of the cells
+                while (i < findingDataHolder.problemImages.size && i < 7) {
+                    drawImageUri(
+                        findingDataHolder.problemImages[i], xSpaceCell,
+                        imageHeight,
+                        xLocation.toFloat(),
+                        yLocation.toFloat()
+                    )
+                    // draw rectangle for the image
+                    drawTableRectangle(
+                        xLocation.toFloat(),
+                        yLocation.toFloat(),
+                        xLocation.toFloat() + xSpaceCell.toFloat(),
+                        yLocation.toFloat() + imageHeight
+                    )
+                    addToXLocation()
+                    i++
+                }
+                // calculate the new y location for next row
+                addToYLocation(imageHeight)
+                resetRequiredParamsForNewTableLine()
             }
             addYMargin(20)
         }
@@ -479,9 +503,9 @@ class WriteToPdf @Inject constructor(private val application: Application) {
         val wid: Int = bitmap.width
         val hei: Int = bitmap.height
 
-        val newWidth = wid /2
-        val newHeight = hei/2
-       val scaledBitmap = bitmap.scale(newWidth,newHeight) // decrease bitmap size by 50%
+        val newWidth = wid / 2
+        val newHeight = hei / 2
+        val scaledBitmap = bitmap.scale(newWidth, newHeight) // decrease bitmap size by 50%
 
         canvas!!.save()
         updateCanvasXYCoordinates(x, yLoc)
