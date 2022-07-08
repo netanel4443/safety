@@ -18,10 +18,20 @@
         app:layout_constraintHeight_percent="0.4"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/problem_image"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/image_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/add_image_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/purple_500"
+            android:text="@string/add_photo"
+            android:layout_gravity="bottom|start"
+            app:tint="@color/white"
+            android:layout_margin="5dp"/>
+
     </androidx.cardview.widget.CardView>
 
 

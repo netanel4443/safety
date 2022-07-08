@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.e.security.MainActivity
 import com.e.security.R
 import com.e.security.data.FindingDataHolder
@@ -15,12 +16,11 @@ import com.e.security.databinding.CreateFindingBinding
 import com.e.security.ui.MainViewModel
 import com.e.security.ui.dialogfragments.FilterResultsDialogFragment
 import com.e.security.ui.dialogfragments.ImageOptionsDialog
-import com.e.security.ui.dialogs.RecyclerViewDialog
-import com.e.security.ui.recyclerviews.celldata.TextViewVhCell
+import com.e.security.ui.recyclerviews.celldata.ImageViewVhCell
+import com.e.security.ui.recyclerviews.clicklisteners.ImageVhItemClickListener
 import com.e.security.ui.recyclerviews.generics.GenericRecyclerviewAdapter2
 import com.e.security.ui.recyclerviews.generics.VhItemSetters
-import com.e.security.ui.recyclerviews.helpers.GenericItemClickListener
-import com.e.security.ui.recyclerviews.viewholders.CreateTextViewVh
+import com.e.security.ui.recyclerviews.viewholders.CreateImageViewVh
 import com.e.security.ui.spinners.GenericSpinner
 import com.e.security.ui.utils.addFragment
 import com.e.security.ui.utils.rxjava.throttleClick
@@ -31,11 +31,12 @@ class CreateFindingFragment : BaseSharedVmFragment() {
 
     private val viewModel: MainViewModel by lazy(this::getViewModel)
     private lateinit var binding: CreateFindingBinding
-    private var imagePath: String = ""
+    private var problemImages: ArrayList<ImageViewVhCell> = ArrayList()
     private var findingToEdit = FindingDataHolder()
     private lateinit var photoLauncher: ActivityResultLauncher<Array<String>>
     private val filterResultsDialogFragmentTag = "FilterResultsDialogFragment"
     private val imageOptionsDialogDialogTag = "ImageOptionsDialog"
+    private var imageRecyclerAdapter: GenericRecyclerviewAdapter2<ImageViewVhCell>? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -56,6 +57,34 @@ class CreateFindingFragment : BaseSharedVmFragment() {
         initStateObserver()
         initEffectObserver()
     }
+
+    private fun initUi() {
+
+        binding.requirement.setOnClickListener {
+            viewModel.getAppropriateHozerItems()
+            viewModel.showHozerMankalDialog()
+        }
+        binding.addImageBtn.throttleClick{
+            viewModel.showPhotoUploadDialog(resources.getStringArray(R.array.photo_operations))
+        }.addDisposable()
+
+        val spinnerAdapter = GenericSpinner()
+        binding.priority.adapter = spinnerAdapter.create(requireActivity(), R.array.priority_array)
+
+        binding.confirmButton.throttleClick {
+            findingToEdit.priority = binding.priority.selectedItem.toString()
+            findingToEdit.sectionInAssessmentList = binding.sectionInAssessmentList.text.toString()
+            findingToEdit.problem = binding.problemDescription.text.toString()
+            findingToEdit.problemLocation = binding.locationDescription.text.toString()
+            findingToEdit.requirement = binding.requirement.text.toString()
+
+            viewModel.saveFinding(findingToEdit,problemImages)
+            viewModel.popFragment()
+        }.addDisposable()
+
+        initImagesRecyclerView()
+    }
+
 
     private fun initEffectObserver() {
         viewModel.viewEffect.observe(viewLifecycleOwner) { effect ->
@@ -78,10 +107,8 @@ class CreateFindingFragment : BaseSharedVmFragment() {
             val curr = state.currentState.createFindingFragmentState
 
             if (prev.problemImage != curr.problemImage) {
-                imagePath = curr.problemImage.toString()
-
-                Picasso.get().load(curr.problemImage)
-                    .into(binding.problemImage)
+                problemImages = curr.problemImage
+                imageRecyclerAdapter!!.submitList(problemImages)
             }
             if (prev.finding.sectionInAssessmentList != curr.finding.sectionInAssessmentList) {
                 binding.requirement.text = curr.finding.requirement
@@ -90,16 +117,16 @@ class CreateFindingFragment : BaseSharedVmFragment() {
             }
         }) {
             val currentState = it.currentState.createFindingFragmentState
-            fillViewsWithData(currentState.finding)
+            fillViewsWithData(currentState.finding,currentState.problemImage)
         }
     }
 
 
-    private fun fillViewsWithData(finding: FindingDataHolder) {
+    private fun fillViewsWithData(finding: FindingDataHolder,images:ArrayList<ImageViewVhCell>) {
         findingToEdit = finding
-        imagePath = finding.pic
+        problemImages = images
 
-        Picasso.get().load(Uri.parse(finding.pic)).into(binding.problemImage)
+        imageRecyclerAdapter!!.submitList(problemImages)
 
         val array = resources.getStringArray(R.array.priority_array)
         binding.priority.setSelection(array.indexOf(finding.priority))
@@ -109,37 +136,41 @@ class CreateFindingFragment : BaseSharedVmFragment() {
         binding.locationDescription.setText(finding.problemLocation)
     }
 
-    private fun initUi() {
-        binding.problemImageCard.setOnClickListener {
-            viewModel.showPhotoUploadDialog(resources.getStringArray(R.array.photo_operations))
-        }
-
-        binding.requirement.setOnClickListener {
-            viewModel.getAppropriateHozerItems()
-            viewModel.showHozerMankalDialog()
-        }
-
-        val spinnerAdapter = GenericSpinner()
-        binding.priority.adapter = spinnerAdapter.create(requireActivity(), R.array.priority_array)
-
-        binding.confirmButton.throttleClick {
-            findingToEdit.priority = binding.priority.selectedItem.toString()
-            findingToEdit.sectionInAssessmentList = binding.sectionInAssessmentList.text.toString()
-            findingToEdit.problem = binding.problemDescription.text.toString()
-            findingToEdit.problemLocation = binding.locationDescription.text.toString()
-            findingToEdit.requirement = binding.requirement.text.toString()
-            findingToEdit.pic = imagePath
-
-            viewModel.saveFinding(findingToEdit)
-            viewModel.popFragment()
-        }.addDisposable()
-    }
 
     private fun showFilterResultDialog() {
         val filterResultsDialogFragment = FilterResultsDialogFragment()
         filterResultsDialogFragment.show(childFragmentManager, filterResultsDialogFragmentTag)
     }
 
+
+    private fun initImagesRecyclerView() {
+        val recyclerView = binding.imageRecyclerView
+        imageRecyclerAdapter = GenericRecyclerviewAdapter2()
+
+        val setter = VhItemSetters<ImageViewVhCell>()
+        setter.createVh = CreateImageViewVh::class.java
+
+        setter.clickListener = object : ImageVhItemClickListener {
+            override fun onItemClick(item: ImageViewVhCell) {
+                viewModel.showPhotoUploadDialog(resources.getStringArray(R.array.photo_operations))
+            }
+
+            override fun onDeleteImage(item: ImageViewVhCell) {
+                viewModel.deleteImage(item)
+            }
+        }
+
+        imageRecyclerAdapter!!.setVhItemSetter(setter)
+
+        recyclerView.adapter = imageRecyclerAdapter
+
+        recyclerView.layoutManager = LinearLayoutManager(
+            requireActivity(),
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
+        recyclerView.setHasFixedSize(true)
+    }
 
     private fun showImageOptionsDialog() {
         val imageOptionsDialogD = ImageOptionsDialog()
@@ -154,7 +185,7 @@ class CreateFindingFragment : BaseSharedVmFragment() {
 
     private fun initPhotoLauncher(): ActivityResultLauncher<Array<String>> {
         return registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
-            viewModel.setProblemImage(uri)
+            viewModel.addProblemImage(uri)
         }
     }
 
