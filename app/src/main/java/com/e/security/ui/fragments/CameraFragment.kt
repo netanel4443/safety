@@ -76,7 +76,7 @@ class CameraFragment : BaseSharedVmFragment() {
 
         binding.takePhotoBtn.setOnClickListener {
             cameraOperations.takePhoto() {
-                viewModel.setProblemImage(it)
+                viewModel.addProblemImage(it)
                 viewModel.popFragment()
             }
         }
