@@ -1,6 +1,5 @@
 package com.e.security.ui.states
 
-import android.net.Uri
 import com.e.fakerestapi.ui.recyclerviews.helpers.GenericVhItem
 import com.e.security.data.FindingDataHolder
 import com.e.security.data.StudyPlaceDetailsDataHolder
