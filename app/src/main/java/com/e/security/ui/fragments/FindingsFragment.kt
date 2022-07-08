@@ -55,9 +55,9 @@ class FindingsFragment : BaseSharedVmFragment() {
             val prev = state.prevState.findingFragmentState
             val curr = state.currentState.findingFragmentState
 
-            if (prev.findingVhCellArrayList != curr.findingVhCellArrayList || recyclerviewAdapter.hasNoItems()) {
+//            if (prev.findingVhCellArrayList != curr.findingVhCellArrayList || recyclerviewAdapter.hasNoItems()) {
                 recyclerviewAdapter.submitList(curr.findingVhCellArrayList)
-            }
+//            }
 
             if (prev.conclusion != curr.conclusion) {
                 binding.conclusion.text = curr.conclusion
@@ -66,7 +66,6 @@ class FindingsFragment : BaseSharedVmFragment() {
         }) { state ->
             val curr = state.currentState.findingFragmentState
 
-            recyclerviewAdapter.submitList(curr.findingVhCellArrayList)
             binding.conclusion.text = curr.conclusion
 
             if (curr.reportConclusionDialogVisibility) {
