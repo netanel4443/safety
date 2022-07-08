@@ -109,7 +109,7 @@ class WriteToWord @Inject constructor(private val application: Application) {
         createTable(2, 5)
         // for sapce between tables
         createParagraph()
-        table!!.setTableAlignment(TableRowAlign.CENTER)
+        table!!.tableAlignment = TableRowAlign.CENTER
 
         var tableRow = table!!.getRow(0)
 
@@ -129,7 +129,7 @@ class WriteToWord @Inject constructor(private val application: Application) {
         createTable(2, 3)
         // for sapce between tables
         createParagraph()
-        table!!.setTableAlignment(TableRowAlign.CENTER)
+        table!!.tableAlignment = TableRowAlign.CENTER
 
         tableRow = table!!.getRow(0)
         tableRow.getCell(0).text = "טלפון המוסד"
@@ -144,7 +144,7 @@ class WriteToWord @Inject constructor(private val application: Application) {
         createTable(2, 4)
         // for sapce between tables
         createParagraph()
-        table!!.setTableAlignment(TableRowAlign.CENTER)
+        table!!.tableAlignment = TableRowAlign.CENTER
 
         tableRow = table!!.getRow(0)
         tableRow.getCell(0).text = "משתתפים מטעם הרשות/ הבעלות"
@@ -162,7 +162,7 @@ class WriteToWord @Inject constructor(private val application: Application) {
         createTable(2, 2)
         // for sapce between tables
         createParagraph()
-        table!!.setTableAlignment(TableRowAlign.CENTER)
+        table!!.tableAlignment = TableRowAlign.CENTER
 
 
         tableRow = table!!.getRow(0)
@@ -219,6 +219,7 @@ class WriteToWord @Inject constructor(private val application: Application) {
 
         //+1 for titles
         table = document!!.createTable(findingList.size + 1, 6)
+
         val tableRow = table!!.getRow(0)
         tableRow.getCell(0).text = "תמונה"
         tableRow.getCell(1).text = "הדרישה לתיקון ושיפור"
@@ -258,9 +259,24 @@ class WriteToWord @Inject constructor(private val application: Application) {
                 Units.toEMU(100.0),
                 Units.toEMU(200.0)
             )
-
         }
+        var i = 1
 
+        val newTable = document!!.createTable(1,6)
+        val newRow = newTable.getRow(0)
+        // add the rest of the images
+        while (i < findingDataHolder.problemImages.size && i < 7) {
+            val cell = newRow.getCell(i-1)
+            run = cell.addParagraph().createRun()
+            run!!.addPicture(
+                application.contentResolver.openInputStream(Uri.parse(findingDataHolder.problemImages[i])),
+                XWPFDocument.PICTURE_TYPE_PNG,
+                "imgFile",
+                Units.toEMU(100.0),
+                Units.toEMU(200.0)
+            )
+            i++
+        }
     }
 
     private fun getNewDecimalNumberingId(
