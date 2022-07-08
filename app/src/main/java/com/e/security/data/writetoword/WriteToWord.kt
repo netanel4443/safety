@@ -249,13 +249,17 @@ class WriteToWord @Inject constructor(private val application: Application) {
         tableRow.getCell(5).text = (rowIndex + 1).toString()
 
         run = tableRow.getCell(0).addParagraph().createRun()
-        run!!.addPicture(
-            application.contentResolver.openInputStream(Uri.parse(findingDataHolder.pic)),
-            XWPFDocument.PICTURE_TYPE_PNG,
-            "imgFile",
-            Units.toEMU(100.0),
-            Units.toEMU(200.0)
-        )
+        //todo change this logic to contain multiple images
+        if (findingDataHolder.problemImages.isNotEmpty()){
+            run!!.addPicture(
+                application.contentResolver.openInputStream(Uri.parse(findingDataHolder.problemImages[0])),
+                XWPFDocument.PICTURE_TYPE_PNG,
+                "imgFile",
+                Units.toEMU(100.0),
+                Units.toEMU(200.0)
+            )
+
+        }
 
     }
 
