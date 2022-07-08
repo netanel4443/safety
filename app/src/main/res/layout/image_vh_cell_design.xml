@@ -1,23 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/parent"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
-    android:id="@+id/parent">
+    android:layout_height="match_parent">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <TextView
+
+        <ImageView
+            android:id="@+id/image_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/tview"
-            android:textSize="30sp"
-            android:textColor="@color/black"
-            android:fontFamily="@font/davidlibre"
-            android:gravity="center"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            android:scaleType="centerCrop" />
+
+        <ImageView
+            android:id="@+id/delete_image_btn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_outline_cancel_24"
+            android:background="@color/white"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_margin="10dp"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

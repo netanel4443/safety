@@ -4,10 +4,7 @@ import android.net.Uri
 import com.e.fakerestapi.ui.recyclerviews.helpers.GenericVhItem
 import com.e.security.data.FindingDataHolder
 import com.e.security.data.StudyPlaceDetailsDataHolder
-import com.e.security.ui.recyclerviews.celldata.FindingVhCell
-import com.e.security.ui.recyclerviews.celldata.ReportVhCell
-import com.e.security.ui.recyclerviews.celldata.StudyPlaceDataVhCell
-import com.e.security.ui.recyclerviews.celldata.TextViewVhCell
+import com.e.security.ui.recyclerviews.celldata.*
 
 data class MainViewState(
     var findingFragmentState: FindingFragmentState = FindingFragmentState(),
@@ -21,7 +18,7 @@ data class MainViewState(
 ) {
     data class CreateFindingFragmentState(
         var finding: FindingDataHolder = FindingDataHolder(),
-        var problemImage: Uri? = null,
+        var problemImage: ArrayList<ImageViewVhCell> = ArrayList(),
         var chosenHozerMankalRecyclerItems: List<GenericVhItem> = ArrayList(),
         val imageOptionsRvItems: List<TextViewVhCell> = ArrayList(),
     )

@@ -111,7 +111,6 @@ class MainViewModel @Inject constructor(
         }
 
         updateFindingVhCellArrayList(tmpArray)
-        println("conclusion ${report.conclusion}")
         updateUpdateReportConclusionState(report.conclusion)
     }
 
@@ -297,6 +296,7 @@ class MainViewModel @Inject constructor(
                 return@forEach
             }
         }
+        fitProblemImagesToVhCell(finding!!)
         updateChosenFindingUi(finding!!)
     }
 
@@ -336,7 +336,7 @@ class MainViewModel @Inject constructor(
         _viewEffect.value = Effects.StartCreateFindingFragment
     }
 
-    fun saveFinding(finding: FindingDataHolder) {
+    fun saveFinding(finding: FindingDataHolder, problemImages: ArrayList<ImageViewVhCell>) {
 
         val findingsArr = data[chosenStudyPlaceId]!!
             .reportList[chosenReportId]!!
@@ -355,6 +355,12 @@ class MainViewModel @Inject constructor(
         if (findings == null) {
             findings = findingsArr[finding.priority.toInt()]
         }
+
+        val images = ArrayList<String>()
+        problemImages.forEach {
+            images.add(it.image)
+        }
+        finding.problemImages = images
 
         if (findings!!.containsKey(finding.id)) {
             crud.updateFinding(finding)
@@ -429,15 +435,6 @@ class MainViewModel @Inject constructor(
             .toString()
     }
 
-    fun setProblemImage(uri: Uri?) {
-        _viewState.mviValue {
-            it.copy(
-                createFindingFragmentState = it.createFindingFragmentState.copy(
-                    problemImage = uri
-                )
-            )
-        }
-    }
 
     fun showCalendarDialog() {
         _viewEffect.value = Effects.ShowCalendarDialog
@@ -464,7 +461,7 @@ class MainViewModel @Inject constructor(
 
     }
 
-    private fun updateReportFragmentRecyclerViewMenuItems(items: ArrayList<TextViewVhCell>){
+    private fun updateReportFragmentRecyclerViewMenuItems(items: ArrayList<TextViewVhCell>) {
         _viewState.mviValue {
             it.copy(
                 reportFragmentMenuRvDialogRvItems = items
@@ -801,5 +798,39 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    fun deleteImage(item: ImageViewVhCell) {
+        val imageArrayList =
+            ArrayList(_viewState.currentState().createFindingFragmentState.problemImage)
+        val newArrayList = imageArrayList.map {
+            it.id != item.id
+        }
+        setProblemImageList(newArrayList as ArrayList<ImageViewVhCell>)
+    }
 
+    fun addProblemImage(uri: Uri?) {
+        uri?.let {
+            val imageArrayList =
+                ArrayList(_viewState.currentState().createFindingFragmentState.problemImage)
+            val uriAsString = uri.toString()
+            imageArrayList.add(ImageViewVhCell(uriAsString, uriAsString))
+            setProblemImageList(imageArrayList)
+        }
+    }
+
+    private fun setProblemImageList(arrayList: ArrayList<ImageViewVhCell>) {
+        _viewState.mviValue {
+            it.copy(
+                createFindingFragmentState = it.createFindingFragmentState.copy(
+                    problemImage = arrayList
+                )
+            )
+        }
+    }
+
+    private fun fitProblemImagesToVhCell(finding: FindingDataHolder) {
+        val list = finding.problemImages.map {
+            ImageViewVhCell(it, it)
+        } as ArrayList
+        setProblemImageList(list)
+    }
 }
