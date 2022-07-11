@@ -1,15 +1,15 @@
-package com.e.security
+package com.e.security.ui.activities
 
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.e.security.R
 import com.e.security.application.BaseApplication
 import com.e.security.databinding.RecyclerviewAddBtnScreenBinding
 import com.e.security.di.components.MainActivityComponent
-import com.e.security.ui.MainViewModel
-import com.e.security.ui.activities.BaseActivity
+import com.e.security.ui.viewmodels.MainViewModel
 import com.e.security.ui.dialogs.DeleteDialog
 import com.e.security.ui.fragments.StudyPlaceInfoFragment
 import com.e.security.ui.fragments.ReportsFragment

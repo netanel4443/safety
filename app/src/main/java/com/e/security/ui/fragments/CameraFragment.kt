@@ -11,11 +11,11 @@ import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import com.e.security.MainActivity
+import com.e.security.ui.activities.MainActivity
 import com.e.security.R
 import com.e.security.databinding.ActivityCameraBinding
 import com.e.security.sensors.CameraOperations
-import com.e.security.ui.MainViewModel
+import com.e.security.ui.viewmodels.MainViewModel
 import javax.inject.Inject
 
 class CameraFragment : BaseSharedVmFragment() {

@@ -1,6 +1,6 @@
 package com.e.security.di.components
 
-import com.e.security.MainActivity
+import com.e.security.ui.activities.MainActivity
 import com.e.security.di.modules.MainVmModule
 import com.e.security.di.scopes.ActivityScope
 import com.e.security.ui.dialogfragments.EducationalInstitutionsRvDialog

@@ -1,10 +1,9 @@
 package com.e.security.ui.dialogfragments
 
 import android.content.Context
-import androidx.lifecycle.LifecycleOwner
 import com.e.fakerestapi.ui.recyclerviews.helpers.GenericVhItem
-import com.e.security.MainActivity
-import com.e.security.ui.MainViewModel
+import com.e.security.ui.activities.MainActivity
+import com.e.security.ui.viewmodels.MainViewModel
 import com.e.security.ui.dialogfragments.generics.GenericFilterResultsDialogFragment
 import com.e.security.ui.dialogs.helpers.IFilterResultsDialogHelper
 import com.e.security.ui.recyclerviews.adapters.HozerMankalRecyclerViewAdapter

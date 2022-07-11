@@ -9,11 +9,11 @@ import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.e.security.MainActivity
+import com.e.security.ui.activities.MainActivity
 import com.e.security.R
 import com.e.security.data.FindingDataHolder
 import com.e.security.databinding.CreateFindingBinding
-import com.e.security.ui.MainViewModel
+import com.e.security.ui.viewmodels.MainViewModel
 import com.e.security.ui.dialogfragments.FilterResultsDialogFragment
 import com.e.security.ui.dialogfragments.ImageOptionsDialog
 import com.e.security.ui.recyclerviews.celldata.ImageViewVhCell
@@ -25,7 +25,6 @@ import com.e.security.ui.spinners.GenericSpinner
 import com.e.security.ui.utils.addFragment
 import com.e.security.ui.utils.rxjava.throttleClick
 import com.e.security.ui.viewmodels.effects.Effects
-import com.squareup.picasso.Picasso
 
 class CreateFindingFragment : BaseSharedVmFragment() {
 

@@ -6,10 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.e.security.MainActivity
+import com.e.security.ui.activities.MainActivity
 import com.e.security.R
 import com.e.security.databinding.FindingFragmentBinding
-import com.e.security.ui.MainViewModel
+import com.e.security.ui.viewmodels.MainViewModel
 import com.e.security.ui.dialogs.EditTextDialog
 import com.e.security.ui.dialogs.helpers.IeditTextDialogHelper
 import com.e.security.ui.recyclerviews.celldata.FindingVhCell

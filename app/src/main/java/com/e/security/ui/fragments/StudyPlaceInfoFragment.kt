@@ -6,11 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.e.security.MainActivity
+import com.e.security.ui.activities.MainActivity
 import com.e.security.R
 import com.e.security.data.StudyPlaceDetailsDataHolder
 import com.e.security.databinding.StudyPlaceInfoBinding
-import com.e.security.ui.MainViewModel
+import com.e.security.ui.viewmodels.MainViewModel
 import com.e.security.ui.dialogfragments.EducationalInstitutionsRvDialog
 import com.e.security.ui.utils.rxjava.throttleClick
 import com.e.security.ui.viewmodels.effects.Effects

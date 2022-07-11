@@ -1,4 +1,4 @@
-package com.e.security.ui
+package com.e.security.ui.viewmodels
 
 import android.content.res.Resources
 import android.net.Uri
@@ -18,7 +18,6 @@ import com.e.security.ui.utils.MviMutableLiveData
 import com.e.security.ui.utils.PrevAndCurrentState
 import com.e.security.ui.utils.livedata.MviLiveData
 import com.e.security.ui.utils.livedata.SingleLiveEvent
-import com.e.security.ui.viewmodels.BaseViewModel
 import com.e.security.ui.viewmodels.effects.Effects
 import com.e.security.usecase.HozerMankalUseCase
 import com.e.security.usecase.WriteToWordUseCase

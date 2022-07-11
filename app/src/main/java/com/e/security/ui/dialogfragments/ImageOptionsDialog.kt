@@ -1,10 +1,8 @@
 package com.e.security.ui.dialogfragments
 
 import android.content.Context
-import com.e.fakerestapi.ui.recyclerviews.helpers.GenericVhItem
-import com.e.security.MainActivity
-import com.e.security.ui.MainViewModel
-import com.e.security.ui.dialogfragments.generics.GenericFilterResultsDialogFragment
+import com.e.security.ui.activities.MainActivity
+import com.e.security.ui.viewmodels.MainViewModel
 import com.e.security.ui.dialogfragments.generics.GenericRecyclerViewDialogFragment
 import com.e.security.ui.dialogs.helpers.RecyclerViewFragmentDialogHelper
 import com.e.security.ui.recyclerviews.celldata.TextViewVhCell
