@@ -9,18 +9,19 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.e.security.ui.activities.MainActivity
 import com.e.security.R
 import com.e.security.databinding.RecyclerviewAddBtnScreenBinding
-import com.e.security.ui.viewmodels.MainViewModel
+import com.e.security.ui.activities.mainactivity.MainActivity
 import com.e.security.ui.activityresults.SaveFileResultContract
 import com.e.security.ui.dialogfragments.ReportFragmentMenuRvDialog
 import com.e.security.ui.dialogs.CalendarDialog
+import com.e.security.ui.fragments.reportsfragment.DeleteReportFragmentDialog
 import com.e.security.ui.recyclerviews.celldata.ReportVhCell
 import com.e.security.ui.recyclerviews.clicklisteners.ReportVhItemClick
 import com.e.security.ui.recyclerviews.generics.GenericRecyclerviewAdapter
 import com.e.security.ui.recyclerviews.viewholders.CreateStudyPlaceReportsVh
 import com.e.security.ui.utils.addFragment
+import com.e.security.ui.viewmodels.MainViewModel
 import com.e.security.ui.viewmodels.effects.Effects
 
 class ReportsFragment : BaseSharedVmFragment() {
@@ -36,6 +37,7 @@ class ReportsFragment : BaseSharedVmFragment() {
     private lateinit var wordLauncher: ActivityResultLauncher<String?>
     private lateinit var pdfLauncher: ActivityResultLauncher<String?>
     private val reportFragmentMenuRvDialogTag = "ReportFragmentMenuRvDialog"
+    private val deleteReportFragmentDialogTag = "DeleteReportFragmentDialogTag"
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -90,7 +92,7 @@ class ReportsFragment : BaseSharedVmFragment() {
                 is Effects.StartActivityForResultWord -> saveWordFile(effect.type)
                 is Effects.StartActivityForResultPdf -> savePdfFile(effect.type)
                 is Effects.ShowReportFragmentRecyclerViewMenu -> showEducationalInstitutionsDialog()
-//                is Effects.ShowDeleteDialogReportScreen ->Toast.makeText(requireActivity(),effect.message,Toast.LENGTH_SHORT).show()
+                is Effects.ShowDeleteReportDialog -> showDeleteReportDialog()
                 else -> {}
             }
         }
@@ -143,7 +145,7 @@ class ReportsFragment : BaseSharedVmFragment() {
 
             override fun onLongClick(item: ReportVhCell): Boolean {
                 viewModel.setChosenReportId(item.id)
-                viewModel.showDeleteReportDialog(viewModel::deleteReport)
+                viewModel.showDeleteReportDialog()
                 return true
             }
         })
@@ -174,6 +176,11 @@ class ReportsFragment : BaseSharedVmFragment() {
     private fun showEducationalInstitutionsDialog() {
         val reportFragmentMenuRvDialog = ReportFragmentMenuRvDialog()
         reportFragmentMenuRvDialog.show(childFragmentManager, reportFragmentMenuRvDialogTag)
+    }
+
+    private fun showDeleteReportDialog() {
+        val fragment = DeleteReportFragmentDialog()
+        fragment.show(childFragmentManager, deleteReportFragmentDialogTag)
     }
 
     override fun onDestroy() {

@@ -13,12 +13,16 @@ sealed class Effects {
     object ShowEducationalInstitutionsDialog : Effects()
     object ShowPhotoUploadDialog : Effects()
     object ShowReportFragmentRecyclerViewMenu : Effects()
+    object ShowDeleteFindingDialog : Effects()
+    object ShowDeleteStudyPlaceDialog : Effects()
+    object ShowDeleteReportDialog : Effects()
 
     data class ShowReportConclusionDialog(val conclusion: String) : Effects()
     data class StartActivityForResultWord(val type: String) : Effects()
     data class StartActivityForResultPdf(val type: String) : Effects()
     data class Toast(val message: String) : Effects()
     data class ShowDeleteDialog(val message: Int, val func: () -> Unit) : Effects()
+
 
 
 }

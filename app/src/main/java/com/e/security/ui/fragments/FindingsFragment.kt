@@ -6,9 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.e.security.ui.activities.MainActivity
+import com.e.security.ui.activities.mainactivity.MainActivity
 import com.e.security.R
 import com.e.security.databinding.FindingFragmentBinding
+import com.e.security.ui.dialogfragments.DeleteFindingFragmentDialog
 import com.e.security.ui.viewmodels.MainViewModel
 import com.e.security.ui.dialogs.EditTextDialog
 import com.e.security.ui.dialogs.helpers.IeditTextDialogHelper
@@ -27,6 +28,7 @@ class FindingsFragment : BaseSharedVmFragment() {
     private lateinit var binding: FindingFragmentBinding
     private lateinit var recyclerviewAdapter: GenericRecyclerviewAdapter2<FindingVhCell>
     private var editTextDialog: EditTextDialog? = null
+    private val deleteFindingFragmentDialogTag = "DeleteFindingFragmentDialogTag"
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -79,8 +81,15 @@ class FindingsFragment : BaseSharedVmFragment() {
             when (effect) {
                 is Effects.StartCreateFindingFragment -> startCreateFindingFragment()
                 is Effects.ShowReportConclusionDialog -> showReportConclusionDialog(effect.conclusion)
+                is Effects.ShowDeleteFindingDialog -> showDeleteFindingDialog()
+                else->{}
             }
         }
+    }
+
+    private fun showDeleteFindingDialog() {
+        val fragment = DeleteFindingFragmentDialog()
+       fragment.show(childFragmentManager,deleteFindingFragmentDialogTag)
     }
 
     private fun initUi() {
@@ -108,7 +117,7 @@ class FindingsFragment : BaseSharedVmFragment() {
             }
 
             override fun onLongClick(item: FindingVhCell): Boolean {
-                viewModel.showDeleteFindingDialog(item.id as ObjectId, viewModel::deleteFinding)
+                viewModel.showDeleteFindingDialog(item.id as ObjectId)
                 return true
             }
         }
