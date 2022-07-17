@@ -24,12 +24,12 @@ import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
 import javax.inject.Inject
-
+//todo handle a situation where the text can be drawn beyond page width
 @ActivityScope
 class WriteToPdf @Inject constructor(private val application: Application) {
     private val STARTED_X_LOCATION = 20
     private val A4_WIDTH = 598
-    private val MARGIN_PAGE_WIDTH = 558
+    private val PAGE_WIDTH_WITH_MARGIN = 558
     private val A4_HEIGHT = 841
 
     private var xLocation = STARTED_X_LOCATION
@@ -104,11 +104,44 @@ class WriteToPdf @Inject constructor(private val application: Application) {
             drawLastPage()
             finishPage()
 
-
+            //conclusion page
+            createNewPage()
+            updateXlocation(STARTED_X_LOCATION)
+            updateYlocation(0)
+            drawConclusionPage(reportDataHolder.conclusion)
+            finishPage()
 
             fileType()
 
         }
+    }
+
+    private fun drawConclusionPage(conclusion:String) {
+        drawRight(
+            createStaticLayout(application.getString(R.string.to_conclude),
+                PAGE_WIDTH_WITH_MARGIN,
+                Layout.Alignment.ALIGN_NORMAL
+            )
+        )
+        drawRight(
+            createStaticLayout(conclusion,
+                PAGE_WIDTH_WITH_MARGIN,
+                Layout.Alignment.ALIGN_NORMAL
+            )
+        )
+        drawRight(
+            createStaticLayout("בברכה,",
+                PAGE_WIDTH_WITH_MARGIN,
+                Layout.Alignment.ALIGN_NORMAL
+            )
+        )
+        drawRight(
+            createStaticLayout("חתימת יועץ בטיחות:",
+                PAGE_WIDTH_WITH_MARGIN,
+                Layout.Alignment.ALIGN_NORMAL
+            )
+        )
+
     }
 
     fun save(
@@ -146,7 +179,7 @@ class WriteToPdf @Inject constructor(private val application: Application) {
         drawCenteredText(
             createStaticLayout(
                 "הבטחת תנאים בטיחותיים במוסדות חינוך",
-                MARGIN_PAGE_WIDTH,
+                PAGE_WIDTH_WITH_MARGIN,
                 Layout.Alignment.ALIGN_CENTER
             )
         )
@@ -154,7 +187,7 @@ class WriteToPdf @Inject constructor(private val application: Application) {
         drawCenteredText(
             createStaticLayout(
                 "דוח סיכום מבדק",
-                MARGIN_PAGE_WIDTH,
+                PAGE_WIDTH_WITH_MARGIN,
                 Layout.Alignment.ALIGN_CENTER
             )
         )
@@ -162,7 +195,7 @@ class WriteToPdf @Inject constructor(private val application: Application) {
         drawCenteredText(
             createStaticLayout(
                 "נתונים כלליים",
-                MARGIN_PAGE_WIDTH,
+                PAGE_WIDTH_WITH_MARGIN,
                 Layout.Alignment.ALIGN_CENTER
             )
         )
@@ -262,7 +295,7 @@ class WriteToPdf @Inject constructor(private val application: Application) {
         staticLayoutArray.add(
             createStaticLayout(
                 "ממצאים לפי תחומי בדיקה וקדימות טיפול",
-                MARGIN_PAGE_WIDTH,
+                PAGE_WIDTH_WITH_MARGIN,
                 Layout.Alignment.ALIGN_NORMAL
             )
         )
@@ -270,63 +303,63 @@ class WriteToPdf @Inject constructor(private val application: Application) {
         staticLayoutArray.add(
             createStaticLayout(
                 "כללי",
-                MARGIN_PAGE_WIDTH,
+                PAGE_WIDTH_WITH_MARGIN,
                 Layout.Alignment.ALIGN_NORMAL
             )
         )
         staticLayoutArray.add(
             createStaticLayout(
                 "1. הממצאים אותרו מתוך השוואת המצב הקיים עם סטנדרטים נדרשים המפורטים ברשימות מנחות לעריכת מבדק כפי שמפרסם  האגף למעונות יום ומשפחתונים שבמשרד העבודה, הרווחה והשירותים החברתיים.",
-                MARGIN_PAGE_WIDTH,
+                PAGE_WIDTH_WITH_MARGIN,
                 Layout.Alignment.ALIGN_NORMAL
             )
         )
         staticLayoutArray.add(
             createStaticLayout(
                 "2. הממצאים ערוכים לפי תחומי בדיקה וקדימות טיפול באופן הבא:",
-                MARGIN_PAGE_WIDTH,
+                PAGE_WIDTH_WITH_MARGIN,
                 Layout.Alignment.ALIGN_NORMAL
             )
         )
         staticLayoutArray.add(
             createStaticLayout(
                 "א. תחומי בדיקה: קישור הממצא לתחום הנבדק בחלוקה המצויה ברשימות המנחות שצוינו לעיל.",
-                MARGIN_PAGE_WIDTH,
+                PAGE_WIDTH_WITH_MARGIN,
                 Layout.Alignment.ALIGN_NORMAL
             )
         )
         staticLayoutArray.add(
             createStaticLayout(
                 "ב. קדימות הטיפול: קישור הממצא לקדימות הטיפול על פי הבנתו המקצועית של עורך המבדק, בחלוקה לשלש רמות קדימות אלו:",
-                MARGIN_PAGE_WIDTH,
+                PAGE_WIDTH_WITH_MARGIN,
                 Layout.Alignment.ALIGN_NORMAL
             )
         )
         staticLayoutArray.add(
             createStaticLayout(
                 "ג. מבדק הבטיחות הינו עדכני ליום ושעת הבדיקה בלבד!",
-                MARGIN_PAGE_WIDTH,
+                PAGE_WIDTH_WITH_MARGIN,
                 Layout.Alignment.ALIGN_NORMAL
             )
         )
         staticLayoutArray.add(
             createStaticLayout(
                 "קדימות 0 : מתייחסת למפגע חמור במיוחד, המחייב להערכת עורך המבדק סגירה מידית של המקום/האתר במוסד החינוך ולאסור שימוש בו עד קבלת הודעה ממנהל הבטיחות ברשות או מנהל המוסד ויועץ בטיחות מטעם הבעלות על המשך שימוש.",
-                MARGIN_PAGE_WIDTH,
+                PAGE_WIDTH_WITH_MARGIN,
                 Layout.Alignment.ALIGN_NORMAL
             )
         )
         staticLayoutArray.add(
             createStaticLayout(
                 "קדימות 1: מתייחסות למפגע בטיחותי אשר קיומו מחייב הסרתו המידית.",
-                MARGIN_PAGE_WIDTH,
+                PAGE_WIDTH_WITH_MARGIN,
                 Layout.Alignment.ALIGN_NORMAL
             )
         )
         staticLayoutArray.add(
             createStaticLayout(
                 "קדימות 2: מתייחסת לליקוי בטיחותי המחייב טיפול של הרשות המקומית/בעלות בתכנית עבודה סדורה.",
-                MARGIN_PAGE_WIDTH,
+                PAGE_WIDTH_WITH_MARGIN,
                 Layout.Alignment.ALIGN_NORMAL
             )
         )
@@ -488,17 +521,23 @@ class WriteToPdf @Inject constructor(private val application: Application) {
         val rect = Rect()
         rect.set(0, 0, width, height)
 
-        val bitmap: Bitmap =
+        val bitmap: Bitmap? =
 
             if (Build.VERSION.SDK_INT < 28) {
-                MediaStore.Images.Media.getBitmap(
+               MediaStore.Images.Media.getBitmap(
                     application.contentResolver, Uri.parse(path)
                 )
             } else {
                 val source = ImageDecoder.createSource(application.contentResolver, Uri.parse(path))
-                val bitmap = ImageDecoder.decodeBitmap(source)
-                bitmap.copy(Bitmap.Config.ARGB_8888, true)
+                try {
+                    val bitmap = ImageDecoder.decodeBitmap(source)
+                    bitmap.copy(Bitmap.Config.ARGB_8888, true)
+                }catch (e:Exception){
+                    println(e.message)
+                 null
+                }
             }
+            if (bitmap == null){ return }
 
         val wid: Int = bitmap.width
         val hei: Int = bitmap.height
@@ -513,14 +552,25 @@ class WriteToPdf @Inject constructor(private val application: Application) {
         canvas!!.restore()
     }
 
+    private fun drawRight(staticLayout:StaticLayout){
+        val layoutWidth = staticLayout.width
+        val rightBorder = PAGE_WIDTH_WITH_MARGIN
+        val drawLocation = rightBorder - layoutWidth // right border is always greater
+        drawAndPrepareForNewParagraph(staticLayout,drawLocation)
+    }
+
     private fun drawCenteredText(staticLayout: StaticLayout) {
         val layoutWidth = staticLayout.width / 2
-        val halfPageWidth = MARGIN_PAGE_WIDTH / 2
+        val halfPageWidth = PAGE_WIDTH_WITH_MARGIN / 2
         val drawLocation = Math.abs(layoutWidth - halfPageWidth)
+        drawAndPrepareForNewParagraph(staticLayout,drawLocation)
+    }
+
+    private fun drawAndPrepareForNewParagraph(staticLayout: StaticLayout, drawLocation:Int){
         updateXlocation(drawLocation)
         draw(staticLayout)
         addToYLocation(staticLayout.height)
-        updateXlocation(STARTED_X_LOCATION) //reset
+        updateXlocation(STARTED_X_LOCATION) //reset- return to (margin left,y)
     }
 
     private fun prepareTableCellForDrawing(text: String): StaticLayout {
@@ -530,7 +580,6 @@ class WriteToPdf @Inject constructor(private val application: Application) {
     }
 
     private fun draw(staticLayout: StaticLayout) {
-
 
         if (biggestCellHeight + heightSum > pageInfo!!.pageHeight) {
             finishPage()
@@ -602,7 +651,7 @@ class WriteToPdf @Inject constructor(private val application: Application) {
     }
 
     private fun calculateXspaceBetweenCells(numberOfCells: Int) {
-        xSpaceCell = MARGIN_PAGE_WIDTH / numberOfCells
+        xSpaceCell = PAGE_WIDTH_WITH_MARGIN / numberOfCells
     }
 
     private fun addYMargin(margin: Int) {

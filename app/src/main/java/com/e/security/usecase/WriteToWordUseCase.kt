@@ -30,7 +30,6 @@ class WriteToWordUseCase @Inject constructor(
         reportDataHolder: ReportDataHolder,
         studyPlaceDetailsDataHolder: StudyPlaceDetailsDataHolder
     ): Single<String> {
-
         return pdf.createPdf(reportDataHolder, studyPlaceDetailsDataHolder)
     }
 
