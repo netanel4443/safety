@@ -57,8 +57,8 @@
     <string name="select_photo">העלאת תמונה</string>
     <string name="take_photo">צילום תמונה</string>
     <string-array name="photo_operations">
-    <item>@string/select_photo</item>
-    <item>@string/take_photo</item>
+        <item>@string/select_photo</item>
+        <item>@string/take_photo</item>
     </string-array>
 
     <!--    e- edit e-export_word d-delete    -->
@@ -83,5 +83,6 @@
         <item>@string/boarding_school</item>
         <item>@string/youth_village</item>
     </string-array>
+    <string name="title_activity_create_finding_screen">CreateFindingScreen</string>
 
-    </resources>
+</resources>

@@ -6,8 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.e.fakerestapi.ui.recyclerviews.helpers.GenericVhItem
 import com.e.security.ui.recyclerviews.helpers.CreateVh
-import com.e.security.ui.recyclerviews.helpers.GenericItemClickListener
-import org.apache.xmlbeans.impl.tool.Diff
+
 
 open class GenericRecyclerviewAdapter2<T : GenericVhItem> :
     RecyclerView.Adapter<CreateVh<T>.GenericViewHolder>() {

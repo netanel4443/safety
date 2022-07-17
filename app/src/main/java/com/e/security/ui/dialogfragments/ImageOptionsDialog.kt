@@ -1,7 +1,7 @@
 package com.e.security.ui.dialogfragments
 
 import android.content.Context
-import com.e.security.ui.activities.MainActivity
+import com.e.security.ui.activities.mainactivity.MainActivity
 import com.e.security.ui.viewmodels.MainViewModel
 import com.e.security.ui.dialogfragments.generics.GenericRecyclerViewDialogFragment
 import com.e.security.ui.dialogs.helpers.RecyclerViewFragmentDialogHelper

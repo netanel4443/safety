@@ -2,7 +2,7 @@ package com.e.security.ui.dialogfragments
 
 import android.content.Context
 import com.e.fakerestapi.ui.recyclerviews.helpers.GenericVhItem
-import com.e.security.ui.activities.MainActivity
+import com.e.security.ui.activities.mainactivity.MainActivity
 import com.e.security.ui.viewmodels.MainViewModel
 import com.e.security.ui.dialogfragments.generics.GenericFilterResultsDialogFragment
 import com.e.security.ui.dialogs.helpers.IFilterResultsDialogHelper
@@ -39,8 +39,8 @@ class FilterResultsDialogFragment : GenericFilterResultsDialogFragment<GenericVh
                 adapter.setHozerMankalVhCellClickListener(object :
                     GenericItemClickListener<HozerMankalVhCell> {
                     override fun onItemClick(item: HozerMankalVhCell) {
-                        dismiss()
                         viewModel.changeRequirement(item)
+                        dismiss()
                     }
                 })
                 return adapter

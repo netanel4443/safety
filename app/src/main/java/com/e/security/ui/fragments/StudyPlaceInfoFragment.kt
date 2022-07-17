@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.e.security.ui.activities.MainActivity
+import com.e.security.ui.activities.mainactivity.MainActivity
 import com.e.security.R
 import com.e.security.data.StudyPlaceDetailsDataHolder
 import com.e.security.databinding.StudyPlaceInfoBinding

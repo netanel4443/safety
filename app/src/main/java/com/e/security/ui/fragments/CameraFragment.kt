@@ -11,7 +11,7 @@ import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import com.e.security.ui.activities.MainActivity
+import com.e.security.ui.activities.mainactivity.MainActivity
 import com.e.security.R
 import com.e.security.databinding.ActivityCameraBinding
 import com.e.security.sensors.CameraOperations
@@ -23,7 +23,7 @@ class CameraFragment : BaseSharedVmFragment() {
 
     @Inject
     lateinit var cameraOperations: CameraOperations
-    private lateinit var binding: ActivityCameraBinding
+    private  var binding: ActivityCameraBinding? = null
     private val viewModel: MainViewModel by lazy(this::getViewModel)
     private var launcher: ActivityResultLauncher<Array<String>> = registerForActivityResult()
     private val REQUIRED_PERMISSIONS =
@@ -47,7 +47,7 @@ class CameraFragment : BaseSharedVmFragment() {
 
             val granted = allPermissionsGranted()
             if (granted) {
-                cameraOperations.startCamera(binding.viewFinder)
+                cameraOperations.startCamera(binding!!.viewFinder)
             } else {
                 viewModel.toast(R.string.permission_not_granted)
             }
@@ -61,7 +61,7 @@ class CameraFragment : BaseSharedVmFragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = ActivityCameraBinding.inflate(inflater)
-        return binding.root
+        return binding!!.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -69,12 +69,12 @@ class CameraFragment : BaseSharedVmFragment() {
         cameraOperations.bindLifeCycle(viewLifecycleOwner)
         val bool = requestPermissions()
         if (bool) {
-            cameraOperations.startCamera(binding.viewFinder)
+            cameraOperations.startCamera(binding!!.viewFinder)
         } else {
             launcher.launch(REQUIRED_PERMISSIONS)
         }
 
-        binding.takePhotoBtn.setOnClickListener {
+        binding!!.takePhotoBtn.setOnClickListener {
             cameraOperations.takePhoto() {
                 viewModel.addProblemImage(it)
                 viewModel.popFragment()
@@ -92,6 +92,10 @@ class CameraFragment : BaseSharedVmFragment() {
         ) == PackageManager.PERMISSION_GRANTED
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
+    }
 
     override fun onDestroy() {
         super.onDestroy()

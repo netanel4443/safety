@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:clickable="true"
-    tools:context=".ui.activities.MainActivity">
+    tools:context=".ui.activities.mainactivity.MainActivity">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/problem_image_card"
