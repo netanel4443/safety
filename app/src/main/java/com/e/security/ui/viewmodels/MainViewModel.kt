@@ -15,11 +15,10 @@ import com.e.security.di.scopes.ActivityScope
 import com.e.security.ui.recyclerviews.celldata.*
 import com.e.security.ui.states.MainViewState
 import com.e.security.ui.utils.MviMutableLiveData
-import com.e.security.ui.utils.PrevAndCurrentState
-import com.e.security.ui.utils.livedata.MviLiveData
 import com.e.security.ui.utils.livedata.SingleLiveEvent
 import com.e.security.ui.viewmodels.effects.Effects
 import com.e.security.usecase.HozerMankalUseCase
+import com.e.security.usecase.SaveFileUseCase
 import com.e.security.usecase.WriteToWordUseCase
 import com.e.security.utils.printErrorIfDbg
 import com.e.security.utils.printIfDbg
@@ -37,12 +36,13 @@ class MainViewModel @Inject constructor(
     private val crud: FindingsCrudRepo,
     private val hozerMankalUSeCase: HozerMankalUseCase,
     private val writeToWordUseCase: WriteToWordUseCase,
+    private val saveFileUseCase: SaveFileUseCase,
     private val resources: Resources
-) : BaseViewModel() {
+) : BaseViewModel<MainViewState>() {
 
     private val TAG = this.javaClass.name
-    private val _viewState = MviMutableLiveData(MainViewState())
-    val viewState: MviLiveData<PrevAndCurrentState<MainViewState>> get() = _viewState
+
+    override val _viewState: MviMutableLiveData<MainViewState> = MviMutableLiveData(MainViewState())
 
     private val _viewEffect = SingleLiveEvent<Effects>()
     val viewEffect: LiveData<Effects> get() = _viewEffect
@@ -190,21 +190,13 @@ class MainViewModel @Inject constructor(
             resources.getString(R.string.edit) -> showCalendarDialog()
             resources.getString(R.string.export_word) -> exportWord()
             resources.getString(R.string.export_pdf) -> exportPdf()
-            resources.getString(R.string.delete) -> showDeleteReportDialog(::deleteReport)
+            resources.getString(R.string.delete) -> showDeleteReportDialog()
         }
     }
 
 
     fun setChosenReportId(id: ObjectId) {
         chosenReportId = id
-    }
-
-    fun setChosenFindingId(id: ObjectId) {
-        chosenFindingId = id
-    }
-
-    fun setChosenStudyplaceId(id: ObjectId) {
-        chosenStudyPlaceId = id
     }
 
     private fun setPlaceDetailsUiValue(details: StudyPlaceDetailsDataHolder) {
@@ -325,6 +317,7 @@ class MainViewModel @Inject constructor(
     fun startCreateFindingFragment() {
         //if we want to create a new finding , pass empty data
         updateChosenFindingUi(FindingDataHolder())
+        updateProblemImageList(ArrayList()) // reset images
         _viewEffect.value = Effects.StartCreateFindingFragment
     }
 
@@ -335,7 +328,11 @@ class MainViewModel @Inject constructor(
         _viewEffect.value = Effects.StartCreateFindingFragment
     }
 
-    fun saveFinding(finding: FindingDataHolder, problemImages: ArrayList<ImageViewVhCell>) {
+    fun saveFinding(
+        finding: FindingDataHolder,
+        problemImages: ArrayList<ImageViewVhCell>,
+        oldPriority: Int
+    ) {
 
         val findingsArr = data[chosenStudyPlaceId]!!
             .reportList[chosenReportId]!!
@@ -343,17 +340,23 @@ class MainViewModel @Inject constructor(
 
         var findings: HashMap<ObjectId, FindingDataHolder>? = null
 
-        findingsArr.forEach {
-            if (it.containsKey(finding.id)) {
-                findings = it
-                return@forEach
-            }
+        findings = if (findingsArr[oldPriority].containsKey(finding.id)) {
+            findingsArr[oldPriority]
+        } else {
+            findingsArr[finding.priority.toInt()]
         }
 
-        //if finding doesn't exists, get proper Hm for inserting the new one
-        if (findings == null) {
-            findings = findingsArr[finding.priority.toInt()]
-        }
+//        findingsArr.forEach {
+//            if (it.containsKey(finding.id)) {
+//                findings = it
+//                return@forEach
+//            }
+//        }
+//
+//        //if finding doesn't exists, get proper Hm for inserting the new one
+//        if (findings == null) {
+//            findings = findingsArr[finding.priority.toInt()]
+//        }
 
         val images = ArrayList<String>()
         problemImages.forEach {
@@ -361,17 +364,17 @@ class MainViewModel @Inject constructor(
         }
         finding.problemImages = images
 
-        if (findings!!.containsKey(finding.id)) {
+        if (findings.containsKey(finding.id)) {
             crud.updateFinding(finding)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     // check if priority has changed , if it has,
                     // remove the finding from  prev hm and insert to correct one
-                    if (findings!![finding.id]!!.priority != finding.priority) {
-                        findings!!.remove(finding.id)
+                    if (findings[finding.id]!!.priority != finding.priority) {
+                        findings.remove(finding.id)
                         findingsArr[finding.priority.toInt()][finding.id] = finding
                     } else {// else we need to update the finding in same hm
-                        findings!![finding.id] = finding
+                        findings[finding.id] = finding
                     }
                     val findingVhCellArrayList = ArrayList<FindingVhCell>()
                     _viewState.currentState().findingFragmentState.copy().findingVhCellArrayList.forEach {
@@ -405,7 +408,7 @@ class MainViewModel @Inject constructor(
                             findingSection = finding.testArea
                         )
                     )
-                    findings!![finding.id] = finding
+                    findings[finding.id] = finding
                     updateFindingVhCellArrayList(findingVhCellArrayList)
                 }, { printIfDbg(TAG, it.message) }).addDisposable()
         }
@@ -506,22 +509,18 @@ class MainViewModel @Inject constructor(
         updateReportVhCellArrayList(newArr)
     }
 
-    private fun showDeleteDialog(message: Int, func: () -> Unit) {
-        _viewEffect.value = Effects.ShowDeleteDialog(message, func)
-    }
-
-    fun showDeleteStudyPlaceDialog(id: ObjectId, func: () -> Unit) {
+    fun showDeleteStudyPlaceDialog(id: ObjectId) {
         chosenStudyPlaceId = id
-        showDeleteDialog(R.string.delete_study_place, func)
+        _viewEffect.value = Effects.ShowDeleteStudyPlaceDialog
     }
 
-    fun showDeleteReportDialog(func: () -> Unit) {
-        showDeleteDialog(R.string.delete_report, func)
+    fun showDeleteReportDialog() {
+        _viewEffect.value = Effects.ShowDeleteReportDialog
     }
 
-    fun showDeleteFindingDialog(id: ObjectId, func: () -> Unit) {
+    fun showDeleteFindingDialog(id: ObjectId) {
         chosenFindingId = id
-        showDeleteDialog(R.string.delete_finding, func)
+        _viewEffect.value = Effects.ShowDeleteFindingDialog
     }
 
 
@@ -669,9 +668,9 @@ class MainViewModel @Inject constructor(
     private fun exportPdf() {
 
         exportFile(writeToWordUseCase::exportPdf)
-            .subscribe({
+            .subscribeBlock {
                 _viewEffect.value = Effects.StartActivityForResultPdf(it)
-            }, ::printErrorIfDbg)
+            }
             .addDisposable()
     }
 
@@ -800,10 +799,10 @@ class MainViewModel @Inject constructor(
     fun deleteImage(item: ImageViewVhCell) {
         val imageArrayList =
             ArrayList(_viewState.currentState().createFindingFragmentState.problemImage)
-        val newArrayList = imageArrayList.map {
+        val newArrayList = imageArrayList.filter {
             it.id != item.id
         }
-        setProblemImageList(newArrayList as ArrayList<ImageViewVhCell>)
+        updateProblemImageList(newArrayList as ArrayList<ImageViewVhCell>)
     }
 
     fun addProblemImage(uri: Uri?) {
@@ -812,11 +811,11 @@ class MainViewModel @Inject constructor(
                 ArrayList(_viewState.currentState().createFindingFragmentState.problemImage)
             val uriAsString = uri.toString()
             imageArrayList.add(ImageViewVhCell(uriAsString, uriAsString))
-            setProblemImageList(imageArrayList)
+            updateProblemImageList(imageArrayList)
         }
     }
 
-    private fun setProblemImageList(arrayList: ArrayList<ImageViewVhCell>) {
+    private fun updateProblemImageList(arrayList: ArrayList<ImageViewVhCell>) {
         _viewState.mviValue {
             it.copy(
                 createFindingFragmentState = it.createFindingFragmentState.copy(
@@ -828,8 +827,22 @@ class MainViewModel @Inject constructor(
 
     private fun fitProblemImagesToVhCell(finding: FindingDataHolder) {
         val list = finding.problemImages.map {
+            println("url $it")
             ImageViewVhCell(it, it)
         } as ArrayList
-        setProblemImageList(list)
+        updateProblemImageList(list)
+    }
+
+    /**
+     * Call this function to save the image,
+     * in order to allow future access to an image that isn't
+     * in app's directory. In this situation the image has temporary permission
+     * so we want to prevent that.
+     * */
+    fun saveImage(uri: Uri) {
+        saveFileUseCase.saveImageToPicturesDir(resources.getString(R.string.app_name), uri)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBlock { printIfDbg(TAG, it) }
     }
 }
