@@ -1,4 +1,4 @@
-package com.e.security.ui.activities
+package com.e.security.ui.activities.mainactivity
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -9,30 +9,29 @@ import com.e.security.R
 import com.e.security.application.BaseApplication
 import com.e.security.databinding.RecyclerviewAddBtnScreenBinding
 import com.e.security.di.components.MainActivityComponent
-import com.e.security.ui.viewmodels.MainViewModel
+import com.e.security.ui.activities.BaseActivity
 import com.e.security.ui.dialogs.DeleteDialog
-import com.e.security.ui.fragments.StudyPlaceInfoFragment
+import com.e.security.ui.fragments.DeleteStudyPlaceFragmentDialog
 import com.e.security.ui.fragments.ReportsFragment
-import com.e.security.ui.recyclerviews.generics.GenericRecyclerviewAdapter
+import com.e.security.ui.fragments.StudyPlaceInfoFragment
 import com.e.security.ui.recyclerviews.celldata.StudyPlaceDataVhCell
 import com.e.security.ui.recyclerviews.clicklisteners.StudyPlaceVhItemClick
+import com.e.security.ui.recyclerviews.generics.GenericRecyclerviewAdapter
 import com.e.security.ui.recyclerviews.viewholders.CreateStudyPlacesVh
 import com.e.security.ui.utils.addFragment
+import com.e.security.ui.viewmodels.MainViewModel
 import com.e.security.ui.viewmodels.effects.Effects
-import com.e.security.usecase.WriteToWordUseCase
-import javax.inject.Inject
 
 
 class MainActivity : BaseActivity() {
 
-    private lateinit var binding: RecyclerviewAddBtnScreenBinding
-    lateinit var mainActivityComponent: MainActivityComponent
     private val viewModel: MainViewModel by lazy(this::getViewModel)
+    private val deleteStudyPlaceFragmentDialogTag = "DeleteStudyPlaceFragmentDialogTag"
     private lateinit var recyclerviewAdapter:
             GenericRecyclerviewAdapter<StudyPlaceDataVhCell, CreateStudyPlacesVh>
-    private var deleteDialog: DeleteDialog? = null
     private var TAG = javaClass.name
-    @Inject lateinit var word: WriteToWordUseCase
+    private lateinit var binding: RecyclerviewAddBtnScreenBinding
+    lateinit var mainActivityComponent: MainActivityComponent
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -67,11 +66,9 @@ class MainActivity : BaseActivity() {
             when (effect) {
                 is Effects.StartReportsFragment -> startReportsFragment()
                 is Effects.ShowStudyPlaceInfoDialogFragment -> startStudyPlaceInfoFragment()
-                is Effects.ShowDeleteDialog -> showDeleteDialog(
-                    resources.getString(effect.message),
-                    effect.func
-                )
+                is Effects.ShowDeleteStudyPlaceDialog -> showDeleteDialog()
                 is Effects.PopBackStack -> popFragment()
+                else -> {}
             }
         }
     }
@@ -98,7 +95,7 @@ class MainActivity : BaseActivity() {
         initRecyclerview()
 
         binding.addBtn.setOnClickListener {
-          viewModel.showEmptyStudyPlaceInfoDialogFragment()
+            viewModel.showEmptyStudyPlaceInfoDialogFragment()
         }
     }
 
@@ -110,8 +107,9 @@ class MainActivity : BaseActivity() {
         )
     }
 
-    private fun showDeleteDialog(message: String, func: () -> Unit) {
-        deleteDialog?.run { showDialog(message) } ?: initDeleteDialog(message, func)
+    private fun showDeleteDialog() {
+        val fragment = DeleteStudyPlaceFragmentDialog()
+        fragment.show(supportFragmentManager, deleteStudyPlaceFragmentDialogTag)
     }
 
     private fun initRecyclerview() {
@@ -127,7 +125,7 @@ class MainActivity : BaseActivity() {
             }
 
             override fun onLongClick(item: StudyPlaceDataVhCell): Boolean {
-                viewModel.showDeleteStudyPlaceDialog(item.id, viewModel::deleteStudyPlace)
+                viewModel.showDeleteStudyPlaceDialog(item.id)
                 return true
             }
         })
@@ -142,10 +140,5 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    private fun initDeleteDialog(message: String, func: () -> Unit) {
-        deleteDialog = DeleteDialog(this)
-        deleteDialog!!.onClick = { func.invoke() }
-        deleteDialog!!.showDialog(message)
-    }
 }
 
