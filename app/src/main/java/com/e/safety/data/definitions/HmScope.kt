@@ -1,0 +1,12 @@
+package com.e.safety.data.definitions
+
+data class HmScope(
+    var testArea:String="",
+    var section:String="",
+    var definition:String="",
+    var school:Boolean=true,
+    var kindergarten:Boolean=true,
+    var boardingSchool:Boolean=true,
+    var youthVillage:Boolean=true,
+
+    )
