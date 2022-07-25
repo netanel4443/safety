@@ -10,6 +10,7 @@ import com.e.safety.data.ReportDataHolder
 import com.e.safety.data.StudyPlaceDataHolder
 import com.e.safety.data.StudyPlaceDetailsDataHolder
 import com.e.safety.data.definitions.HmScope
+import com.e.safety.data.firebase.UserAccess
 import com.e.safety.data.localdatabase.operations.FindingsCrudRepo
 import com.e.safety.di.scopes.ActivityScope
 import com.e.safety.ui.recyclerviews.celldata.*
@@ -37,12 +38,14 @@ class MainViewModel @Inject constructor(
     private val hozerMankalUSeCase: HozerMankalUseCase,
     private val writeToWordUseCase: WriteToWordUseCase,
     private val saveFileUseCase: SaveFileUseCase,
-    private val resources: Resources
+    private val resources: Resources,
+    private val userAccess: UserAccess
 ) : BaseViewModel<MainViewState>() {
 
     private val TAG = this.javaClass.name
 
-    override val _viewState: MviMutableLiveData2<MainViewState> = MviMutableLiveData2(MainViewState())
+    override val _viewState: MviMutableLiveData2<MainViewState> =
+        MviMutableLiveData2(MainViewState())
 
     private val _viewEffect = SingleLiveEvent<Effects>()
     val viewEffect: LiveData<Effects> get() = _viewEffect
@@ -80,8 +83,6 @@ class MainViewModel @Inject constructor(
     }
 
     fun getReportListOfChosenStudyPlace() {
-        //todo check if we can prevent from always do that
-
         val tmpArray = ArrayList<ReportVhCell>()
         data[chosenStudyPlaceId]!!.reportList.forEach { reportList ->
             val value = reportList.value
@@ -144,7 +145,9 @@ class MainViewModel @Inject constructor(
 
                 data[chosenStudyPlaceId]!!.reportList[reportListId] = newReport
                 val tmpArray = ArrayList<ReportVhCell>()
-                tmpArray.addAll(_viewState.currentState().copy().reportVhCellArrayList)
+                tmpArray.addAll(
+                    _viewState.currentState().copy().reportFragmentState.reportVhCellArrayList
+                )
                 tmpArray.add(
                     ReportVhCell(reportListId, date)
                 )
@@ -340,10 +343,11 @@ class MainViewModel @Inject constructor(
             .reportList[chosenReportId]!!
             .findingArr
 
-        val oldPriority = _viewState.currentState().createFindingFragmentState.finding.copy().priority.toInt()
+        val oldPriority =
+            _viewState.currentState().createFindingFragmentState.finding.copy().priority.toInt()
 
-            println("old $oldPriority new ${finding.priority}")
-        val  findings = if (findingsArr[oldPriority].containsKey(chosenFindingId)) {
+        println("old $oldPriority new ${finding.priority}")
+        val findings = if (findingsArr[oldPriority].containsKey(chosenFindingId)) {
             println("containt")
             findingsArr[oldPriority]
         } else {
@@ -370,7 +374,7 @@ class MainViewModel @Inject constructor(
         finding.problemImages = images
 
         if (findings.containsKey(chosenFindingId)) {
-            finding.id  = chosenFindingId
+            finding.id = chosenFindingId
             crud.updateFinding(finding)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
@@ -468,7 +472,6 @@ class MainViewModel @Inject constructor(
         _viewEffect.value = Effects.ShowReportFragmentRecyclerViewMenu
         val tvList = createTextViewVhCell(items)
         updateReportFragmentRecyclerViewMenuItems(tvList)
-
     }
 
     private fun updateReportFragmentRecyclerViewMenuItems(items: ArrayList<TextViewVhCell>) {
@@ -507,7 +510,7 @@ class MainViewModel @Inject constructor(
     private fun updateReportDateUi(date: String) {
 
         val newArr: ArrayList<ReportVhCell> =
-            ArrayList(_viewState.currentState().copy().reportVhCellArrayList)
+            ArrayList(_viewState.currentState().copy().reportFragmentState.reportVhCellArrayList)
 
         newArr.forEachIndexed { index, reportVhCell ->
             if (reportVhCell.id == chosenReportId) {
@@ -584,7 +587,8 @@ class MainViewModel @Inject constructor(
             .subscribe({
                 //todo maybe we need to reset chosenReportId?
                 data[chosenStudyPlaceId]!!.reportList.remove(chosenReportId)
-                val newArr = ArrayList(_viewState.currentState().reportVhCellArrayList)
+                val newArr =
+                    ArrayList(_viewState.currentState().reportFragmentState.reportVhCellArrayList)
                 newArr.forEach { reportVhCell ->
                     if (reportVhCell.id == chosenReportId) {
                         newArr.remove(reportVhCell)
@@ -600,7 +604,9 @@ class MainViewModel @Inject constructor(
     private fun updateReportVhCellArrayList(newArray: ArrayList<ReportVhCell>) {
         _viewState.mviValue {
             it.copy(
-                reportVhCellArrayList = newArray
+                reportFragmentState = it.reportFragmentState.copy(
+                    reportVhCellArrayList = newArray
+                )
             )
         }
     }
@@ -674,21 +680,45 @@ class MainViewModel @Inject constructor(
 
 
     private fun exportPdf() {
-
-        exportFile(writeToWordUseCase::exportPdf)
-            .subscribeBlock {
+        showReportLoadingBar(true)
+        checkExportPermission()
+            .flatMap { exportFile(writeToWordUseCase::exportPdf) }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBlock({
                 _viewEffect.value = Effects.StartActivityForResultPdf(it)
-            }
+                showReportLoadingBar(false)
+            }, {
+                showReportLoadingBar(false)
+            })
             .addDisposable()
     }
 
+    private fun showReportLoadingBar(visibility: Boolean) {
+        val tmpArr = ArrayList(
+            _viewState.currentState().reportFragmentState.reportVhCellArrayList.clone()
+                    as ArrayList<ReportVhCell>
+        )
+        tmpArr.forEachIndexed { index, reportVhCell ->
+            if (reportVhCell.id == chosenReportId) {
+                val newItem = reportVhCell.copy(isLoading = visibility)
+                tmpArr[index] = newItem
+                return@forEachIndexed
+            }
+        }
+        updateReportVhCellArrayList(tmpArr)
+    }
+
     private fun exportWord() {
-        writeToWordUseCase.getWordFileType()
+        showReportLoadingBar(true)
+        checkExportPermission()
+            .flatMap { writeToWordUseCase.getWordFileType() }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
+            .subscribeBlock({
                 _viewEffect.value = Effects.StartActivityForResultWord(it)
-            }, ::printErrorIfDbg)
+                showReportLoadingBar(false)
+            }, { showReportLoadingBar(false) } )
             .addDisposable()
     }
 
@@ -703,8 +733,6 @@ class MainViewModel @Inject constructor(
         val chosenReport = studyPlace!!.reportList[chosenReportId]!!
 
         return func.invoke(chosenReport, studyPlaceDetailsDataHolder)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
     }
 
 
@@ -853,7 +881,12 @@ class MainViewModel @Inject constructor(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBlock {
                 addProblemImage(it)
-              //  printIfDbg(TAG, it)
+                //  printIfDbg(TAG, it)
             }
+    }
+
+    fun checkExportPermission(): Single<Boolean> {
+        return userAccess.checkIfAllowedToExportReport().toSingle()
+
     }
 }

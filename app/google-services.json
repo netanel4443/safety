@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "48677431162",
+    "firebase_url": "https://my-awesome-project-4e528.firebaseio.com",
+    "project_id": "my-awesome-project-4e528",
+    "storage_bucket": "my-awesome-project-4e528.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:48677431162:android:e1b5cc8f72d03f158f98c3",
+        "android_client_info": {
+          "package_name": "com.e.safety"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "48677431162-jiq1atu5vanpjutelmlq5fam75kbhutq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1HkFvhtlY4rwO5WOvlVMtc2wx2NXN25k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "48677431162-jiq1atu5vanpjutelmlq5fam75kbhutq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

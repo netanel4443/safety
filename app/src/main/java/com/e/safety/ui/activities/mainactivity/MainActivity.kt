@@ -47,7 +47,6 @@ class MainActivity : BaseActivity() {
         initUi()
         initStateObserver()
         initEffectObserver()
-
         viewModel.getStudyPlacesAndTheirFindings()
 
         ActivityCompat.requestPermissions(

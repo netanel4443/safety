@@ -7,20 +7,22 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import javax.inject.Inject
 
-abstract class BaseActivity:AppCompatActivity() {
+abstract class BaseActivity : AppCompatActivity() {
 
-    @Inject lateinit var factory:ViewModelProvider.Factory
+    @Inject
+    lateinit var factory: ViewModelProvider.Factory
 
-    protected inline fun <reified T: ViewModel> getViewModel() =
-        ViewModelProvider(this,factory)[T::class.java]
+    protected inline fun <reified T : ViewModel> getViewModel() =
+        ViewModelProvider(this, factory)[T::class.java]
 
-    protected  fun getTag(activity: BaseActivity):String{
+    protected fun getTag(activity: BaseActivity): String {
         return activity.javaClass.name
     }
 
-    protected var compositeDisposable= CompositeDisposable()
+    protected var compositeDisposable = CompositeDisposable()
 
-    protected  fun Disposable.addDisposable(){
+
+    protected fun Disposable.addDisposable() {
         compositeDisposable.add(this)
     }
 

@@ -6,22 +6,22 @@ import io.realm.*
 
 class Migrations : RealmMigration {
     override fun migrate(realm: DynamicRealm, oldVersion: Long, newVersion: Long) {
-        var old = oldVersion
-
-        if (old == 0L) {
-            migration0to1(realm.schema)
-            old++
-        }
-
-        if (old == 2L) {
-            migration1to2(realm.schema)
-            old++
-        }
-
-        if (old == 3L) {
-            migration2to3(realm.schema)
-            old++
-        }
+//        var old = oldVersion
+//
+//        if (old == 0L) {
+//            migration0to1(realm.schema)
+//            old++
+//        }
+//
+//        if (old == 2L) {
+//            migration1to2(realm.schema)
+//            old++
+//        }
+//
+//        if (old == 3L) {
+//            migration2to3(realm.schema)
+//            old++
+//        }
     }
 
     private fun migration0to1(schema: RealmSchema) {

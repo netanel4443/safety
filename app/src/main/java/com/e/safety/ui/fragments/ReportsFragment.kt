@@ -72,10 +72,18 @@ class ReportsFragment : BaseSharedVmFragment() {
 
     private fun initStateObserver() {
 
-        viewModel.viewState.observe(viewLifecycleOwner) { state ->
-//            val prev = state.prevState
-//            val curr = state.currentState
-            recyclerviewAdapter.submitList(state.reportVhCellArrayList)
+        viewModel.viewState.observeMviLiveData(viewLifecycleOwner) {prevState, currentState ->
+            val prev = prevState?.reportFragmentState
+            val curr = currentState.reportFragmentState
+
+            if (prev == null || prev.reportVhCellArrayList
+                != curr.reportVhCellArrayList)
+            recyclerviewAdapter.submitList(curr.reportVhCellArrayList)
+
+            if (prev == null || prev.isLoading != curr.isLoading){
+
+            }
+
         }
     }
 

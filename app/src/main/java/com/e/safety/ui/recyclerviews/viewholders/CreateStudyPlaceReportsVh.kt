@@ -35,6 +35,13 @@ class CreateStudyPlaceReportsVh : CreateVh<ReportVhCell>() {
 
     override fun bindData(item: ReportVhCell) {
         binding!!.date.text = item.date
+        if (item.isLoading){
+            binding!!.editBtn.visibility = View.GONE
+            binding!!.progressCircular.visibility = View.VISIBLE
+        }else{
+            binding!!.editBtn.visibility = View.VISIBLE
+            binding!!.progressCircular.visibility = View.GONE
+        }
     }
 
     override fun setClickListener(itemClickListener: GenericItemClickListener<ReportVhCell>?) {

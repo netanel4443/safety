@@ -5,5 +5,6 @@ import org.bson.types.ObjectId
 data class ReportVhCell(
     var id:ObjectId,
     var date:String,
+    var isLoading:Boolean = false
 
 )

@@ -6,11 +6,13 @@ buildscript {
     }
     repositories {
         mavenCentral()
+        google()
     }
     dependencies {
 
         def realm_version="10.11.0"
         classpath "io.realm:realm-gradle-plugin:$realm_version"
+        classpath 'com.google.gms:google-services:4.3.13'
      }
 }
 

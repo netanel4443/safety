@@ -7,9 +7,8 @@ import com.e.safety.ui.recyclerviews.celldata.*
 
 data class MainViewState(
     var findingFragmentState: FindingFragmentState = FindingFragmentState(),
-//    var reportFragmentState: ReportFragmentState = ReportFragmentState(),
+    var reportFragmentState: ReportFragmentState = ReportFragmentState(),
     var studyPlacesVhCellArrayList: ArrayList<StudyPlaceDataVhCell> = ArrayList(),
-    var reportVhCellArrayList: ArrayList<ReportVhCell> = ArrayList(),
     val createFindingFragmentState: CreateFindingFragmentState = CreateFindingFragmentState(),
     var studyPlaceInfoFragmentState: StudyPlaceInfoFragmentState = StudyPlaceInfoFragmentState(),
     val educationalInstitutionsRvItems: List<TextViewVhCell> = ArrayList(),
@@ -33,7 +32,8 @@ data class MainViewState(
     )
 
     data class ReportFragmentState(
-        var reportVhCellArrayList: ArrayList<ReportVhCell> = ArrayList(),
+        val reportVhCellArrayList: ArrayList<ReportVhCell> = ArrayList(),
+        val isLoading:Boolean = false
     )
 
 
