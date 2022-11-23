@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">בטיחות</string>
     <string name="add_photo">הוסף תמונה</string>
+    <string name="search_section_or_words">חפש סעיף או מילים</string>
     <string name="priority">קדימות</string>
     <string name="study_place_details">פרטי המוסד</string>
     <string name="finding">ממצא</string>
