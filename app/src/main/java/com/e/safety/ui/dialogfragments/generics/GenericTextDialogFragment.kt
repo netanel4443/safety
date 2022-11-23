@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import com.e.fakerestapi.ui.recyclerviews.helpers.GenericVhItem
 import com.e.safety.databinding.RecyclerViewDialogBinding
 import com.e.safety.ui.dialogfragments.BaseRecyclerViewDialogFragment

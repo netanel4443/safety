@@ -1,5 +1,6 @@
 package com.e.safety.ui.dialogfragments
 
+import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -59,6 +60,14 @@ open class BaseRecyclerViewDialogFragment : DialogFragment() {
             context,
             orientation,
             false
+        )
+    }
+
+    override fun onStart() {
+        super.onStart()
+        dialog?.window?.setLayout(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.MATCH_PARENT
         )
     }
 

@@ -1,6 +1,7 @@
 package com.e.safety.ui.dialogfragments
 
 import android.content.Context
+import android.view.WindowManager
 import com.e.safety.ui.activities.mainactivity.MainActivity
 import com.e.safety.ui.viewmodels.MainViewModel
 import com.e.safety.ui.dialogfragments.generics.GenericRecyclerViewDialogFragment
@@ -19,6 +20,14 @@ class ImageOptionsDialog : GenericRecyclerViewDialogFragment<TextViewVhCell>() {
         super.onAttach(context)
         (requireActivity() as MainActivity).mainActivityComponent.inject(this)
         setIhelper()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        dialog?.window?.setLayout(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.WRAP_CONTENT
+        )
     }
 
     private fun setIhelper() {
