@@ -140,7 +140,9 @@ class CreateFindingFragment : BaseSharedVmFragment() {
         val recyclerView = binding.imageRecyclerView
         imageRecyclerAdapter = GenericRecyclerviewAdapter2()
 
-        val setter = VhItemSetters<ImageViewVhCell>()
+        val setter = VhItemSetters<ImageViewVhCell>(
+            layoutId =  R.layout.image_vh_cell_design,
+        )
         setter.createVh = CreateImageViewVh::class.java
 
         setter.clickListener = object : ImageVhItemClickListener {

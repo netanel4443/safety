@@ -1,6 +1,7 @@
 package com.e.safety.ui.recyclerviews.adapters
 
 import com.e.fakerestapi.ui.recyclerviews.helpers.GenericVhItem
+import com.e.safety.R
 import com.e.safety.ui.recyclerviews.celldata.HozerMankalVhCell
 import com.e.safety.ui.recyclerviews.celldata.TextViewVhCell
 import com.e.safety.ui.recyclerviews.generics.GenericRecyclerviewAdapter2
@@ -15,8 +16,13 @@ class HozerMankalRecyclerViewAdapter : GenericRecyclerviewAdapter2<GenericVhItem
     private val CREATE_TEXTVIEW_VH_CELL = 0
     private val CREATE_FINDING_VH_CELL = 1
 
-    private val textVhItemSetter = VhItemSetters<TextViewVhCell>()
-    private val hozerMankalVhItemSetter = VhItemSetters<HozerMankalVhCell>()
+    private val textVhItemSetter = VhItemSetters<TextViewVhCell>(
+        layoutId =  R.layout.textview_vh_cell_design
+    )
+
+    private val hozerMankalVhItemSetter = VhItemSetters<HozerMankalVhCell>(
+        layoutId =   R.layout.hozer_mankal_vh_cell_design,
+    )
 
 
     init {

@@ -346,12 +346,10 @@ class MainViewModel @Inject constructor(
         val oldPriority =
             _viewState.currentState().createFindingFragmentState.finding.copy().priority.toInt()
 
-        println("old $oldPriority new ${finding.priority}")
         val findings = if (findingsArr[oldPriority].containsKey(chosenFindingId)) {
-            println("containt")
+
             findingsArr[oldPriority]
         } else {
-            println("not containt")
             findingsArr[finding.priority.toInt()]
         }
 

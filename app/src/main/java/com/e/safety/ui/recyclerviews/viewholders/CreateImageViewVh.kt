@@ -15,17 +15,6 @@ class CreateImageViewVh : CreateVh<ImageViewVhCell>() {
     private var binding: ImageVhCellDesignBinding? = null
     private var _itemClick: ImageVhItemClickListener? = null
 
-    override fun getViewHolder(
-        parent: ViewGroup,
-        itemClick: GenericItemClickListener<ImageViewVhCell>?
-    ): GenericViewHolder {
-        return createVh(
-            parent,
-            R.layout.image_vh_cell_design,
-            itemClick
-        )
-    }
-
     override fun onInitVh(view: View) {
         binding = ImageVhCellDesignBinding.bind(view)
         binding!!.imageView.setOnClickListener {

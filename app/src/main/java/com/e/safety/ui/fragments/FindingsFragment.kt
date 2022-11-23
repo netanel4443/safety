@@ -97,7 +97,9 @@ class FindingsFragment : BaseSharedVmFragment() {
         val recyclerView = binding.recyclerview
         recyclerviewAdapter = GenericRecyclerviewAdapter2()
 
-        val setter = VhItemSetters<FindingVhCell>()
+        val setter = VhItemSetters<FindingVhCell>(
+            layoutId = R.layout.finding_recyclerview_cell_design,
+        )
         setter.createVh = CreateFindingDetailsViewHolder::class.java
 
         setter.clickListener = object : FindingVhItemClick {

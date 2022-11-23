@@ -50,8 +50,9 @@ open class GenericRecyclerviewAdapter2<T : GenericVhItem> :
         getVhItemSetter(viewType)
 
         val createVh = vhItemSetter!!.createVh!!.newInstance()
-        return createVh.getViewHolder(
+        return createVh.createVh(
             parent,
+            vhItemSetter!!.layoutId,
             vhItemSetter!!.clickListener
         )
     }
@@ -83,6 +84,13 @@ open class GenericRecyclerviewAdapter2<T : GenericVhItem> :
         return 0
     }
 
+    /***
+     * this function depeneds on [getItemViewType] function, for recyclerview
+     * with multiple  [RecyclerView.ViewHolder]s.
+     * [getItemViewType] need to check which viewHolder fits.
+     * inside [onCreateViewHolder] we call [getVhItemSetter]
+     * that calls to [setVhItemSetter] to set the desired viewHolder
+     */
     protected open fun getVhItemSetter(viewType: Int) {}
 
 

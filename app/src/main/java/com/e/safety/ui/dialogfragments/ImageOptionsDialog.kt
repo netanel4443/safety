@@ -2,6 +2,7 @@ package com.e.safety.ui.dialogfragments
 
 import android.content.Context
 import android.view.WindowManager
+import com.e.safety.R
 import com.e.safety.ui.activities.mainactivity.MainActivity
 import com.e.safety.ui.viewmodels.MainViewModel
 import com.e.safety.ui.dialogfragments.generics.GenericRecyclerViewDialogFragment
@@ -36,7 +37,9 @@ class ImageOptionsDialog : GenericRecyclerViewDialogFragment<TextViewVhCell>() {
             override fun getRecyclerViewAdapter(): GenericRecyclerviewAdapter2<TextViewVhCell> {
                 val adapter = GenericRecyclerviewAdapter2<TextViewVhCell>()
 
-                val setter = VhItemSetters<TextViewVhCell>()
+                val setter = VhItemSetters<TextViewVhCell>(
+                   layoutId = R.layout.textview_vh_cell_design
+                )
                 setter.createVh = CreateTextViewVh::class.java
                 setter.clickListener = object :
                     GenericItemClickListener<TextViewVhCell> {

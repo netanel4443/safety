@@ -10,12 +10,12 @@ abstract class CreateVh<T> {
     protected var cachedItem: T? = null
     protected var itemClick: GenericItemClickListener<T>? = null
 
-    abstract fun getViewHolder(
-        parent: ViewGroup,
-        itemClick: GenericItemClickListener<T>?
-    ): GenericViewHolder
+//    abstract fun getViewHolder(
+//        parent: ViewGroup,
+//        itemClick: GenericItemClickListener<T>?
+//    ): GenericViewHolder
 
-    protected fun createVh(
+     fun createVh(
         parent: ViewGroup,
         layoutId: Int,
         itemClick: GenericItemClickListener<T>?

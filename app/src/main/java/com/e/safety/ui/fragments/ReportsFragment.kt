@@ -18,19 +18,21 @@ import com.e.safety.ui.dialogs.CalendarDialog
 import com.e.safety.ui.fragments.reportsfragment.DeleteReportFragmentDialog
 import com.e.safety.ui.recyclerviews.celldata.ReportVhCell
 import com.e.safety.ui.recyclerviews.clicklisteners.ReportVhItemClick
-import com.e.safety.ui.recyclerviews.generics.GenericRecyclerviewAdapter
+import com.e.safety.ui.recyclerviews.generics.GenericRecyclerviewAdapter2
+import com.e.safety.ui.recyclerviews.generics.VhItemSetters
 import com.e.safety.ui.recyclerviews.viewholders.CreateStudyPlaceReportsVh
 import com.e.safety.ui.utils.addFragment
 import com.e.safety.ui.viewmodels.MainViewModel
 import com.e.safety.ui.viewmodels.effects.Effects
+import org.bson.types.ObjectId
 
 class ReportsFragment : BaseSharedVmFragment() {
 
     private lateinit var binding: RecyclerviewAddBtnScreenBinding
     private val viewModel: MainViewModel by lazy(this::getViewModel)
+
     private lateinit var recyclerviewAdapter:
-            GenericRecyclerviewAdapter<ReportVhCell,
-                    CreateStudyPlaceReportsVh>
+            GenericRecyclerviewAdapter2<ReportVhCell>
 
     private var calendarDialog: CalendarDialog? = null
 
@@ -135,28 +137,32 @@ class ReportsFragment : BaseSharedVmFragment() {
         )
     }
 
-
-    private fun initRecyclerView() {
+    private fun initRecyclerView(){
         val recyclerview = binding.recyclerview
-        recyclerviewAdapter = GenericRecyclerviewAdapter(
-            CreateStudyPlaceReportsVh::class.java
+        recyclerviewAdapter = GenericRecyclerviewAdapter2()
+
+        val setters = VhItemSetters<ReportVhCell>(
+            layoutId = R.layout.report_vh_cell_design
         )
-        recyclerviewAdapter.setItemClickListener(object : ReportVhItemClick {
+        setters.createVh = CreateStudyPlaceReportsVh::class.java
+
+        setters.clickListener = object : ReportVhItemClick {
             override fun onItemClick(item: ReportVhCell) {
-                viewModel.startFindingDetailsFragment(item.id)
+                viewModel.startFindingDetailsFragment(item.id as ObjectId)
             }
 
             override fun onEditBtnClick(item: ReportVhCell) {
-                viewModel.setChosenReportId(item.id)
+                viewModel.setChosenReportId(item.id as ObjectId)
                 viewModel.showReportFragmentRecyclerViewMenu(resources.getStringArray(R.array.esd))
             }
 
             override fun onLongClick(item: ReportVhCell): Boolean {
-                viewModel.setChosenReportId(item.id)
+                viewModel.setChosenReportId(item.id as ObjectId)
                 viewModel.showDeleteReportDialog()
                 return true
             }
-        })
+        }
+        recyclerviewAdapter.setVhItemSetter(setters)
         recyclerview.adapter = recyclerviewAdapter
 
         recyclerview.layoutManager = LinearLayoutManager(
@@ -165,7 +171,40 @@ class ReportsFragment : BaseSharedVmFragment() {
             false
         )
         recyclerview.setHasFixedSize(true)
+
     }
+
+
+//    private fun initRecyclerView() {
+//        val recyclerview = binding.recyclerview
+//        recyclerviewAdapter = GenericRecyclerviewAdapter(
+//            CreateStudyPlaceReportsVh::class.java
+//        )
+//        recyclerviewAdapter.setItemClickListener(object : ReportVhItemClick {
+//            override fun onItemClick(item: ReportVhCell) {
+//                viewModel.startFindingDetailsFragment(item.id)
+//            }
+//
+//            override fun onEditBtnClick(item: ReportVhCell) {
+//                viewModel.setChosenReportId(item.id)
+//                viewModel.showReportFragmentRecyclerViewMenu(resources.getStringArray(R.array.esd))
+//            }
+//
+//            override fun onLongClick(item: ReportVhCell): Boolean {
+//                viewModel.setChosenReportId(item.id)
+//                viewModel.showDeleteReportDialog()
+//                return true
+//            }
+//        })
+//        recyclerview.adapter = recyclerviewAdapter
+//
+//        recyclerview.layoutManager = LinearLayoutManager(
+//            requireActivity(),
+//            LinearLayoutManager.VERTICAL,
+//            false
+//        )
+//        recyclerview.setHasFixedSize(true)
+//    }
 
     private fun showCalendarDialog() {
         if (calendarDialog == null) {
