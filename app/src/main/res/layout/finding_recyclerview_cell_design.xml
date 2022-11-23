@@ -21,18 +21,18 @@
             app:layout_constraintWidth_percent="0.5"
             android:textSize="30sp"
             android:textColor="@color/black"
+            android:fontFamily="@font/davidlibre"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             />
 
         <TextView
             android:id="@+id/problem"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintHeight_percent="0.5"
-            android:textSize="30sp"
-            android:textColor="@color/black"
-            app:layout_constraintStart_toStartOf="parent"
+            android:textSize="20sp"
+            android:fontFamily="@font/davidlibre"
             app:layout_constraintTop_toBottomOf="@+id/section"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>

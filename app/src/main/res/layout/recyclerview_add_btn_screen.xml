@@ -58,6 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="אין חיבור אינטרנט"
+            android:fontFamily="@font/davidlibre"
             android:textSize="30dp"
             android:gravity="center"
            />

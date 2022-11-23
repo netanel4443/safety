@@ -13,7 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import com.e.safety.ui.activities.mainactivity.MainActivity
 import com.e.safety.R
-import com.e.safety.databinding.ActivityCameraBinding
+import com.e.safety.databinding.CameraScreenDesignBinding
 import com.e.safety.sensors.CameraOperations
 import com.e.safety.ui.viewmodels.MainViewModel
 import javax.inject.Inject
@@ -23,7 +23,7 @@ class CameraFragment : BaseSharedVmFragment() {
 
     @Inject
     lateinit var cameraOperations: CameraOperations
-    private  var binding: ActivityCameraBinding? = null
+    private  var binding: CameraScreenDesignBinding? = null
     private val viewModel: MainViewModel by lazy(this::getViewModel)
     private var launcher: ActivityResultLauncher<Array<String>> = registerForActivityResult()
     private val REQUIRED_PERMISSIONS =
@@ -60,7 +60,7 @@ class CameraFragment : BaseSharedVmFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = ActivityCameraBinding.inflate(inflater)
+        binding = CameraScreenDesignBinding.inflate(inflater)
         return binding!!.root
     }
 

@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/parent"
     android:layout_width="match_parent"
-    android:layout_height="100dp">
+    android:layout_height="100dp"
+    app:cardUseCompatPadding="true">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,6 +23,7 @@
 
             <TextView
                 android:id="@+id/place_name"
+                android:fontFamily="@font/davidlibre"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="5"
@@ -31,12 +33,12 @@
 
             <TextView
                 android:id="@+id/city"
+                android:fontFamily="@font/davidlibre"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="5"
                 android:gravity="right|center"
-                android:textColor="@color/black"
-                android:textSize="30sp"
+                android:textSize="20sp"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/place_name" />
         </LinearLayout>
@@ -47,7 +49,7 @@
             android:layout_height="0dp"
             android:src="@drawable/ic_baseline_edit_black_24"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHeight_percent="0.5"
+            app:layout_constraintHeight_percent="0.3"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@+id/details_linear_layout"
             app:layout_constraintTop_toTopOf="parent"

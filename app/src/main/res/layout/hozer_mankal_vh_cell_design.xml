@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/parent">
+    android:id="@+id/parent"
+    app:cardUseCompatPadding="true">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -14,8 +15,9 @@
             android:layout_height="match_parent"
             android:layout_weight="0.8"
             android:id="@+id/definition"
-            android:textSize="15sp"
+            android:textSize="20sp"
             android:textColor="@color/black"
+            android:fontFamily="@font/davidlibre"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_margin="7dp"/>
@@ -24,9 +26,10 @@
             android:layout_height="match_parent"
             android:layout_weight="0.2"
             android:id="@+id/section"
-            android:textSize="15sp"
+            android:textSize="20sp"
             android:gravity="center"
             android:textColor="@color/black"
+            android:fontFamily="@font/davidlibre"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 

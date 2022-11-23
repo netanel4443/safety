@@ -28,6 +28,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@color/purple_500"
             android:text="@string/add_photo"
+            android:fontFamily="@font/davidlibre"
             android:layout_gravity="bottom|start"
             app:tint="@color/white"
             android:layout_margin="5dp"/>
@@ -55,6 +56,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:fontFamily="@font/davidlibre"
                 android:text="@string/priority" />
 
             <Spinner
@@ -88,6 +90,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.9"
                 android:gravity="center"
+                android:fontFamily="@font/davidlibre"
                 android:hint="@string/requirement" />
 
             <TextView
@@ -95,6 +98,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.1"
+                android:fontFamily="@font/davidlibre"
                 android:gravity="center" />
         </LinearLayout>
 
@@ -105,6 +109,7 @@
         android:id="@+id/location_description_card"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        app:cardUseCompatPadding="true"
         app:layout_constraintHeight_percent="0.1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/finding_card">
@@ -113,6 +118,7 @@
             android:id="@+id/location_description"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:fontFamily="@font/davidlibre"
             android:hint="@string/problem_location" />
     </androidx.cardview.widget.CardView>
 
@@ -120,6 +126,7 @@
         android:id="@+id/problem_description_card"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        app:cardUseCompatPadding="true"
         app:layout_constraintHeight_percent="0.1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/location_description_card">
@@ -128,6 +135,7 @@
             android:id="@+id/problem_description"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:fontFamily="@font/davidlibre"
             android:hint="@string/problem_description" />
     </androidx.cardview.widget.CardView>
 
@@ -152,8 +160,9 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:text="@string/confirm"
+        android:fontFamily="@font/davidlibre"
         app:layout_constraintBottom_toBottomOf="@id/horizontal_guideline"
-        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintHeight_percent="0.08"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintWidth_percent="0.5" />
