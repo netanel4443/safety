@@ -9,11 +9,15 @@ open class MviLiveData<T> : LiveData<T> {
     constructor(t: T) : super(t)
 
 
-    fun observeWithInitialValue(owner: LifecycleOwner,onObserve:((T)->Unit)? = null, onDataChanged:(T?, T)->Unit) {
-        val observer = object :MviObserver<T>(){
+    fun observeWithInitialValue(
+        owner: LifecycleOwner,
+        onObserve: ((T) -> Unit)? = null,
+        onDataChanged: (T?, T) -> Unit
+    ) {
+        val observer = object : MviObserver<T>() {
 
             override fun onChanged(prev: T?, current: T) {
-                onDataChanged(prev,current)
+                onDataChanged(prev, current)
             }
 
         }
@@ -24,11 +28,11 @@ open class MviLiveData<T> : LiveData<T> {
         }
     }
 
-    fun observeMviLiveData(owner: LifecycleOwner, onDataChanged:(T?, T)->Unit) {
-        val observer = object :MviObserver<T>(){
+    fun observeMviLiveData(owner: LifecycleOwner, onDataChanged: (T?, T) -> Unit) {
+        val observer = object : MviObserver<T>() {
 
             override fun onChanged(prev: T?, current: T) {
-                onDataChanged(prev,current)
+                onDataChanged(prev, current)
             }
         }
         super.observe(owner, observer as Observer<in T>)

@@ -2,7 +2,7 @@ package com.e.safety.utils
 
 import android.util.Log
 
-const val DBG = false
+const val DBG = true
 fun printErrorIfDbg(tag: String, message: String?) {
     if (DBG) {
         Log.e(tag, message.toString())

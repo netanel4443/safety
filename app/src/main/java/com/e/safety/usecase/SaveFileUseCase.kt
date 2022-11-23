@@ -63,8 +63,6 @@ class SaveFileUseCase @Inject constructor(private val application: Application) 
             }
             val image = File(imagesDir, name.toString() + ".png")
             imageUri = Uri.parse(image.path) // todo check if it should be path or absolutepath
-            println("imageuri2 ${image.path}")
-            println("imageuri3 ${image.absolutePath}")
             FileOutputStream(image)
         }
 

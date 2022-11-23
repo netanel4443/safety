@@ -74,7 +74,7 @@ open class GenericRecyclerviewAdapter2<T : GenericVhItem> :
         vhItemSetter = setter
     }
 
-    /** this function fit to 1 view holder , that`s why we return 0.
+    /** this function fits to 1 view holder , that`s why we return 0.
     0 is the first index of [vhMap].
     If we need multiple view holders, we will override this function in a
     subclass of [GenericRecyclerviewAdapter2] and use proper logic
