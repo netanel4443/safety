@@ -11,17 +11,6 @@ import com.e.safety.ui.recyclerviews.helpers.GenericItemClickListener
 class CreateHozerMankalVh : CreateVh<HozerMankalVhCell>() {
     private var binding: HozerMankalVhCellDesignBinding? = null
 
-    override fun getViewHolder(
-        parent: ViewGroup,
-        itemClick: GenericItemClickListener<HozerMankalVhCell>?
-    ): GenericViewHolder {
-        return createVh(
-            parent,
-            R.layout.hozer_mankal_vh_cell_design,
-            itemClick
-        )
-    }
-
     override fun onInitVh(view: View) {
         binding = HozerMankalVhCellDesignBinding.bind(view)
         binding!!.parent.setOnClickListener {

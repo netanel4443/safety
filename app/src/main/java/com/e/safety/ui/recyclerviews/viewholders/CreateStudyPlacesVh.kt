@@ -12,16 +12,6 @@ import com.e.safety.ui.recyclerviews.helpers.GenericItemClickListener
 class CreateStudyPlacesVh : CreateVh<StudyPlaceDataVhCell>() {
     private var binding: StudyPlaceVhCellDesignBinding? = null
     private var itmClick: StudyPlaceVhItemClick? = null
-    override fun getViewHolder(
-        parent: ViewGroup,
-        itemClick: GenericItemClickListener<StudyPlaceDataVhCell>?
-    ): GenericViewHolder {
-        return createVh(
-            parent,
-            R.layout.study_place_vh_cell_design,
-            itemClick
-        )
-    }
 
     override fun onInitVh(view: View) {
         binding = StudyPlaceVhCellDesignBinding.bind(view)

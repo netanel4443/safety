@@ -12,16 +12,6 @@ import com.e.safety.ui.recyclerviews.helpers.GenericItemClickListener
 class CreateFindingDetailsViewHolder : CreateVh<FindingVhCell>() {
     private var binding: FindingRecyclerviewCellDesignBinding? = null
     private var itmClick: FindingVhItemClick? = null
-    override fun getViewHolder(
-        parent: ViewGroup,
-        itemClick: GenericItemClickListener<FindingVhCell>?
-    ):  GenericViewHolder {
-        return createVh(
-            parent,
-            R.layout.finding_recyclerview_cell_design,
-            itemClick
-        )
-    }
 
     override fun onInitVh(view: View) {
         binding = FindingRecyclerviewCellDesignBinding.bind(view)

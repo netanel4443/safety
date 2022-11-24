@@ -11,18 +11,7 @@ import com.e.safety.ui.recyclerviews.helpers.GenericItemClickListener
 class CreateTextViewVh : CreateVh<TextViewVhCell>() {
     private var binding: TextviewVhCellDesignBinding? = null
 
-    override fun getViewHolder(
-        parent: ViewGroup,
-        itemClick: GenericItemClickListener<TextViewVhCell>?
-    ): GenericViewHolder {
-        return createVh(
-            parent,
-            R.layout.textview_vh_cell_design,
-            itemClick
-        )
-    }
-
-    override fun onInitVh(view: View) {
+        override fun onInitVh(view: View) {
         binding = TextviewVhCellDesignBinding.bind(view)
         binding!!.parent.setOnClickListener {
             itemClick?.onItemClick(cachedItem!!)
