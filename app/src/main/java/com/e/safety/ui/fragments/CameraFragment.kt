@@ -59,7 +59,7 @@ class CameraFragment : BaseSharedVmFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = CameraScreenDesignBinding.inflate(inflater)
         return binding!!.root
     }

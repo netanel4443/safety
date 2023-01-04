@@ -44,8 +44,8 @@ class ReportFragmentMenuRvDialog : GenericRecyclerViewDialogFragment<TextViewVhC
                 setter.clickListener = object :
                     GenericItemClickListener<TextViewVhCell> {
                     override fun onItemClick(item: TextViewVhCell) {
-                        dismiss()
                         viewModel.editExportDeleteMenuSelection(item)
+                        dismiss()
                     }
                 }
                 adapter.setVhItemSetter(setter)

@@ -127,7 +127,6 @@ class FindingsFragment : BaseSharedVmFragment() {
 
     private fun startCreateFindingFragment() {
         val fragment = CreateFindingFragment()
-//        val fragment = CreateFindingScreen()
         requireActivity().addFragment(fragment, R.id.fragment_container, "CreateFindingFragment")
     }
 

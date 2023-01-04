@@ -87,17 +87,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun initStateObserver() {
-//        viewModel.viewState.observeMviLiveData(this, { state ->
-////            val prev = state.prevState
-////            val curr = state.currentState
-//            recyclerviewAdapter.submitList(state.studyPlacesVhCellArrayList)
-//
-//        }) { prevState, currentState ->
-//            if (prevState != null &&
-//                prevState.studyPlacesVhCellArrayList != currentState.studyPlacesVhCellArrayList) {
-//                recyclerviewAdapter.submitList(currentState.studyPlacesVhCellArrayList)
-//            }
-//        }
+
         viewModel.viewState.observeMviLiveData(this){ prevState, currentState->
             if (prevState == null ||
                 prevState.studyPlacesVhCellArrayList != currentState.studyPlacesVhCellArrayList) {

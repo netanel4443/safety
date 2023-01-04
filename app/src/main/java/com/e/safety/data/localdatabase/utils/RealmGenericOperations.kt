@@ -45,10 +45,10 @@ fun <T : RealmObject, V : RealmObject> Realm.deleteItemFromList(
 }
 
 //todo check listener and results if it is handled correctly
-fun <T : RealmObject, K, V> Realm.getLists(
+fun <T : RealmObject, K:Any> Realm.getLists(
     clazz: Class<T>,
-    block: (RealmResults<T>) -> HashMap<K, V>
-): Single<HashMap<K, V>> {
+    block: (RealmResults<T>) -> K
+): Single<K> {
     return Single.create { emitter ->
         var listener: RealmChangeListener<RealmResults<T>>? = null
         var res: RealmResults<T>? = null
@@ -72,7 +72,7 @@ fun <T : RealmObject, K, V> Realm.getLists(
     }
 }
 
-fun <T> Realm.rxSingleTransactionAsync(block: (Realm) -> T): Single<T> {
+fun <T:Any> Realm.rxSingleTransactionAsync(block: (Realm) -> T): Single<T> {
     return Single.create { emitter ->
         try {
             executeTransactionAsync { realm ->

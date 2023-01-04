@@ -79,8 +79,9 @@ class ReportsFragment : BaseSharedVmFragment() {
             val curr = currentState.reportFragmentState
 
             if (prev == null || prev.reportVhCellArrayList
-                != curr.reportVhCellArrayList)
-            recyclerviewAdapter.submitList(curr.reportVhCellArrayList)
+                != curr.reportVhCellArrayList) {
+                recyclerviewAdapter.submitList(curr.reportVhCellArrayList)
+            }
 
             if (prev == null || prev.isLoading != curr.isLoading){
 
@@ -118,7 +119,6 @@ class ReportsFragment : BaseSharedVmFragment() {
 
     private fun registerForActivityResult(func: (Uri) -> Unit): ActivityResultLauncher<String?> {
         return registerForActivityResult(SaveFileResultContract()) { result ->
-
             result?.let {
                 it.data?.let { uri ->
                     func.invoke(uri)
@@ -173,38 +173,6 @@ class ReportsFragment : BaseSharedVmFragment() {
         recyclerview.setHasFixedSize(true)
 
     }
-
-
-//    private fun initRecyclerView() {
-//        val recyclerview = binding.recyclerview
-//        recyclerviewAdapter = GenericRecyclerviewAdapter(
-//            CreateStudyPlaceReportsVh::class.java
-//        )
-//        recyclerviewAdapter.setItemClickListener(object : ReportVhItemClick {
-//            override fun onItemClick(item: ReportVhCell) {
-//                viewModel.startFindingDetailsFragment(item.id)
-//            }
-//
-//            override fun onEditBtnClick(item: ReportVhCell) {
-//                viewModel.setChosenReportId(item.id)
-//                viewModel.showReportFragmentRecyclerViewMenu(resources.getStringArray(R.array.esd))
-//            }
-//
-//            override fun onLongClick(item: ReportVhCell): Boolean {
-//                viewModel.setChosenReportId(item.id)
-//                viewModel.showDeleteReportDialog()
-//                return true
-//            }
-//        })
-//        recyclerview.adapter = recyclerviewAdapter
-//
-//        recyclerview.layoutManager = LinearLayoutManager(
-//            requireActivity(),
-//            LinearLayoutManager.VERTICAL,
-//            false
-//        )
-//        recyclerview.setHasFixedSize(true)
-//    }
 
     private fun showCalendarDialog() {
         if (calendarDialog == null) {

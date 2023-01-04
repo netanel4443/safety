@@ -343,44 +343,39 @@ class MainViewModel @Inject constructor(
             .reportList[chosenReportId]!!
             .findingArr
 
+        //todo maybe copy is not necessary in this case because its an int and not an object
         val oldPriority =
             _viewState.currentState().createFindingFragmentState.finding.copy().priority.toInt()
 
+        //findings will hold a reference to the appropriate hashmap according to the priority.
+        // First , checks if the object is already exists
         val findings = if (findingsArr[oldPriority].containsKey(chosenFindingId)) {
-
             findingsArr[oldPriority]
         } else {
             findingsArr[finding.priority.toInt()]
         }
 
-//        findingsArr.forEach {
-//            if (it.containsKey(finding.id)) {
-//                findings = it
-//                return@forEach
-//            }
-//        }
-//
-//        //if finding doesn't exists, get proper Hm for inserting the new one
-//        if (findings == null) {
-//            findings = findingsArr[finding.priority.toInt()]
-//        }
-
         val images = ArrayList<String>()
         problemImages.forEach {
             images.add(it.image)
         }
+
+        //problem images are empty , this adds the problem images to the object
         finding.problemImages = images
 
         if (findings.containsKey(chosenFindingId)) {
+            /** @param chosenFindingId's value is being set at another places in the code
+             * 1) when a new finding is being created at [startCreateFindingFragment]
+             * 2) when a finding is being edited at the function of [FindingsFragment] class
+             * which is called [initRecyclerView]  */
             finding.id = chosenFindingId
             crud.updateFinding(finding)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     // check if priority has changed , if it has,
                     // remove the finding from  prev hm and insert to correct one
-                    println("${findings[chosenFindingId]!!.priority} , ${finding.priority}")
+                    printIfDbg(TAG,"${findings[chosenFindingId]!!.priority} , ${finding.priority}")
                     if (findings[chosenFindingId]!!.priority != finding.priority) {
-
                         findings.remove(chosenFindingId)
                         findingsArr[finding.priority.toInt()][chosenFindingId] = finding
                     } else {// else we need to update the finding in same hm
@@ -861,7 +856,7 @@ class MainViewModel @Inject constructor(
 
     private fun fitProblemImagesToVhCell(finding: FindingDataHolder) {
         val list = finding.problemImages.map {
-            println("url $it")
+            printIfDbg(TAG, it)
             ImageViewVhCell(it, it)
         } as ArrayList
         updateProblemImageList(list)
@@ -879,7 +874,6 @@ class MainViewModel @Inject constructor(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBlock {
                 addProblemImage(it)
-                //  printIfDbg(TAG, it)
             }
     }
 
